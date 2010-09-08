@@ -9,50 +9,55 @@ namespace UnderworldEngine.GraphicsEngine
 {
     class Point
     {
-        float _x;
+        VertexPositionColor vpc;
+
         float X
         {
             get
             {
-                return _x;
+                return vpc.Position.X;
             }
             set
             {
-                _x = value;
+                vpc.Position.X = value;
             }
         }
 
-        float _y;
         float Y
         {
             get
             {
-                return _y;
+                return vpc.Position.Y;
             }
             set
             {
-                _y = value;
+                vpc.Position.Y = value;
             }
         }
 
-        float _z;
         float Z
         {
             get
             {
-                return _z;
+                return vpc.Position.Z;
             }
             set
             {
-                _z = value;
+                vpc.Position.Z = value;
+            }
+        }
+
+        VertexPositionColor VPC
+        {
+            get
+            {
+                return vpc;
             }
         }
 
         public Point(float x, float y, float z)
         {
-            this.X = x;
-            this.Y = y;
-            this.Z = z;
+            vpc = new VertexPositionColor(new Vector3(x, y, z), Color.White);
         }
 
         public void Draw(GraphicsDevice gd)
