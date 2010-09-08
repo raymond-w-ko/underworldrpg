@@ -11,6 +11,8 @@ using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
+using UnderworldEngine.GraphicsEngine;
+
 namespace UnderworldEngine
 {
     /// <summary>
@@ -18,8 +20,13 @@ namespace UnderworldEngine
     /// </summary>
     public class Game1 : Microsoft.Xna.Framework.Game
     {
-        GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        GraphicsDeviceManager graphics;
+
+        Camera camera;
+
+        VertexDeclaration vertexDeclaration;
+        BasicEffect basicEffect;
 
         public Game1()
         {
@@ -36,7 +43,8 @@ namespace UnderworldEngine
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-
+            camera = new Camera(GraphicsDevice.Viewport);
+            camera.MoveTo(5, 0, 5);
             base.Initialize();
         }
 
@@ -73,7 +81,7 @@ namespace UnderworldEngine
                 this.Exit();
 
             // TODO: Add your update logic here
-
+            
             base.Update(gameTime);
         }
 
@@ -83,7 +91,8 @@ namespace UnderworldEngine
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            // Clear the Display
+            GraphicsDevice.Clear(Color.Black);
 
             // TODO: Add your drawing code here
 

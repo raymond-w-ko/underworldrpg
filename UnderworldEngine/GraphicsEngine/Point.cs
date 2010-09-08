@@ -55,9 +55,19 @@ namespace UnderworldEngine.GraphicsEngine
             }
         }
 
+        public Point()
+        {
+            vpc = new VertexPositionColor(new Vector3(0, 0, 0), Color.White);
+        }
+
         public Point(float x, float y, float z)
         {
             vpc = new VertexPositionColor(new Vector3(x, y, z), Color.White);
+        }
+
+        public Point(float x, float y, float z, Color color)
+        {
+            vpc = new VertexPositionColor(new Vector3(x, y, z), color);
         }
 
         public void Draw(GraphicsDevice gd)
