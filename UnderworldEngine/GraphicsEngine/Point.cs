@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 
 namespace UnderworldEngine.GraphicsEngine
 {
@@ -51,6 +53,23 @@ namespace UnderworldEngine.GraphicsEngine
             this.X = x;
             this.Y = y;
             this.Z = z;
+        }
+
+        public void Draw(GraphicsDevice gd)
+        {
+            VertexPositionColor[] pointList = new VertexPositionColor[1];
+            pointList[0] = new VertexPositionColor(
+                new Vector3(this.X, this.Y, this.Z), Color.White);
+            VertexBuffer vb = new VertexBuffer(gd, 
+                VertexPositionColor.SizeInBytes * pointList.Length, BufferUsage.None);
+
+            vb.SetData<VertexPositionColor>(pointList);
+            gd.DrawUserPrimitives<VertexPositionColor>(
+                PrimitiveType.PointList,
+                pointList, 
+                0, 
+                1
+            );
         }
     }
 }
