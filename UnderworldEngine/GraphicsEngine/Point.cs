@@ -63,8 +63,7 @@ namespace UnderworldEngine.GraphicsEngine
         public void Draw(GraphicsDevice gd)
         {
             VertexPositionColor[] pointList = new VertexPositionColor[1];
-            pointList[0] = new VertexPositionColor(
-                new Vector3(this.X, this.Y, this.Z), Color.White);
+            pointList[0] = this.VPC;
             VertexBuffer vb = new VertexBuffer(gd, 
                 VertexPositionColor.SizeInBytes * pointList.Length, BufferUsage.None);
 
