@@ -8,7 +8,7 @@ namespace UnderworldEngine.GraphicsEngine
     class Quad
     {
         Point _a;
-        Point A
+        public Point A
         {
             get
             {
@@ -21,7 +21,7 @@ namespace UnderworldEngine.GraphicsEngine
         }
 
         Point _b;
-        Point B
+        public Point B
         {
             get
             {
@@ -34,7 +34,7 @@ namespace UnderworldEngine.GraphicsEngine
         }
 
         Point _c;
-        Point C
+        public Point C
         {
             get
             {
@@ -47,7 +47,7 @@ namespace UnderworldEngine.GraphicsEngine
         }
 
         Point _d;
-        Point D
+        public Point D
         {
             get
             {
