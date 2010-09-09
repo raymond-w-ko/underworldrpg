@@ -38,19 +38,19 @@ namespace UnderworldEngine.GraphicsEngine
         private Vector3 currentTarget;
         private Vector3 currentUpVector;
 
-        private float fov;
-        private float aspectRatio;
+        private float fov = (float)(Math.PI/2);  //90degree field of view by default
+        private float aspectRatio = 1.33f; //4:3 default
         public class FovOutOfRangeException : System.ApplicationException { };
 
-        private float nearPlaneDistance;
-        private float farPlaneDistance;
+        private float nearPlaneDistance = 1.0f;
+        private float farPlaneDistance = 5.0f;
         public class PlaneDistanceException : System.ApplicationException { };
 
         public Camera(Viewport viewport)
         {
+            this.SetFovDegrees(45.0f);
             this.MoveTo(0, 0, 5);
             this.LookAt(0, 0, 0);
-            this.SetFovDegrees(45);
             
             this.SetNearPlaneDistance(1.0f);
             this.SetFarPlaneDistance(100.0f);

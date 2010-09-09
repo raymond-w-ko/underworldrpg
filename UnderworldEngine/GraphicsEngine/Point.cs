@@ -11,7 +11,7 @@ namespace UnderworldEngine.GraphicsEngine
     {
         VertexPositionColor vpc;
 
-        float X
+        public float X
         {
             get
             {
@@ -23,7 +23,7 @@ namespace UnderworldEngine.GraphicsEngine
             }
         }
 
-        float Y
+        public float Y
         {
             get
             {
@@ -35,7 +35,7 @@ namespace UnderworldEngine.GraphicsEngine
             }
         }
 
-        float Z
+        public float Z
         {
             get
             {
@@ -47,7 +47,7 @@ namespace UnderworldEngine.GraphicsEngine
             }
         }
 
-        VertexPositionColor VPC
+        public VertexPositionColor VPC
         {
             get
             {
