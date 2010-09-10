@@ -20,6 +20,15 @@ namespace UnderworldEngine.Game
         private string modelName;
         private Model model;
 
+        public GameObjectModel(string name)
+            : base()
+        {
+            this.content = Game1.DefaultContent;
+            this.modelName = name;
+            this.model = content.Load<Model>(modelName);
+        }
+
+
         public GameObjectModel(ContentManager c, string name)
             : base()
         {
@@ -43,12 +52,13 @@ namespace UnderworldEngine.Game
             foreach (ModelMesh mesh in this.model.Meshes) {
                 foreach (BasicEffect effect in mesh.Effects) {
                     effect.EnableDefaultLighting();
+                    // Smoother lighting enabled default, maybe become a performance option in the future?
                     effect.PreferPerPixelLighting = true;
 
                     effect.World = parentTransforms[mesh.ParentBone.Index] * this.worldMatrix;
 
-                    effect.View = Game1.camera.ViewMatrix;
-                    effect.Projection = Game1.camera.ProjectionMatrix;
+                    effect.View = Game1.Camera.ViewMatrix;
+                    effect.Projection = Game1.Camera.ProjectionMatrix;
                 }
 
                 mesh.Draw();

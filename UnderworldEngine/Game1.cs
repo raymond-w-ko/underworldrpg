@@ -24,7 +24,8 @@ namespace UnderworldEngine
         SpriteBatch spriteBatch;
         GraphicsDeviceManager graphics;
 
-        internal static Camera camera = new Camera();
+        internal static Camera Camera;
+        internal static ContentManager DefaultContent;
         BasicEffectManager basicEffectManager;
 
         GameObjectModel ground;
@@ -35,6 +36,9 @@ namespace UnderworldEngine
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+
+            Game1.Camera = new Camera();
+            Game1.DefaultContent = Content;
         }
 
         /// <summary>
@@ -45,11 +49,11 @@ namespace UnderworldEngine
         /// </summary>
         protected override void Initialize()
         {
-            Game1.camera.CalculateAspectRatio(GraphicsDevice.Viewport);
-            Game1.camera.MoveTo(200, 100, 200);
-            Game1.camera.LookAt(0, 0, 0);
-            Game1.camera.SetFovDegrees(30);
-            Game1.camera.SetFarPlaneDistance(1000);
+            Game1.Camera.CalculateAspectRatio(GraphicsDevice.Viewport);
+            Game1.Camera.MoveTo(200, 100, 200);
+            Game1.Camera.LookAt(0, 0, 0);
+            Game1.Camera.SetFovDegrees(30);
+            Game1.Camera.SetFarPlaneDistance(1000);
             basicEffectManager = new BasicEffectManager(GraphicsDevice);
             base.Initialize();
         }
@@ -64,12 +68,12 @@ namespace UnderworldEngine
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            ground = new GameObjectModel(Content, "Models/ground");
+            ground = new GameObjectModel("Models/ground");
 
-            level2 = new GameObjectModel(Content, "Models/ground");
+            level2 = new GameObjectModel("Models/ground");
             level2.Position = new Vector3(0, 50, 0);
 
-            ship = new GameObjectModel(Content, "Models/ship");
+            ship = new GameObjectModel("Models/ship");
             ship.Position = new Vector3(90, 50, 90);
             ship.Scale(.03f);
             ship.ApplyRotationY(270.0f - 27.5f);
