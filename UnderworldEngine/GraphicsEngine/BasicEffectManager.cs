@@ -34,19 +34,15 @@ namespace UnderworldEngine.GraphicsEngine
             }
         }
 
-        private Camera camera;
-
-        public BasicEffectManager(GraphicsDevice gd, Camera c)
+        public BasicEffectManager(GraphicsDevice gd)
         {
-            this.camera = c;
-
             this.effect = new BasicEffect(gd, null);
 
             this.worldMatrix = Matrix.CreateTranslation(0, 0, 0);
 
             effect.World = this.worldMatrix;
-            effect.View = camera.ViewMatrix;
-            effect.Projection = camera.ProjectionMatrix;
+            effect.View = Game1.camera.ViewMatrix;
+            effect.Projection = Game1.camera.ProjectionMatrix;
 
             this.EnableVertexColor();
         }
@@ -64,8 +60,8 @@ namespace UnderworldEngine.GraphicsEngine
         public void Update()
         {
             this.effect.World = this.worldMatrix;
-            this.effect.View = camera.ViewMatrix;
-            this.effect.Projection = camera.ProjectionMatrix;
+            this.effect.View = Game1.camera.ViewMatrix;
+            this.effect.Projection = Game1.camera.ProjectionMatrix;
         }
     }
 }
