@@ -34,6 +34,10 @@ namespace UnderworldEngine.Game
                 return;
             }
 
+            // Process transforms
+            Matrix[] parentTransforms = new Matrix[this.model.Bones.Count];
+            this.model.CopyAbsoluteBoneTransformsTo(parentTransforms);
+            // Compiles all queued transforms into the worldMatrix member;
             this.CompileTransformations();
 
             foreach (ModelMesh mesh in this.model.Meshes) {
@@ -41,11 +45,12 @@ namespace UnderworldEngine.Game
                     effect.EnableDefaultLighting();
                     effect.PreferPerPixelLighting = true;
 
-                    effect.World = this.worldMatrix;
+                    effect.World = parentTransforms[mesh.ParentBone.Index] * this.worldMatrix;
 
                     effect.View = Game1.camera.ViewMatrix;
                     effect.Projection = Game1.camera.ProjectionMatrix;
                 }
+
                 mesh.Draw();
             }
         }
