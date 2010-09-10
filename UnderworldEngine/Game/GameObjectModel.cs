@@ -52,6 +52,7 @@ namespace UnderworldEngine.Game
             foreach (ModelMesh mesh in this.model.Meshes) {
                 foreach (BasicEffect effect in mesh.Effects) {
                     effect.EnableDefaultLighting();
+
                     // Smoother lighting enabled default, maybe become a performance option in the future?
                     effect.PreferPerPixelLighting = true;
 
