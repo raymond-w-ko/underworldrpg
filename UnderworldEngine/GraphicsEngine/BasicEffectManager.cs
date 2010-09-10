@@ -41,8 +41,8 @@ namespace UnderworldEngine.GraphicsEngine
             this.worldMatrix = Matrix.CreateTranslation(0, 0, 0);
 
             effect.World = this.worldMatrix;
-            effect.View = Game1.camera.ViewMatrix;
-            effect.Projection = Game1.camera.ProjectionMatrix;
+            effect.View = Game1.Camera.ViewMatrix;
+            effect.Projection = Game1.Camera.ProjectionMatrix;
 
             this.EnableVertexColor();
         }
@@ -60,8 +60,8 @@ namespace UnderworldEngine.GraphicsEngine
         public void Update()
         {
             this.effect.World = this.worldMatrix;
-            this.effect.View = Game1.camera.ViewMatrix;
-            this.effect.Projection = Game1.camera.ProjectionMatrix;
+            this.effect.View = Game1.Camera.ViewMatrix;
+            this.effect.Projection = Game1.Camera.ProjectionMatrix;
         }
     }
 }
