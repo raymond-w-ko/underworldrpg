@@ -28,6 +28,8 @@ namespace UnderworldEngine
         BasicEffectManager basicEffectManager;
 
         GameObjectModel ground;
+        GameObjectModel level2;
+        GameObjectModel ship;
 
         public Game1()
         {
@@ -63,6 +65,15 @@ namespace UnderworldEngine
 
             // TODO: use this.Content to load your game content here
             ground = new GameObjectModel(Content, "Models/ground");
+
+            level2 = new GameObjectModel(Content, "Models/ground");
+            level2.Position = new Vector3(0, 50, 0);
+
+            ship = new GameObjectModel(Content, "Models/ship");
+            ship.Position = new Vector3(90, 50, 90);
+            ship.Scale(.03f);
+            ship.ApplyRotationY(270);
+            ship.OffsetBy(0, -20, 0);
         }
 
         /// <summary>
@@ -104,6 +115,10 @@ namespace UnderworldEngine
 
             // TODO: Add your drawing code here
             ground.Draw();
+
+            level2.Draw();
+
+            ship.Draw();
 
             base.Draw(gameTime);
         }
