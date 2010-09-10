@@ -31,6 +31,7 @@ namespace UnderworldEngine
         GameObjectModel ground;
         GameObjectModel level2;
         GameObjectModel ship;
+        GameObjectModel interceptor;
 
         public Game1()
         {
@@ -50,9 +51,9 @@ namespace UnderworldEngine
         protected override void Initialize()
         {
             Game1.Camera.CalculateAspectRatio(GraphicsDevice.Viewport);
-            Game1.Camera.MoveTo(200, 100, 200);
+            Game1.Camera.MoveTo(200, 65, 200);
             Game1.Camera.LookAt(0, 0, 0);
-            Game1.Camera.SetFovDegrees(30);
+            Game1.Camera.SetFovDegrees(45);
             Game1.Camera.SetFarPlaneDistance(1000);
             basicEffectManager = new BasicEffectManager(GraphicsDevice);
             base.Initialize();
@@ -74,10 +75,15 @@ namespace UnderworldEngine
             level2.Position = new Vector3(0, 50, 0);
 
             ship = new GameObjectModel("Models/ship");
-            ship.Position = new Vector3(90, 50, 90);
-            ship.Scale(.03f);
+            ship.Position = new Vector3(0, 20,0);
+            ship.Scale(.05f);
             ship.ApplyRotationY(270.0f - 27.5f);
-            ship.OffsetBy(0, -20, 0);
+            ship.OffsetBy(0, -5, 0);
+
+            interceptor = new GameObjectModel("Models/ship");
+            interceptor.Position = new Vector3(100, 20, 100);
+            interceptor.Scale(.005f);
+            interceptor.ApplyRotationY(270.0f - 27.5f);
         }
 
         /// <summary>
@@ -123,6 +129,7 @@ namespace UnderworldEngine
             level2.Draw();
 
             ship.Draw();
+            interceptor.Draw();
 
             base.Draw(gameTime);
         }
