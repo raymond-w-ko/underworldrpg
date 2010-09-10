@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
 using UnderworldEngine.GraphicsEngine;
+using UnderworldEngine.Game;
 
 namespace UnderworldEngine
 {
@@ -23,8 +24,10 @@ namespace UnderworldEngine
         SpriteBatch spriteBatch;
         GraphicsDeviceManager graphics;
 
-        Camera camera;
+        internal static Camera camera = new Camera();
         BasicEffectManager basicEffectManager;
+
+        GameObjectModel ground;
 
         public Game1()
         {
@@ -40,8 +43,12 @@ namespace UnderworldEngine
         /// </summary>
         protected override void Initialize()
         {
-            this.camera = new Camera(GraphicsDevice.Viewport);
-            basicEffectManager = new BasicEffectManager(GraphicsDevice, this.camera);
+            Game1.camera.CalculateAspectRatio(GraphicsDevice.Viewport);
+            Game1.camera.MoveTo(200, 100, 200);
+            Game1.camera.LookAt(0, 0, 0);
+            Game1.camera.SetFovDegrees(30);
+            Game1.camera.SetFarPlaneDistance(1000);
+            basicEffectManager = new BasicEffectManager(GraphicsDevice);
             base.Initialize();
         }
 
@@ -55,6 +62,7 @@ namespace UnderworldEngine
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            ground = new GameObjectModel(Content, "Models/ground");
         }
 
         /// <summary>
@@ -95,6 +103,7 @@ namespace UnderworldEngine
             GraphicsDevice.Clear(Color.Black);
 
             // TODO: Add your drawing code here
+            ground.Draw();
 
             base.Draw(gameTime);
         }

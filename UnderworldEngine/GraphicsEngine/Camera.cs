@@ -46,16 +46,16 @@ namespace UnderworldEngine.GraphicsEngine
         private float farPlaneDistance = 5.0f;
         public class PlaneDistanceException : System.ApplicationException { };
 
-        public Camera(Viewport viewport)
+        public Camera()
         {
-            this.SetFovDegrees(45.0f);
             this.MoveTo(0, 0, 5);
             this.LookAt(0, 0, 0);
-            
+            this.SetUpVector(Vector3.Up);
+
+            this.SetFovDegrees(45.0f);
+
             this.SetNearPlaneDistance(1.0f);
             this.SetFarPlaneDistance(100.0f);
-
-            this.CalculateAspectRatio(viewport);
         }
 
         public void SetNearPlaneDistance(float dist)

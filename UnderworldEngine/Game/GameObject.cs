@@ -18,14 +18,12 @@ namespace UnderworldEngine.Game
     {
         public Vector3 Position { get; set; }
         public BoundingBox BoundingBox { get; set; }
-        public bool IsActive { get; set; }
         public bool IsVisible { get; set; }
 
         public GameObject()
         {
             this.Position = Vector3.Zero;
             this.BoundingBox = new BoundingBox();
-            this.IsActive = true;
             this.IsVisible = true;
         }
 
