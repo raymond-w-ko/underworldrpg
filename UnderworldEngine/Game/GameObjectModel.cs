@@ -34,12 +34,14 @@ namespace UnderworldEngine.Game
                 return;
             }
 
+            this.CompileTransformations();
+
             foreach (ModelMesh mesh in this.model.Meshes) {
                 foreach (BasicEffect effect in mesh.Effects) {
                     effect.EnableDefaultLighting();
                     effect.PreferPerPixelLighting = true;
 
-                    effect.World = Matrix.Identity;
+                    effect.World = this.worldMatrix;
 
                     effect.View = Game1.camera.ViewMatrix;
                     effect.Projection = Game1.camera.ProjectionMatrix;
