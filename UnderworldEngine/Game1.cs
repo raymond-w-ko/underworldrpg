@@ -24,9 +24,7 @@ namespace UnderworldEngine
         GraphicsDeviceManager graphics;
 
         Camera camera;
-
-        VertexDeclaration vertexDeclaration;
-        BasicEffect basicEffect;
+        BasicEffectManager basicEffectManager;
 
         public Game1()
         {
@@ -42,9 +40,8 @@ namespace UnderworldEngine
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-            camera = new Camera(GraphicsDevice.Viewport);
-            camera.MoveTo(5, 0, 5);
+            this.camera = new Camera(GraphicsDevice.Viewport);
+            basicEffectManager = new BasicEffectManager(GraphicsDevice, this.camera);
             base.Initialize();
         }
 
@@ -79,6 +76,9 @@ namespace UnderworldEngine
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
+            if (Keyboard.GetState().IsKeyDown(Keys.Escape)) {
+                this.Exit();
+            }
 
             // TODO: Add your update logic here
             

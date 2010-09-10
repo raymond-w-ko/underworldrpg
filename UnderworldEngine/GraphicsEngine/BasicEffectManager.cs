@@ -60,5 +60,12 @@ namespace UnderworldEngine.GraphicsEngine
         {
             this.effect.VertexColorEnabled = false;
         }
+
+        public void Update()
+        {
+            this.effect.World = this.worldMatrix;
+            this.effect.View = camera.ViewMatrix;
+            this.effect.Projection = camera.ProjectionMatrix;
+        }
     }
 }
