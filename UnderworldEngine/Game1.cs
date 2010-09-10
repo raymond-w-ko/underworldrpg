@@ -72,7 +72,7 @@ namespace UnderworldEngine
             ship = new GameObjectModel(Content, "Models/ship");
             ship.Position = new Vector3(90, 50, 90);
             ship.Scale(.03f);
-            ship.ApplyRotationY(270);
+            ship.ApplyRotationY(270.0f - 27.5f);
             ship.OffsetBy(0, -20, 0);
         }
 
