@@ -29,7 +29,8 @@ namespace UnderworldEngine.Scripting
         private void loadFunctions()
         {
             functions["load"] = new Load();
-            functions["play"] = new Play();
+            functions["music"] = new Music();
+            //TODO functions["bind"]
         }
 
         public void run(string function)

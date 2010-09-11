@@ -16,6 +16,8 @@ using UnderworldEngine.GraphicsEngine;
 using UnderworldEngine.Game;
 using UnderworldEngine.Audio;
 using System.IO;
+using UnderworldEngine.Scripting;
+using UnderworldEngine.IO;
 
 namespace UnderworldEngine
 {
@@ -39,6 +41,8 @@ namespace UnderworldEngine
         internal static GraphicsDeviceManager DefaultGraphics;
         internal static GraphicsDevice DefaultGraphicsDevice;
         internal static AudioManager audioManager;
+        internal static Interpreter interpreter;
+        internal static ControllerManager controller;
 
         GameObjectModel ground;
         GameObjectModel level2;
@@ -78,6 +82,8 @@ namespace UnderworldEngine
             Game1.Camera.SetFovDegrees(45);
             Game1.Camera.SetFarPlaneDistance(1000);
 
+            // global access to audiomanager
+            Game1.interpreter = new Interpreter();
             base.Initialize();
         }
 
@@ -113,11 +119,6 @@ namespace UnderworldEngine
 
             quad = new QuadTexture(Vector3.Zero, Vector3.Up, Vector3.Forward, 10, 10, "Texture/ground");
             quad.ScaleUvMap(5.0f);
-
-            //Audio loading
-            Game1.audioManager.AddSoundLibrary("Music");
-            Game1.audioManager.PlaySound("Cursed Giant");
-            Game1.audioManager.Volume = 1.0f;
         }
 
         /// <summary>

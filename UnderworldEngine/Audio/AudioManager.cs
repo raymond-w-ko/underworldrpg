@@ -122,6 +122,7 @@ namespace UnderworldEngine.Audio
         public Cue PlaySound(string name)
         {
             Cue sound = FetchSound(name);
+            currentlyPlaying.AddLast(sound);
             sound.Play();
             return sound;
         }
