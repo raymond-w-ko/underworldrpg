@@ -51,7 +51,7 @@ namespace UnderworldEngine.Audio
             }
             set
             {
-                volume = value % 2.0f;
+                volume = value;
                 UpdateVolume();
             }
         }
@@ -66,7 +66,7 @@ namespace UnderworldEngine.Audio
             currentEmitterPosition = Vector3.Zero;
         }
 
-        public bool AddSound(string name)
+        public bool AddSoundLibrary(string name)
         {
             bool success;
             AudioInstance inst;
@@ -123,7 +123,7 @@ namespace UnderworldEngine.Audio
         {
             foreach(AudioInstance inst in instances)
             {
-                inst.AudioEngine.GetCategory("Music").SetVolume(volume);
+                inst.AudioEngine.GetCategory("Default").SetVolume(volume);
             }
         }
 

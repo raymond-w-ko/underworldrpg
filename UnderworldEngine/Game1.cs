@@ -88,8 +88,9 @@ namespace UnderworldEngine
             interceptor.ApplyRotationY(270.0f - 27.5f);
 
             //Audio loading
-            Game1.audioManager.AddSound("Music");
+            Game1.audioManager.AddSoundLibrary("Music");
             Game1.audioManager.PlaySound("Hello");
+            Game1.audioManager.Volume = 1.0f;
         }
 
         /// <summary>
