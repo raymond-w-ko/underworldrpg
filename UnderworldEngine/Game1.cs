@@ -26,6 +26,7 @@ namespace UnderworldEngine
 
         internal static Camera Camera;
         internal static ContentManager DefaultContent;
+        internal static AudioManager audioManager;
         BasicEffectManager basicEffectManager;
 
         GameObjectModel ground;
@@ -40,6 +41,7 @@ namespace UnderworldEngine
 
             Game1.Camera = new Camera();
             Game1.DefaultContent = Content;
+            Game1.audioManager = new AudioManager();
         }
 
         /// <summary>
@@ -84,6 +86,10 @@ namespace UnderworldEngine
             interceptor.Position = new Vector3(100, 20, 100);
             interceptor.Scale(.005f);
             interceptor.ApplyRotationY(270.0f - 27.5f);
+
+            //Audio loading
+            Game1.audioManager.AddSound("Music");
+            Game1.audioManager.PlaySound("Hello");
         }
 
         /// <summary>

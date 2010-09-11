@@ -13,6 +13,9 @@ namespace UnderworldEngine.Audio
 {
     public class AudioTest
     {
+        /// <summary>
+        /// A simple test of the XACT audio pipeline
+        /// </summary>
         // Audio objects
         AudioEngine engine;
         SoundBank soundBank;
