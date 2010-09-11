@@ -59,8 +59,8 @@ namespace UnderworldEngine.Audio
         void Initialize()
         {
             eng = new AudioEngine("Content\\Audio\\" + name + ".xgs");
-            sb = new SoundBank(eng, "Content\\Audio\\Sound Bank.xsb");
-            wb = new WaveBank(eng, "Content\\Audio\\Wave Bank.xwb");
+            sb = new SoundBank(eng, "Content\\Audio\\" + name + " Sound Bank.xsb");
+            wb = new WaveBank(eng, "Content\\Audio\\" + name + " Wave Bank.xwb");
         }
 
         public Cue GetCue(string cueName)
