@@ -7,6 +7,6 @@ namespace UnderworldEngine.Scripting
 {
     interface IInterpretable
     {
-        public void run(string function);
+        void run(string function);
     }
 }
