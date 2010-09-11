@@ -28,7 +28,8 @@ namespace UnderworldEngine.Scripting
 
         private void loadFunctions()
         {
-            functions["load"] = new Load(Game1.audioManager);
+            functions["load"] = new Load();
+            functions["play"] = new Play();
         }
 
         public void run(string function)
