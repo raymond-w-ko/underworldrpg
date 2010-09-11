@@ -67,6 +67,11 @@ namespace UnderworldEngine.Game
             }
         }
 
+        public override void ManagedDraw(Effect effect)
+        {
+            throw new NotSupportedException();
+        }
+
         public BoundingBox GetBoundingBoxFromModel(Model model)
         {
             //Game1.Debug.WriteLine("Creating Bounding Box...");

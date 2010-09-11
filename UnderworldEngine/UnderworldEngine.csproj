@@ -88,6 +88,10 @@
     <Compile Include="Audio\AudioManager.cs" />
     <Compile Include="Audio\AudioTest.cs" />
     <Compile Include="Game\GameObjectModel.cs" />
+    <Compile Include="Game\GridColumn.cs" />
+    <Compile Include="Game\GridMap.cs" />
+    <Compile Include="Game\Interfaces\IManagedDraw.cs" />
+    <Compile Include="Game\Interfaces\IDraw.cs" />
     <Compile Include="Game\Quad.cs" />
     <Compile Include="Game\QuadTexture.cs" />
     <Compile Include="GraphicsEngine\Camera.cs" />

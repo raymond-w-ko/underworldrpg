@@ -34,7 +34,7 @@ namespace UnderworldEngine.GraphicsEngine
             basicEffect.Projection = Game1.Camera.ProjectionMatrix;
 
             // Possible optimization for low end computers?
-            basicEffect.EnableDefaultLighting();
+            basicEffect.PreferPerPixelLighting = true;
         }
 
         public void EnableVertexColor()

@@ -12,6 +12,8 @@ using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
+using UnderworldEngine.GraphicsEngine;
+
 namespace UnderworldEngine.Game
 {
     public class QuadTexture : Quad
@@ -32,7 +34,7 @@ namespace UnderworldEngine.Game
 
             FillVertices();
 
-            texture = Game1.DefaultContent.Load<Texture2D>("Textures/ground");
+            texture = Game1.DefaultContent.Load<Texture2D>(textureName);
             this.effect.EnableTexture();
             this.effect.SetTexture(texture);
 
@@ -111,6 +113,24 @@ namespace UnderworldEngine.Game
             for (int ii = 0; ii < 4; ii++) {
                 this.vertices[ii].TextureCoordinate *= scale;
             }
+        }
+
+        public override void ManagedDraw(Effect bem)
+        {
+           bem.Begin();
+
+            foreach (EffectPass pass in bem.CurrentTechnique.Passes) {
+                pass.Begin();
+
+                Game1.DefaultGraphicsDevice.DrawUserIndexedPrimitives<VertexPositionNormalTexture>(
+                    PrimitiveType.TriangleList,
+                    this.vertices, 0, 4,
+                    this.indexes, 0, 2);
+
+                pass.End();
+            }
+
+            bem.End();
         }
     }
 }
