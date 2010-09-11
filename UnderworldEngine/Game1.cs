@@ -42,7 +42,7 @@ namespace UnderworldEngine
         internal static GraphicsDevice DefaultGraphicsDevice;
         internal static AudioManager audioManager;
         internal static Interpreter interpreter;
-        internal static ControllerManager controller;
+        internal static ControllerManager controller1;
 
         GridMap gripMap;
 
@@ -80,6 +80,12 @@ namespace UnderworldEngine
 
             // global access to audiomanager
             Game1.interpreter = new Interpreter();
+
+            // global access to controllers
+            Game1.controller1 = new ControllerManager(PlayerIndex.One);
+
+            //init script
+            Game1.interpreter.run("run test.rs");
 
             base.Initialize();
         }
@@ -122,7 +128,8 @@ namespace UnderworldEngine
             }
 
             // TODO: Add your update logic here
-            
+            Game1.controller1.UpdateInput();
+
             base.Update(gameTime);
         }
 

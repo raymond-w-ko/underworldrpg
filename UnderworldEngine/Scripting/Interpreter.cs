@@ -30,7 +30,8 @@ namespace UnderworldEngine.Scripting
         {
             functions["load"] = new Load();
             functions["music"] = new Music();
-            //TODO functions["bind"]
+            functions["bind"] = new Bind();
+            functions["run"] = new Run();
         }
 
         public void run(string function)
