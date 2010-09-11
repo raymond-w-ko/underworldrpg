@@ -44,11 +44,7 @@ namespace UnderworldEngine
         internal static Interpreter interpreter;
         internal static ControllerManager controller;
 
-        GameObjectModel ground;
-        GameObjectModel level2;
-        GameObjectModel ship;
-        GameObjectModel interceptor;
-        QuadTexture quad;
+        GridMap gripMap;
 
         public Game1()
         {
@@ -77,13 +73,14 @@ namespace UnderworldEngine
             // global access to camera
             Game1.Camera = new Camera(GraphicsDevice.Viewport);
             Game1.Camera.CalculateAspectRatio(GraphicsDevice.Viewport);
-            Game1.Camera.MoveTo(10, 10, 10);
-            Game1.Camera.LookAt(0, 0, 0);
+            Game1.Camera.MoveTo(10, 5, 10);
+            Game1.Camera.LookAt(5, 0, 5);
             Game1.Camera.SetFovDegrees(45);
             Game1.Camera.SetFarPlaneDistance(1000);
 
             // global access to audiomanager
             Game1.interpreter = new Interpreter();
+
             base.Initialize();
         }
 
@@ -97,28 +94,7 @@ namespace UnderworldEngine
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            ground = new GameObjectModel("Models/ground");
-            ground.IsVisible = false;
-
-            level2 = new GameObjectModel("Models/ground");
-            level2.Position = new Vector3(0, 50, 0);
-            level2.IsVisible = false;
-
-            ship = new GameObjectModel("Models/ship");
-            ship.Position = new Vector3(0, 20, 0);
-            ship.Scale(.05f);
-            ship.ApplyRotationY(270.0f - 27.5f);
-            ship.OffsetBy(0, -5, 0);
-            ship.IsVisible = false;
-
-            interceptor = new GameObjectModel("Models/ship");
-            interceptor.Position = new Vector3(100, 20, 100);
-            interceptor.Scale(.005f);
-            interceptor.ApplyRotationY(270.0f - 27.5f);
-            interceptor.IsVisible = false;
-
-            quad = new QuadTexture(Vector3.Zero, Vector3.Up, Vector3.Forward, 10, 10, "Texture/ground");
-            quad.ScaleUvMap(5.0f);
+            gripMap = new GridMap(10, 10);
         }
 
         /// <summary>
@@ -160,14 +136,7 @@ namespace UnderworldEngine
             GraphicsDevice.Clear(Color.Black);
 
             // TODO: Add your drawing code here
-            ground.Draw();
-
-            //level2.Draw();
-
-            ship.Draw();
-            interceptor.Draw();
-
-            quad.Draw();
+            gripMap.Draw();
 
             base.Draw(gameTime);
         }

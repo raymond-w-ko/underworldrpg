@@ -12,12 +12,14 @@ using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
+using UnderworldEngine.Game.Interfaces;
+
 namespace UnderworldEngine.Game
 {
     /// <summary>
     /// Renderable object that exists within the game world
     /// </summary>
-    public abstract class GameObject
+    public abstract class GameObject : IDraw, IManagedDraw
     {
         private class Transformation
         {
@@ -81,6 +83,7 @@ namespace UnderworldEngine.Game
         }
 
         public abstract void Draw();
+        public abstract void ManagedDraw(Effect effect);
 
         public void Scale(float degrees)
         {
