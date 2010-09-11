@@ -18,13 +18,24 @@ namespace UnderworldEngine.Scripting
             for (int i = 2; i < command.Length; i++)
             {
                 bindingTemp.Append(command[i]);
+                bindingTemp.Append(" ");
             }
 
             keyToBind = keyToBind.ToUpper();
+            binding = bindingTemp.ToString();
             switch (keyToBind)
             {
                 case "A":
-                     
+                    Game1.controller1.acommand = binding; 
+                    break;
+                case "B":
+                    Game1.controller1.bcommand = binding;
+                    break;
+                case "X":
+                    Game1.controller1.xcommand = binding;
+                    break;
+                case "Y":
+                    Game1.controller1.ycommand = binding;
                     break;
             }
         }
