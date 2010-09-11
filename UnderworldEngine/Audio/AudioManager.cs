@@ -70,17 +70,9 @@ namespace UnderworldEngine.Audio
         {
             bool success;
             AudioInstance inst;
-            
-            try
-            {
-                inst = new AudioInstance(name);
-                instances.Add(inst);
-                success = true;
-            }
-            catch
-            {
-                success = false;
-            }
+            inst = new AudioInstance(name);
+            instances.Add(inst);
+            success = true;
 
             return success;
         }
@@ -134,7 +126,7 @@ namespace UnderworldEngine.Audio
             return sound;
         }
 
-        private Cue FetchSound(string name)
+        public Cue FetchSound(string name)
         {
             Cue temp = null;
 

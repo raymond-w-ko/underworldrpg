@@ -11,10 +11,10 @@ namespace UnderworldEngine.Scripting
         Dictionary<string, ILoader> functions;
         
 
-        public Load(AudioManager audio)
+        public Load()
         {
             functions = new Dictionary<string, ILoader>();
-            functions["soundpkg"] = new SoundLoader(audio);
+            functions["soundpkg"] = new SoundLoader();
         }
 
         public void run(string function)

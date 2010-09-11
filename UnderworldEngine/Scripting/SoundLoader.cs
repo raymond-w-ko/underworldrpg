@@ -8,19 +8,12 @@ namespace UnderworldEngine.Scripting
 {
     class SoundLoader : ILoader
     {
-        AudioManager audio;
-
-        public SoundLoader(AudioManager audio)
-        {
-            this.audio = audio;
-        }
-
         public bool load(string name)
         {
             bool success = false;
             try
             {
-                audio.AddSoundLibrary(name);
+                Game1.audioManager.AddSoundLibrary(name);
                 success = true;
             }
             catch
