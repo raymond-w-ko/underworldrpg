@@ -12,74 +12,50 @@ using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
+using UnderworldEngine.GraphicsEngine;
+
 namespace UnderworldEngine.Game
 {
-    class Quad
+    public abstract class Quad : GameObject
     {
-        public VertexPositionNormalTexture[] Vertices;
-        public int[] Indexes;
-        Vector3 Origin;
-        Vector3 Normal;
-        Vector3 Up;
+        protected Vector3 origin;
+        protected Vector3 normal;
+        protected Vector3 up;
 
-        Vector3 Left;
-        Vector3 UpperLeft;
-        Vector3 UpperRight;
-        Vector3 LowerLeft;
-        Vector3 LowerRight;
+        protected Vector3 left;
+
+        protected Vector3 upperLeft;
+        protected Vector3 upperRight;
+        protected Vector3 lowerLeft;
+        protected Vector3 lowerRight;
+
+        protected BasicEffectManager effect;
 
         public Quad(Vector3 origin, Vector3 normal, Vector3 up, float width, float height)
         {
-            this.Vertices = new VertexPositionNormalTexture[4];
-            this.Indexes = new int[6];
-            this.Origin = origin;
-            this.Normal = normal;
-            this.Up = up;
+            this.origin = origin;
+            this.normal = normal;
+            this.up = up;
 
-            Left = Vector3.Cross(Normal, Up);
-            Vector3 uppercenter = (Up * height / 2) + Origin;
+            this.left = Vector3.Cross(normal, up);
+            Vector3 uppercenter = (up * height / 2) + origin;
 
-            this.UpperLeft = uppercenter + (Left * width / 2);
-            this.UpperRight = uppercenter - (Left * width / 2);
-            this.LowerLeft = UpperLeft - (Up * height);
-            this.LowerRight = UpperRight - (Up * height);
+            this.upperLeft = uppercenter + (left * width / 2);
+            this.upperRight = uppercenter - (left * width / 2);
+            this.lowerLeft = upperLeft - (up * height);
+            this.lowerRight = upperRight - (up * height);
 
-            FillVertices();
+            this.effect = new BasicEffectManager();
+
+            /*
+            Game1.Debug.WriteLine("Quad Points");
+            Game1.Debug.WriteLine(upperLeft);
+            Game1.Debug.WriteLine(upperRight);
+            Game1.Debug.WriteLine(lowerLeft);
+            Game1.Debug.WriteLine(lowerRight);
+            */
         }
 
-        private void FillVertices()
-        {
-            // Fill in texture coordinates to display full texture
-            // on quad
-            Vector2 textureUpperLeft = new Vector2(0.0f, 0.0f);
-            Vector2 textureUpperRight = new Vector2(5.0f, 0.0f);
-            Vector2 textureLowerLeft = new Vector2(0.0f, 5.0f);
-            Vector2 textureLowerRight = new Vector2(5.0f, 5.0f);
-
-            // Provide a normal for each vertex
-            for (int i = 0; i < Vertices.Length; i++) {
-                Vertices[i].Normal = Normal;
-            }
-
-            // Set the position and texture coordinate for each
-            // vertex
-            Vertices[0].Position = LowerLeft;
-            Vertices[0].TextureCoordinate = textureLowerLeft;
-            Vertices[1].Position = UpperLeft;
-            Vertices[1].TextureCoordinate = textureUpperLeft;
-            Vertices[2].Position = LowerRight;
-            Vertices[2].TextureCoordinate = textureLowerRight;
-            Vertices[3].Position = UpperRight;
-            Vertices[3].TextureCoordinate = textureUpperRight;
-
-            // Set the index buffer for each vertex, using
-            // clockwise winding
-            Indexes[0] = 0;
-            Indexes[1] = 1;
-            Indexes[2] = 2;
-            Indexes[3] = 2;
-            Indexes[4] = 1;
-            Indexes[5] = 3;
-        }
+        
     }
 }

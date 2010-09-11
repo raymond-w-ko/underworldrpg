@@ -14,54 +14,59 @@ using Microsoft.Xna.Framework.Storage;
 
 namespace UnderworldEngine.GraphicsEngine
 {
-    class BasicEffectManager
+    public class BasicEffectManager
     {
-        private Matrix worldMatrix;
-        public Matrix WorldMatrix
+        private BasicEffect basicEffect;
+        public BasicEffect BasicEffect
         {
             get
             {
-                return worldMatrix;
+                return basicEffect;
             }
         }
 
-        private BasicEffect effect;
-        public BasicEffect Effect
+        public BasicEffectManager()
         {
-            get
-            {
-                return effect;
-            }
-        }
+            this.basicEffect = new BasicEffect(Game1.DefaultGraphicsDevice, null);
 
-        public BasicEffectManager(GraphicsDevice gd)
-        {
-            this.effect = new BasicEffect(gd, null);
+            basicEffect.World = Matrix.Identity;
+            basicEffect.View = Game1.Camera.ViewMatrix;
+            basicEffect.Projection = Game1.Camera.ProjectionMatrix;
 
-            this.worldMatrix = Matrix.CreateTranslation(0, 0, 0);
-
-            effect.World = this.worldMatrix;
-            effect.View = Game1.Camera.ViewMatrix;
-            effect.Projection = Game1.Camera.ProjectionMatrix;
-
-            this.EnableVertexColor();
+            // Possible optimization for low end computers?
+            basicEffect.EnableDefaultLighting();
         }
 
         public void EnableVertexColor()
         {
-            this.effect.VertexColorEnabled = true;
+            this.basicEffect.VertexColorEnabled = true;
         }
 
         public void DisableVertexColor()
         {
-            this.effect.VertexColorEnabled = false;
+            this.basicEffect.VertexColorEnabled = false;
         }
 
-        public void Update()
+        public void EnableTexture()
         {
-            this.effect.World = this.worldMatrix;
-            this.effect.View = Game1.Camera.ViewMatrix;
-            this.effect.Projection = Game1.Camera.ProjectionMatrix;
+            this.basicEffect.TextureEnabled = true;
+        }
+
+        public void DisableTexture()
+        {
+            this.basicEffect.TextureEnabled = false;
+        }
+
+        public void SetTexture(Texture2D texture)
+        {
+            this.basicEffect.Texture = texture;
+        }
+
+        public void UpdatePresentationMatrices(Matrix world)
+        {
+            this.basicEffect.World = world;
+            this.basicEffect.View = Game1.Camera.ViewMatrix;
+            this.basicEffect.Projection = Game1.Camera.ProjectionMatrix;
         }
     }
 }
