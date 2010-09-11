@@ -84,6 +84,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Audio\AudioInstance.cs" />
+    <Compile Include="Audio\AudioManager.cs" />
     <Compile Include="Audio\AudioTest.cs" />
     <Compile Include="Game\GameObjectModel.cs" />
     <Compile Include="GraphicsEngine\Camera.cs" />
