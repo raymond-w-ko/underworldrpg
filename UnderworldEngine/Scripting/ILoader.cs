@@ -7,6 +7,6 @@ namespace UnderworldEngine.Scripting
 {
     interface ILoader
     {
-        public bool load(string name);
+        bool load(string name);
     }
 }
