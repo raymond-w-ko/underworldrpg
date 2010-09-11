@@ -46,7 +46,9 @@ namespace UnderworldEngine.GraphicsEngine
         private float farPlaneDistance = 5.0f;
         public class PlaneDistanceException : System.ApplicationException { };
 
-        public Camera()
+        private Viewport viewPort;
+
+        public Camera(Viewport view)
         {
             this.MoveTo(0, 0, 5);
             this.LookAt(0, 0, 0);
@@ -56,6 +58,8 @@ namespace UnderworldEngine.GraphicsEngine
 
             this.SetNearPlaneDistance(1.0f);
             this.SetFarPlaneDistance(100.0f);
+
+            this.viewPort = view;
         }
 
         public void SetNearPlaneDistance(float dist)
@@ -149,6 +153,7 @@ namespace UnderworldEngine.GraphicsEngine
             }
             projectionMatrix = Matrix.CreatePerspectiveFieldOfView(fov, aspectRatio, nearPlaneDistance,
                 farPlaneDistance);
+            projectionMatrix = Matrix.CreateOrthographic(viewPort.Width/20.0f, viewPort.Height/20.0f, 0, 1000);
 
         }
     }

@@ -88,6 +88,7 @@
     <Compile Include="Audio\AudioManager.cs" />
     <Compile Include="Audio\AudioTest.cs" />
     <Compile Include="Game\GameObjectModel.cs" />
+    <Compile Include="Game\Quad.cs" />
     <Compile Include="GraphicsEngine\Camera.cs" />
     <Compile Include="GraphicsEngine\BasicEffectManager.cs" />
     <Compile Include="Game\GameObject.cs" />
