@@ -30,7 +30,6 @@ namespace UnderworldEngine.Game
             GetBoundingBoxFromModel(model);
         }
 
-
         public GameObjectModel(ContentManager c, string name)
             : base()
         {
@@ -70,7 +69,7 @@ namespace UnderworldEngine.Game
 
         public BoundingBox GetBoundingBoxFromModel(Model model)
         {
-            Game1.Debug.WriteLine("Creating Bounding Box...");
+            //Game1.Debug.WriteLine("Creating Bounding Box...");
             BoundingBox boundingBox = new BoundingBox();
             foreach (ModelMesh mesh in model.Meshes) {
                 VertexPositionNormalTexture[] vertices =
@@ -82,7 +81,7 @@ namespace UnderworldEngine.Game
 
                 for (int index = 0; index < vertexs.Length; index++) {
                     vertexs[index] = vertices[index].Position;
-                    Game1.Debug.WriteLine(index.ToString() + vertexs[index]);
+                    //Game1.Debug.WriteLine(index.ToString() + vertexs[index]);
                 }
 
                 boundingBox = BoundingBox.CreateMerged(boundingBox,  BoundingBox.CreateFromPoints(vertexs));

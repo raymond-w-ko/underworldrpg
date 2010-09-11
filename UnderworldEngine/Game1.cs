@@ -36,26 +36,23 @@ namespace UnderworldEngine
 
         internal static Camera Camera;
         internal static ContentManager DefaultContent;
+        internal static GraphicsDeviceManager DefaultGraphics;
+        internal static GraphicsDevice DefaultGraphicsDevice;
         internal static AudioManager audioManager;
-        BasicEffectManager basicEffectManager;
 
         GameObjectModel ground;
         GameObjectModel level2;
         GameObjectModel ship;
         GameObjectModel interceptor;
-
-        UnderworldEngine.Game.Quad quad;
-        VertexDeclaration quadVertexDecl;
+        QuadTexture quad;
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
-            Game1.FileStream = new FileStream("log.txt", FileMode.OpenOrCreate);
+            Game1.FileStream = new FileStream("log.txt", FileMode.Truncate);
             Game1.Debug = new StreamWriter(Game1.FileStream);
-
-            
 
             Game1.audioManager = new AudioManager();
         }
@@ -68,22 +65,18 @@ namespace UnderworldEngine
         /// </summary>
         protected override void Initialize()
         {
-            //AllocConsole();
-            Console.WriteLine("Hello, World!");
-            Console.WriteLine(Vector3.Backward);
+            // global access to rarely changing elements
+            Game1.DefaultContent = Content;
+            Game1.DefaultGraphics = graphics;
+            Game1.DefaultGraphicsDevice = GraphicsDevice;
 
+            // global access to camera
             Game1.Camera = new Camera(GraphicsDevice.Viewport);
             Game1.Camera.CalculateAspectRatio(GraphicsDevice.Viewport);
             Game1.Camera.MoveTo(10, 10, 10);
             Game1.Camera.LookAt(0, 0, 0);
             Game1.Camera.SetFovDegrees(45);
             Game1.Camera.SetFarPlaneDistance(1000);
-
-            Game1.DefaultContent = Content;
-
-            basicEffectManager = new BasicEffectManager(GraphicsDevice);
-
-            quad = new UnderworldEngine.Game.Quad(Vector3.Zero, Vector3.Up, Vector3.Forward, 10, 10);
 
             base.Initialize();
         }
@@ -92,8 +85,6 @@ namespace UnderworldEngine
         /// LoadContent will be called once per game and is the place to load
         /// all of your content.
         /// </summary>
-        Texture2D texture;
-        BasicEffect quadEffect;
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
@@ -120,17 +111,8 @@ namespace UnderworldEngine
             interceptor.ApplyRotationY(270.0f - 27.5f);
             interceptor.IsVisible = false;
 
-            texture = Game1.DefaultContent.Load<Texture2D>("Textures/ground");
-            quadEffect = new BasicEffect(graphics.GraphicsDevice, null);
-            quadEffect.EnableDefaultLighting();
-            quadEffect.World = Matrix.Identity;
-            quadEffect.View = Game1.Camera.ViewMatrix;
-            quadEffect.Projection = Game1.Camera.ProjectionMatrix;
-            quadEffect.TextureEnabled = true;
-            quadEffect.Texture = texture;
-
-            quadVertexDecl = new VertexDeclaration(graphics.GraphicsDevice,
-                VertexPositionNormalTexture.VertexElements);
+            quad = new QuadTexture(Vector3.Zero, Vector3.Up, Vector3.Forward, 10, 10, "Texture/ground");
+            quad.ScaleUvMap(5.0f);
 
             //Audio loading
             Game1.audioManager.AddSoundLibrary("Music");
@@ -145,7 +127,6 @@ namespace UnderworldEngine
         protected override void UnloadContent()
         {
             // TODO: Unload any non ContentManager content here
-            FreeConsole();
             Game1.Debug.Close();
         }
 
@@ -185,22 +166,7 @@ namespace UnderworldEngine
             ship.Draw();
             interceptor.Draw();
 
-            GraphicsDevice.VertexDeclaration = quadVertexDecl;
-            quadEffect.Begin();
-            foreach (EffectPass pass in quadEffect.CurrentTechnique.Passes) {
-                pass.Begin();
-
-                GraphicsDevice.DrawUserIndexedPrimitives
-                    <VertexPositionNormalTexture>(
-                    PrimitiveType.TriangleList,
-                    quad.Vertices, 0, 4,
-                    quad.Indexes, 0, 2);
-
-                pass.End();
-            }
-
-            quadEffect.End();
-
+            quad.Draw();
 
             base.Draw(gameTime);
         }

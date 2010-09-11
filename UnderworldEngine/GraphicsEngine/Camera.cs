@@ -153,7 +153,7 @@ namespace UnderworldEngine.GraphicsEngine
             }
             projectionMatrix = Matrix.CreatePerspectiveFieldOfView(fov, aspectRatio, nearPlaneDistance,
                 farPlaneDistance);
-            projectionMatrix = Matrix.CreateOrthographic(viewPort.Width/20.0f, viewPort.Height/20.0f, 0, 1000);
+            projectionMatrix = Matrix.CreateOrthographic(viewPort.Width/50.0f, viewPort.Height/50.0f, 0, 1000);
 
         }
     }

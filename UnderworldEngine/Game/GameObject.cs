@@ -17,7 +17,7 @@ namespace UnderworldEngine.Game
     /// <summary>
     /// Renderable object that exists within the game world
     /// </summary>
-    abstract class GameObject
+    public abstract class GameObject
     {
         private class Transformation
         {
