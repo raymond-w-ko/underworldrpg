@@ -34,42 +34,106 @@ namespace UnderworldEngine.GraphicsEngine
             }
         }
 
-        private Vector3 currentPosition;
-        private Vector3 currentTarget;
-        private Vector3 currentUpVector;
+        private Vector3 currentPosition = Vector3.Zero;
+        private Vector3 currentTarget = Vector3.Zero;
+        private Vector3 currentUpVector = Vector3.Zero;
 
-        private float fov = (float)(Math.PI/2);  //90degree field of view by default
-        private float aspectRatio = 1.33f; //4:3 default
-        public class FovOutOfRangeException : System.ApplicationException { };
-
-        private float nearPlaneDistance = 1.0f;
-        private float farPlaneDistance = 5.0f;
+        private float nearPlaneDistance = 0.0f;
+        private float farPlaneDistance = 100.0f;
         public class PlaneDistanceException : System.ApplicationException { };
 
-        private Viewport viewPort;
+        private float zoomFactor = 50.0f;
+        public class InvalidZoomFactor : ApplicationException { }
 
-        public Camera(Viewport view)
+        private const float NORMAL_CAMERA_BOX_SIZE = 8.0f;
+        private float cameraBoxSize = NORMAL_CAMERA_BOX_SIZE;
+        private Vector3[] allowableCameraPositions = {
+            Vector3.Zero,
+            Vector3.Zero,
+            Vector3.Zero,
+            Vector3.Zero
+                                                     };
+        private enum CameraLocation
         {
-            this.MoveTo(0, 0, 5);
+            UpperLeft,
+            UpperRight,
+            LowerRight,
+            LowerLeft
+        }
+
+        private const int NUM_CAMERA_LOCATIONS = 4;
+
+        private CameraLocation currentCameraLocation = CameraLocation.LowerRight;
+
+        public Camera()
+        {
+            this.MoveTo(0, 0, 0);
             this.LookAt(0, 0, 0);
             this.SetUpVector(Vector3.Up);
 
-            this.SetFovDegrees(45.0f);
-
-            this.SetNearPlaneDistance(1.0f);
+            this.SetNearPlaneDistance(0.0f);
             this.SetFarPlaneDistance(100.0f);
 
-            this.viewPort = view;
+            allowableCameraPositions = new Vector3[4];
         }
 
+        private void MoveTo(float x, float y, float z)
+        {
+            MoveTo(new Vector3(x, y, z));
+        }
+        private void MoveTo(Vector3 vector)
+        {
+            this.currentPosition = vector;
+        }
+
+        public void LookAt(float x, float y, float z)
+        {
+            this.LookAt(new Vector3(x, y, z));
+        }
+        public void LookAt(Vector3 vector)
+        {
+            currentTarget = vector;
+
+            allowableCameraPositions[0].X = currentTarget.X - cameraBoxSize;
+            allowableCameraPositions[0].Y = currentTarget.Y + cameraBoxSize;
+            allowableCameraPositions[0].Z = currentTarget.Z + cameraBoxSize;
+
+            allowableCameraPositions[1].X = currentTarget.X + cameraBoxSize;
+            allowableCameraPositions[1].Y = currentTarget.Y + cameraBoxSize;
+            allowableCameraPositions[1].Z = currentTarget.Z + cameraBoxSize;
+
+            allowableCameraPositions[2].X = currentTarget.X + cameraBoxSize;
+            allowableCameraPositions[2].Y = currentTarget.Y + cameraBoxSize;
+            allowableCameraPositions[2].Z = currentTarget.Z - cameraBoxSize;
+
+            allowableCameraPositions[3].X = currentTarget.X - cameraBoxSize;
+            allowableCameraPositions[3].Y = currentTarget.Y + cameraBoxSize;
+            allowableCameraPositions[3].Z = currentTarget.Z - cameraBoxSize;
+
+            this.MoveTo(allowableCameraPositions[(int)currentCameraLocation]);
+
+            recalculateMatrices();
+        }
+
+        public void SetUpVector(float x, float y, float z)
+        {
+            SetUpVector(x, y, z);
+        }
+        public void SetUpVector(Vector3 vector)
+        {
+            currentUpVector = vector;
+            recalculateMatrices();
+        }
+
+       
         public void SetNearPlaneDistance(float dist)
         {
             if (dist < 1.0f) {
-                throw new PlaneDistanceException();
+                //throw new PlaneDistanceException();
             }
             this.nearPlaneDistance = dist;
 
-            this.Update();
+            this.recalculateMatrices();
         }
 
         public void SetFarPlaneDistance(float dist)
@@ -79,82 +143,98 @@ namespace UnderworldEngine.GraphicsEngine
             }
             this.farPlaneDistance = dist;
 
-            this.Update();
+            this.recalculateMatrices();
         }
 
-        public void CalculateAspectRatio(Viewport viewport)
+        
+        public void SetZoomFactor(float zoom)
         {
-            this.aspectRatio = ((float)viewport.Width) / ((float)viewport.Height);
-
-            this.Update();
-        }
-
-        public void SetFovDegrees(float degrees)
-        {
-            if ((degrees <= 0) || (degrees >= 180)) {
-                throw new FovOutOfRangeException();
+            if (zoom <= 0.0f) {
+                throw new InvalidZoomFactor();
             }
 
-            this.fov = MathHelper.ToRadians(degrees);
+            this.zoomFactor = zoom;
 
-            this.Update();
+            this.recalculateMatrices();
         }
 
-        public void SetFovRadians(float radians)
-        {
-            if ((radians <= 0) || (radians >= Math.PI)) {
-                throw new FovOutOfRangeException();
-            }
-
-            this.fov = radians;
-
-            this.Update();
-        }
-
-        public void MoveTo(float x, float y, float z)
-        {
-            MoveTo(new Vector3(x, y, z));
-        }
-
-        public void MoveTo(Vector3 vector)
-        {
-            this.currentPosition = vector;
-            Update();
-        }
-
-        public void LookAt(float x, float y, float z)
-        {
-            this.LookAt(new Vector3(x, y, z));
-        }
-
-        public void LookAt(Vector3 vector)
-        {
-            currentTarget = vector;
-            Update();
-        }
-
-        public void SetUpVector(float x, float y, float z)
-        {
-            SetUpVector(x, y, z);
-        }
-
-        public void SetUpVector(Vector3 vector)
-        {
-            currentUpVector = vector;
-            Update();
-        }
-
-        private void Update()
+        private void recalculateMatrices()
         {
             viewMatrix = Matrix.CreateLookAt(currentPosition, currentTarget, currentUpVector);
 
-            if (this.nearPlaneDistance > this.farPlaneDistance) {
-                throw new PlaneDistanceException();
-            }
-            projectionMatrix = Matrix.CreatePerspectiveFieldOfView(fov, aspectRatio, nearPlaneDistance,
-                farPlaneDistance);
-            projectionMatrix = Matrix.CreateOrthographic(viewPort.Width/50.0f, viewPort.Height/50.0f, 0, 1000);
+            //float viewWidth = Game1.DefaultGraphicsDevice.Viewport.Width / this.zoomFactor;
+            //float viewHeight = Game1.DefaultGraphicsDevice.Viewport.Height / this.zoomFactor;
+            float viewWidth = cameraBoxSize;// *(float)Math.Sqrt(2.0);
+            float viewHeight = viewWidth / Game1.DefaultGraphicsDevice.Viewport.AspectRatio;
+            projectionMatrix = Matrix.CreateOrthographic(
+                viewWidth, viewHeight,
+                this.nearPlaneDistance, this.farPlaneDistance);
+        }
 
+        Keys lastPressedKey = Keys.F13;
+
+        public void Update()
+        {
+            KeyboardState keyState = Keyboard.GetState();
+            if (keyState.IsKeyDown(Keys.A)) {
+                lastPressedKey = Keys.A;
+            }
+            else if (keyState.IsKeyDown(Keys.D)) {
+                lastPressedKey = Keys.D;
+            }
+            else if (keyState.IsKeyUp(Keys.A) && lastPressedKey == Keys.A) {
+                lastPressedKey = Keys.F13;
+                prevCameraView();
+            }
+            else if (keyState.IsKeyUp(Keys.D) && lastPressedKey == Keys.D) {
+                lastPressedKey = Keys.F13;
+                nextCameraView();
+            }
+
+            /*
+            Matrix curPosMatrix = new Matrix();
+            curPosMatrix.M11 = currentPosition.X;
+            curPosMatrix.M21 = currentPosition.Y;
+            curPosMatrix.M31 = currentPosition.Z;
+
+            //Game1.Debug.WriteLine("current");
+            //Game1.Debug.WriteLine(curPosMatrix);
+
+            Matrix newPosMatrix =
+            Matrix.CreateFromYawPitchRoll(MathHelper.ToRadians((float)(45.0 / (60.0 * 2.0))), 0, 0)
+            * curPosMatrix;
+
+            //Game1.Debug.WriteLine("new");
+            //Game1.Debug.WriteLine(newPosMatrix);
+
+            currentPosition.X = newPosMatrix.M11;
+            currentPosition.Y = newPosMatrix.M21;
+            currentPosition.Z = newPosMatrix.M31;
+            */
+
+            currentPosition = Vector3.Transform(currentPosition,
+                Matrix.CreateRotationY(MathHelper.ToRadians((float)(45.0 / (60.0))))
+                );
+
+            recalculateMatrices();
+        }
+
+        private void prevCameraView()
+        {
+            int temp = (int)currentCameraLocation;
+            temp--;
+            temp += Camera.NUM_CAMERA_LOCATIONS;
+            temp %= Camera.NUM_CAMERA_LOCATIONS;
+            currentCameraLocation = (CameraLocation)temp;
+        }
+
+        private void nextCameraView()
+        {
+            int temp = (int)currentCameraLocation;
+            temp++;
+            temp += Camera.NUM_CAMERA_LOCATIONS;
+            temp %= Camera.NUM_CAMERA_LOCATIONS;
+            currentCameraLocation = (CameraLocation)temp;
         }
     }
 }
