@@ -34,6 +34,11 @@ namespace UnderworldEngine.Scripting
             functions["run"] = new Run();
             functions["setv"] = new SetV();
             functions["setc"] = new SetC();
+
+            foreach (string key in functions.Keys)
+            {
+                Game1.console.BindCommandHandler(key, new ConsoleCommandHandler(run), new Char[] { ' ' });
+            }
         }
 
         public void run(string function)
@@ -53,6 +58,12 @@ namespace UnderworldEngine.Scripting
             {
                 throw new ArgumentException("Command " + command[0] + " is unrecognized");
             }
+        }
+
+        public void run(Microsoft.Xna.Framework.GameTime
+            t, string function)
+        {
+            run(function);
         }
 
 

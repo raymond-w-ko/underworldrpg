@@ -41,7 +41,7 @@ namespace UnderworldEngine.Game
             gridQuadList = new List<GridColumn>();
 
             rand = new Random(9001);
-            GenerateQuads(false);
+            GenerateQuads(true);
         }
 
         private void GenerateQuads(bool UseRandomY)
