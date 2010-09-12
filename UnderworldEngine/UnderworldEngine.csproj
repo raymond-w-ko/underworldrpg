@@ -86,7 +86,6 @@
   <ItemGroup>
     <Compile Include="Audio\AudioInstance.cs" />
     <Compile Include="Audio\AudioManager.cs" />
-    <Compile Include="Audio\AudioTest.cs" />
     <Compile Include="Game\GameObjectModel.cs" />
     <Compile Include="Game\GridColumn.cs" />
     <Compile Include="Game\GridMap.cs" />
@@ -112,6 +111,7 @@
     <Compile Include="Scripting\Load.cs" />
     <Compile Include="Scripting\Music.cs" />
     <Compile Include="Scripting\Run.cs" />
+    <Compile Include="Scripting\SetV.cs" />
     <Compile Include="Scripting\SoundLoader.cs" />
   </ItemGroup>
   <ItemGroup>
