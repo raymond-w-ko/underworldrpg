@@ -105,6 +105,9 @@
     <Compile Include="Program.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Scripting\Bind.cs" />
+    <Compile Include="Scripting\ConsoleKeyMap.cs" />
+    <Compile Include="Scripting\GameConsole.cs" />
+    <Compile Include="Scripting\IGameConsole.cs" />
     <Compile Include="Scripting\IInterpretable.cs" />
     <Compile Include="Scripting\ILoader.cs" />
     <Compile Include="Scripting\Interpreter.cs" />

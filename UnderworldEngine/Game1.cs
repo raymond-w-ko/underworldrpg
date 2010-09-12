@@ -43,8 +43,10 @@ namespace UnderworldEngine
         internal static AudioManager audioManager;
         internal static Interpreter interpreter;
         internal static ControllerManager controller1;
+        internal static IGameConsole console;
 
         GridMap gripMap;
+        KeyboardState mLastKeyboardState;
 
         public Game1()
         {
@@ -61,16 +63,9 @@ namespace UnderworldEngine
             // global access to rarely changing elements
             Game1.DefaultContent = Content;
             Game1.DefaultGraphics = graphics;
-            
-            // interpreter
-            Game1.interpreter = new Interpreter();
 
             // global access to controllers
             Game1.controller1 = new ControllerManager(PlayerIndex.One);
-
-            //set up surprise
-            interpreter.run("run test.rs");
-            
         }
 
         /// <summary>
@@ -88,6 +83,23 @@ namespace UnderworldEngine
             Game1.Camera.LookAt(5, 0, 5);
             Game1.Camera.SetFarPlaneDistance(1000);
 
+            // console stuff
+            GameConsole.Initialize(this, "Consolas", Color.Black, Color.White, 0.8f, 10);
+            Game1.console = (IGameConsole)Services.GetService(typeof(IGameConsole));
+
+            console.BindCommandHandler("hello", delegate(GameTime time, string args)
+            {
+                console.Log(args);
+            }
+            , ' ');
+
+            mLastKeyboardState = Keyboard.GetState();
+
+            // interpreter
+            Game1.interpreter = new Interpreter();
+            //set up surprise
+            interpreter.run("run test.rs");
+
             base.Initialize();
         }
 
@@ -101,7 +113,7 @@ namespace UnderworldEngine
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            gripMap = new GridMap(10, 10);
+            gripMap = new GridMap(12, 12);
         }
 
         /// <summary>
@@ -146,6 +158,17 @@ namespace UnderworldEngine
             // TODO: Add your update logic here
             Game1.Camera.Update();
             Game1.controller1.UpdateInput();
+
+            //Console stuff
+            KeyboardState kb = Keyboard.GetState();
+
+            if (kb[Keys.Escape] == KeyState.Down)
+                this.Exit();
+
+            if (!console.IsOpen && kb[Keys.OemTilde] == KeyState.Down && mLastKeyboardState[Keys.OemTilde] == KeyState.Up)
+                console.Open(Keys.OemTilde);
+
+            mLastKeyboardState = kb;
 
             base.Update(gameTime);
         }
