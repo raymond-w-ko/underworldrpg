@@ -40,8 +40,6 @@ namespace UnderworldEngine.Game
 
             vertexDeclaration = new VertexDeclaration(Game1.DefaultGraphics.GraphicsDevice,
                 VertexPositionNormalTexture.VertexElements);
-
-            Game1.DefaultGraphicsDevice.VertexDeclaration = vertexDeclaration;
         }
 
         private void FillVertices()
@@ -83,6 +81,8 @@ namespace UnderworldEngine.Game
             if (!this.IsVisible) {
                 return;
             }
+
+            Game1.DefaultGraphicsDevice.VertexDeclaration = vertexDeclaration;
 
             CompileTransformations();
             this.effect.UpdatePresentationMatrices(this.worldMatrix);
