@@ -21,22 +21,75 @@ namespace UnderworldEngine.Scripting
                 bindingTemp.Append(" ");
             }
 
-            keyToBind = keyToBind.ToUpper();
+            keyToBind = keyToBind.ToLower();
             binding = bindingTemp.ToString();
             switch (keyToBind)
             {
-                case "A":
+                #region Buttons
+                case "a":
                     Game1.controller1.acommand = binding; 
                     break;
-                case "B":
+                case "b":
                     Game1.controller1.bcommand = binding;
                     break;
-                case "X":
+                case "x":
                     Game1.controller1.xcommand = binding;
                     break;
-                case "Y":
+                case "y":
                     Game1.controller1.ycommand = binding;
                     break;
+                case "back":
+                    Game1.controller1.backcommand = binding;
+                    break;
+                case "start":
+                    Game1.controller1.startcommand = binding;
+                    break;
+                case "leftshoulder":
+                    Game1.controller1.lshcommand = binding;
+                    break;
+                case "leftstick":
+                    Game1.controller1.lscommand = binding;
+                    break;
+                case "lefttrigger":
+                    Game1.controller1.ltcommand = binding;
+                    break;
+                case "rightshoulder":
+                    Game1.controller1.rshcommand = binding;
+                    break;
+                case "rightstick":
+                    Game1.controller1.rscommand = binding;
+                    break;
+                case "righttrigger":
+                    Game1.controller1.rtcommand = binding;
+                    break;
+                #endregion
+
+                #region DPad
+                case "dpadup":
+                    Game1.controller1.dupcommand = binding;
+                    break;
+                case "dpaddown":
+                    Game1.controller1.ddowncommand = binding;
+                    break;
+                case "dpadleft":
+                    Game1.controller1.dleftcommand = binding;
+                    break;
+                case "dpadright":
+                    Game1.controller1.drightcommand = binding;
+                    break;
+                case "dpadupleft":
+                    Game1.controller1.dupleftcommand = binding;
+                    break;
+                case "dpadupright":
+                    Game1.controller1.duprightcommand = binding;
+                    break;
+                case "dpaddownright":
+                    Game1.controller1.ddownrightcommand = binding;
+                    break;
+                case "dpaddownleft":
+                    Game1.controller1.ddownleftcommand = binding;
+                    break;
+                #endregion
             }
         }
 
