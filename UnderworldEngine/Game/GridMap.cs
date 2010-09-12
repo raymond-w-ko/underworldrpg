@@ -26,8 +26,6 @@ namespace UnderworldEngine.Game
 
         private List<GridColumn> gridQuadList;
 
-        private BasicEffectManager effect;
-
         public GridMap(uint x, uint y) : this(x, y, Vector3.Zero) { }
 
         public GridMap(uint x, uint y, Vector3 orig) :
@@ -37,7 +35,6 @@ namespace UnderworldEngine.Game
             this.ySize = y;
             this.Position = this.origin = orig;
 
-            this.effect = new BasicEffectManager();
             gridQuadList = new List<GridColumn>();
 
             rand = new Random(9001);
@@ -64,7 +61,6 @@ namespace UnderworldEngine.Game
                 return;
             }
             CompileTransformations();
-            this.effect.UpdatePresentationMatrices(this.worldMatrix);
 
             foreach (GridColumn g in gridQuadList) {
                 g.Draw();
