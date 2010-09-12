@@ -36,6 +36,11 @@ namespace UnderworldEngine.Scripting
 
         public void run(string function)
         {
+            if (function == null)
+            {
+                return;
+            }
+
             string[] command = function.Split(new Char[] { ' ' });
 
             try
