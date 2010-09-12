@@ -45,7 +45,7 @@ namespace UnderworldEngine.GraphicsEngine
         private float zoomFactor = 50.0f;
         public class InvalidZoomFactor : ApplicationException { }
 
-        private const float NORMAL_CAMERA_BOX_SIZE = 8.0f;
+        private const float NORMAL_CAMERA_BOX_SIZE = 10.0f;
         private float cameraBoxSize = NORMAL_CAMERA_BOX_SIZE;
         private Vector3[] allowableCameraPositions = {
             Vector3.Zero,
@@ -65,6 +65,8 @@ namespace UnderworldEngine.GraphicsEngine
 
         private CameraLocation currentCameraLocation = CameraLocation.LowerRight;
 
+        private Vector3 ringPosition;
+
         public Camera()
         {
             this.MoveTo(0, 0, 0);
@@ -75,6 +77,7 @@ namespace UnderworldEngine.GraphicsEngine
             this.SetFarPlaneDistance(100.0f);
 
             allowableCameraPositions = new Vector3[4];
+            ringPosition = new Vector3(0, cameraBoxSize, 0);
         }
 
         private void MoveTo(float x, float y, float z)
@@ -111,6 +114,9 @@ namespace UnderworldEngine.GraphicsEngine
             allowableCameraPositions[3].Z = currentTarget.Z - cameraBoxSize;
 
             this.MoveTo(allowableCameraPositions[(int)currentCameraLocation]);
+            ringPosition.X = -cameraBoxSize;
+            ringPosition.Y = cameraBoxSize;
+            ringPosition.Z = +cameraBoxSize;
 
             recalculateMatrices();
         }
@@ -191,30 +197,11 @@ namespace UnderworldEngine.GraphicsEngine
                 nextCameraView();
             }
 
-            /*
-            Matrix curPosMatrix = new Matrix();
-            curPosMatrix.M11 = currentPosition.X;
-            curPosMatrix.M21 = currentPosition.Y;
-            curPosMatrix.M31 = currentPosition.Z;
-
-            //Game1.Debug.WriteLine("current");
-            //Game1.Debug.WriteLine(curPosMatrix);
-
-            Matrix newPosMatrix =
-            Matrix.CreateFromYawPitchRoll(MathHelper.ToRadians((float)(45.0 / (60.0 * 2.0))), 0, 0)
-            * curPosMatrix;
-
-            //Game1.Debug.WriteLine("new");
-            //Game1.Debug.WriteLine(newPosMatrix);
-
-            currentPosition.X = newPosMatrix.M11;
-            currentPosition.Y = newPosMatrix.M21;
-            currentPosition.Z = newPosMatrix.M31;
-            */
-
-            currentPosition = Vector3.Transform(currentPosition,
+            ringPosition = Vector3.Transform(ringPosition,
                 Matrix.CreateRotationY(MathHelper.ToRadians((float)(45.0 / (60.0))))
                 );
+            currentPosition.X = ringPosition.X + currentTarget.X;
+            currentPosition.Z = ringPosition.Z + currentTarget.Z;
 
             recalculateMatrices();
         }
@@ -226,6 +213,7 @@ namespace UnderworldEngine.GraphicsEngine
             temp += Camera.NUM_CAMERA_LOCATIONS;
             temp %= Camera.NUM_CAMERA_LOCATIONS;
             currentCameraLocation = (CameraLocation)temp;
+            currentPosition = allowableCameraPositions[(int)currentCameraLocation];
         }
 
         private void nextCameraView()
@@ -235,6 +223,7 @@ namespace UnderworldEngine.GraphicsEngine
             temp += Camera.NUM_CAMERA_LOCATIONS;
             temp %= Camera.NUM_CAMERA_LOCATIONS;
             currentCameraLocation = (CameraLocation)temp;
+            currentPosition = allowableCameraPositions[(int)currentCameraLocation];
         }
     }
 }
