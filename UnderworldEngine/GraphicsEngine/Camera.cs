@@ -244,7 +244,7 @@ namespace UnderworldEngine.GraphicsEngine
             currentPosition.Z = ringPosition.Z + currentTarget.Z;
         }
 
-        private void prevCameraView()
+        public void prevCameraView()
         {
             int temp = (int)currentCameraLocation;
             temp--;
@@ -256,7 +256,7 @@ namespace UnderworldEngine.GraphicsEngine
             LookAt(currentTarget);
         }
 
-        private void nextCameraView()
+        public void nextCameraView()
         {
             int temp = (int)currentCameraLocation;
             temp++;
