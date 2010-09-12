@@ -48,6 +48,16 @@ namespace UnderworldEngine.Scripting
                         Game1.Camera.SetFarPlaneDistance(dist);
                         break;
                     }
+                case "next":
+                    {
+                        Game1.Camera.nextCameraView();
+                        break;
+                    }
+                case "prev":
+                    {
+                        Game1.Camera.prevCameraView();
+                        break;
+                    }
             }
         }
 

@@ -158,6 +158,9 @@ namespace UnderworldEngine
 
             mLastKeyboardState = kb;
 
+            //controller stuff
+            Game1.controller1.UpdateInput();
+
             base.Update(gameTime);
         }
 

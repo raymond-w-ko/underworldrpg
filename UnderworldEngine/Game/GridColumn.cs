@@ -74,7 +74,6 @@ namespace UnderworldEngine.Game
         public override void Draw()
         {
             Top.Draw();
-
             Front.Draw();
             Back.Draw();
             Left.Draw();
