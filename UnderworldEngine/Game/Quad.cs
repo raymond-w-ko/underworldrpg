@@ -33,7 +33,7 @@ namespace UnderworldEngine.Game
 
         public Quad(Vector3 origin, Vector3 normal, Vector3 up, float width, float height)
         {
-            this.origin = origin;
+            this.Position = this.origin = origin;
             this.normal = normal;
             this.up = up;
 

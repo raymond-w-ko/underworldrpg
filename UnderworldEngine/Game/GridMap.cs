@@ -35,13 +35,13 @@ namespace UnderworldEngine.Game
         {
             this.xSize = x;
             this.ySize = y;
-            this.origin = orig;
+            this.Position = this.origin = orig;
 
             this.effect = new BasicEffectManager();
             gridQuadList = new List<GridColumn>();
 
             rand = new Random(9001);
-            GenerateQuads(true);
+            GenerateQuads(false);
         }
 
         private void GenerateQuads(bool UseRandomY)

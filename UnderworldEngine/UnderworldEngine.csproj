@@ -97,6 +97,7 @@
     <Compile Include="GraphicsEngine\Camera.cs" />
     <Compile Include="GraphicsEngine\BasicEffectManager.cs" />
     <Compile Include="Game\GameObject.cs" />
+    <Compile Include="GraphicsEngine\Old\OldCamera.cs" />
     <Compile Include="GraphicsEngine\Point.cs" />
     <Compile Include="GraphicsEngine\Quad.cs" />
     <Compile Include="GraphicsEngine\Tri.cs" />

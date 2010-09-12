@@ -37,6 +37,8 @@ namespace UnderworldEngine.Game
         public GridColumn(Vector3 origin, int height) :
             base()
         {
+            this.position = origin;
+
             bem = new BasicEffectManager();
 
             Top = new QuadTexture(origin, Vector3.Up, Vector3.Backward, 1, 1, "Textures/ground");

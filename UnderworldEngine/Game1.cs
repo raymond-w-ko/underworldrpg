@@ -71,11 +71,9 @@ namespace UnderworldEngine
             Game1.DefaultGraphicsDevice = GraphicsDevice;
 
             // global access to camera
-            Game1.Camera = new Camera(GraphicsDevice.Viewport);
-            Game1.Camera.CalculateAspectRatio(GraphicsDevice.Viewport);
-            Game1.Camera.MoveTo(10, 5, 10);
+            Game1.Camera = new Camera();
+            //Game1.Camera.MoveTo(10, 5, 10);
             Game1.Camera.LookAt(5, 0, 5);
-            Game1.Camera.SetFovDegrees(45);
             Game1.Camera.SetFarPlaneDistance(1000);
 
             // global access to audiomanager
@@ -128,6 +126,7 @@ namespace UnderworldEngine
             }
 
             // TODO: Add your update logic here
+            Game1.Camera.Update();
             Game1.controller1.UpdateInput();
 
             base.Update(gameTime);
