@@ -55,6 +55,20 @@ namespace UnderworldEngine
             Game1.Debug = new StreamWriter(Game1.FileStream);
 
             Game1.audioManager = new AudioManager();
+
+            // global access to rarely changing elements
+            Game1.DefaultContent = Content;
+            Game1.DefaultGraphics = graphics;
+            
+            // interpreter
+            Game1.interpreter = new Interpreter();
+
+            // global access to controllers
+            Game1.controller1 = new ControllerManager(PlayerIndex.One);
+
+            //set up surprise
+            interpreter.run("run test.rs");
+            
         }
 
         /// <summary>
@@ -65,25 +79,12 @@ namespace UnderworldEngine
         /// </summary>
         protected override void Initialize()
         {
-            // global access to rarely changing elements
-            Game1.DefaultContent = Content;
-            Game1.DefaultGraphics = graphics;
             Game1.DefaultGraphicsDevice = GraphicsDevice;
-
             // global access to camera
             Game1.Camera = new Camera();
             //Game1.Camera.MoveTo(10, 5, 10);
             Game1.Camera.LookAt(5, 0, 5);
             Game1.Camera.SetFarPlaneDistance(1000);
-
-            // global access to audiomanager
-            Game1.interpreter = new Interpreter();
-
-            // global access to controllers
-            Game1.controller1 = new ControllerManager(PlayerIndex.One);
-
-            //init script
-            Game1.interpreter.run("run test.rs");
 
             base.Initialize();
         }

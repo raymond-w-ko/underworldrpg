@@ -32,6 +32,7 @@ namespace UnderworldEngine.Scripting
             functions["music"] = new Music();
             functions["bind"] = new Bind();
             functions["run"] = new Run();
+            functions["setv"] = new SetV();
         }
 
         public void run(string function)
