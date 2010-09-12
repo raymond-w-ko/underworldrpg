@@ -54,9 +54,9 @@ namespace UnderworldEngine.Scripting
             {
                 functions[command[0]].run(function);
             }
-            catch
+            catch (Exception e)
             {
-                throw new ArgumentException("Command " + command[0] + " is unrecognized");
+                Game1.console.Log(e.Message); 
             }
         }
 
