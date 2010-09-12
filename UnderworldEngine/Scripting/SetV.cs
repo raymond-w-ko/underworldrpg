@@ -29,6 +29,9 @@ namespace UnderworldEngine.Scripting
                 case "windowed":
                     Game1.DefaultGraphics.IsFullScreen = false;
                     break;
+                case "update":
+                    Game1.DefaultGraphics.ApplyChanges();
+                    break;
             }
         }
 

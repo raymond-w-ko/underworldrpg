@@ -33,6 +33,7 @@ namespace UnderworldEngine.Scripting
             functions["bind"] = new Bind();
             functions["run"] = new Run();
             functions["setv"] = new SetV();
+            functions["setc"] = new SetC();
         }
 
         public void run(string function)

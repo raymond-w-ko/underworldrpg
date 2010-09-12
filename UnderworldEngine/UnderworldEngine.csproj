@@ -111,6 +111,7 @@
     <Compile Include="Scripting\Load.cs" />
     <Compile Include="Scripting\Music.cs" />
     <Compile Include="Scripting\Run.cs" />
+    <Compile Include="Scripting\SetC.cs" />
     <Compile Include="Scripting\SetV.cs" />
     <Compile Include="Scripting\SoundLoader.cs" />
   </ItemGroup>
