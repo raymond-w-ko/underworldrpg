@@ -223,6 +223,7 @@ namespace UnderworldEngine.Scripting
         private List<ConsoleMessage>        mLog;
         private StringBuilder               mCurrentText;
         private string                      mInputPrompt;
+        private int                         mHistoryOffset = 1;
 
         private GameTime                    mCurrentTime;
 
@@ -620,12 +621,12 @@ namespace UnderworldEngine.Scripting
             if ((kb[Keys.PageDown] == KeyState.Down) && (mLastKeyboardState[Keys.PageDown] == KeyState.Up))
                 mCurrentLine = (int)MathHelper.Clamp(mCurrentLine + mVisibleLineCount, 0, mLog.Count - 1);
 
-            if ((kb[Keys.Up] == KeyState.Down) && (mLastKeyboardState[Keys.Up] == KeyState.Up))
+            /*if ((kb[Keys.Up] == KeyState.Down) && (mLastKeyboardState[Keys.Up] == KeyState.Up))
                 mCurrentLine = (int)MathHelper.Clamp(mCurrentLine - 1, 0, mLog.Count - 1);
-
+            
             if ((kb[Keys.Down] == KeyState.Down) && (mLastKeyboardState[Keys.Down] == KeyState.Up))
                 mCurrentLine = (int)MathHelper.Clamp(mCurrentLine + 1, 0, mLog.Count - 1);
-
+            */
             // Process each pressed key for a key down event
             foreach (Keys key in kb.GetPressedKeys())
             {
@@ -663,7 +664,7 @@ namespace UnderworldEngine.Scripting
             if((kb[Keys.Enter] == KeyState.Down) && (mLastKeyboardState[Keys.Enter] == KeyState.Up))
             {
                 mInputPosition = 0;
-
+                mHistoryOffset = 1;
                 // if the text is length 0, we won't log it
                 if(mCurrentText.Length == 0)
                     return;
@@ -709,6 +710,16 @@ namespace UnderworldEngine.Scripting
                 else if (mAlertOnUnrecognizedCommand)
                 {
                     Log(string.Format("Unrecognized Command: '{0}'", command[0]), 0);
+                }
+            }
+            //check for if history is requested
+            if (kb[Keys.Up] == KeyState.Down && mLastKeyboardState[Keys.Up] == KeyState.Up)
+            {
+                if (MessageLog.Count > 0 && MessageLog.Count >= mHistoryOffset)
+                {
+                    mCurrentText = new StringBuilder();
+                    this.mCurrentText.Append(this.MessageLog[MessageLog.Count - mHistoryOffset].Text);
+                    mHistoryOffset++;
                 }
             }
 
