@@ -45,7 +45,7 @@ namespace UnderworldEngine
         internal static ControllerManager controller1;
         internal static IGameConsole console;
 
-        GridMap gripMap;
+        GridMap gridMap;
         KeyboardState mLastKeyboardState;
 
         public Game1()
@@ -113,7 +113,7 @@ namespace UnderworldEngine
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            gripMap = new GridMap(12, 12);
+            gridMap = new GridMap(12, 12);
         }
 
         /// <summary>
@@ -132,21 +132,10 @@ namespace UnderworldEngine
         /// checking for collisions, gathering input, and playing audio.
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        //time since last FPS update in seconds
-        float deltaFPSTime = 0;
+        
         protected override void Update(GameTime gameTime)
         {
-            // Show FPS
-            // The time since Update was called last
-            float elapsed = (float)gameTime.ElapsedRealTime.TotalSeconds;
-
-            float fps = 1 / elapsed;
-            deltaFPSTime += elapsed;
-            if (deltaFPSTime > 1) {
-
-                Window.Title = "I am running at  <" + fps.ToString() + "> FPS";
-                deltaFPSTime -= 1;
-            }
+            FpsCounter(gameTime);
 
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
@@ -157,7 +146,6 @@ namespace UnderworldEngine
 
             // TODO: Add your update logic here
             Game1.Camera.Update();
-            Game1.controller1.UpdateInput();
 
             //Console stuff
             KeyboardState kb = Keyboard.GetState();
@@ -173,6 +161,22 @@ namespace UnderworldEngine
             base.Update(gameTime);
         }
 
+        float deltaFPSTime = 0; //time since last FPS update in seconds
+        private void FpsCounter(GameTime gameTime)
+        {
+            // Show FPS
+            // The time since Update was called last
+            float elapsed = (float)gameTime.ElapsedRealTime.TotalSeconds;
+
+            float fps = 1 / elapsed;
+            deltaFPSTime += elapsed;
+            if (deltaFPSTime > 1) {
+
+                Window.Title = "I am running at  <" + fps.ToString() + "> FPS";
+                deltaFPSTime -= 1;
+            };
+        }
+
         /// <summary>
         /// This is called when the game should draw itself.
         /// </summary>
@@ -183,7 +187,7 @@ namespace UnderworldEngine
             GraphicsDevice.Clear(Color.Black);
 
             // TODO: Add your drawing code here
-            gripMap.Draw();
+            gridMap.Draw();
 
             base.Draw(gameTime);
         }

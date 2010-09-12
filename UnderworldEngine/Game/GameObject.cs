@@ -163,9 +163,6 @@ namespace UnderworldEngine.Game
                 }
             }
 
-            // NO !!!
-            //worldMatrix *= Matrix.CreateTranslation(this.Position);
-
             this.needTransformationCompile = false;
         }
     }
