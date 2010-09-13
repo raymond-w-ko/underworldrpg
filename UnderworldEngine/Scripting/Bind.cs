@@ -90,6 +90,9 @@ namespace UnderworldEngine.Scripting
                     Game1.controller1.ddownleftcommand = binding;
                     break;
                 #endregion
+
+                default:
+                    throw new ArgumentException("invalid option", command[1]);
             }
         }
 
