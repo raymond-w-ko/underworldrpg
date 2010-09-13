@@ -176,7 +176,7 @@ namespace UnderworldEngine.Scripting
 
         // graphics
         private SpriteBatch                 mSpriteBatch;
-        private SpriteFont                  mFont;
+        public SpriteFont                  mFont;
         private BasicEffect                 mEffect;
 
         private VertexDeclaration           mVertexDeclaration;

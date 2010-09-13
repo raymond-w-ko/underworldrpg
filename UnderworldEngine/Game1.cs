@@ -76,6 +76,8 @@ namespace UnderworldEngine
         protected override void Initialize()
         {
             Game1.DefaultGraphicsDevice = GraphicsDevice;
+            graphics.SynchronizeWithVerticalRetrace = false;
+
             // global access to camera
             Game1.Camera = new Camera();
             Game1.Camera.SetFarPlaneDistance(10000);
@@ -112,7 +114,7 @@ namespace UnderworldEngine
 
             // TODO: use this.Content to load your game content here
             //gridMap = new GridMap(20, 20);
-            gom = new GameObjectModel("Models/testmap");
+            gom = new GameObjectModel("Models/testmap2");
         }
 
         /// <summary>
@@ -163,6 +165,8 @@ namespace UnderworldEngine
         }
 
         float deltaFPSTime = 0; //time since last FPS update in seconds
+        int numOfFrames = 0;
+        double FPS = 0;  
         private void FpsCounter(GameTime gameTime)
         {
             // Show FPS
@@ -176,6 +180,10 @@ namespace UnderworldEngine
                 Window.Title = "I am running at  <" + fps.ToString() + "> FPS";
                 deltaFPSTime -= 1;
             };
+            if (gameTime.TotalGameTime.Milliseconds == 0) {
+                FPS = numOfFrames;
+                numOfFrames = 0;
+            }  
         }
 
         /// <summary>
@@ -190,6 +198,18 @@ namespace UnderworldEngine
             // TODO: Add your drawing code here
             //gridMap.Draw();
             gom.Draw();
+
+            VertexDeclaration vd = GraphicsDevice.VertexDeclaration;
+
+            SpriteFont sf = Game1.DefaultContent.Load<SpriteFont>("Consolas");
+            numOfFrames++;
+            /*
+            spriteBatch.Begin();
+            spriteBatch.DrawString(sf, FPS.ToString(), new Vector2(0, 0), Color.Yellow);
+            spriteBatch.End();
+             */
+
+            GraphicsDevice.VertexDeclaration = vd;
 
             base.Draw(gameTime);
         }
