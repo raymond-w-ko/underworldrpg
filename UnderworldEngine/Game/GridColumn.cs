@@ -17,7 +17,7 @@ namespace UnderworldEngine.Game
 {
     public class GridColumn : GameObject
     {
-        public const int FLOOR_HEIGHT = -5;
+        public const int FLOOR_HEIGHT = 0;
         // Top 1x1 Square
         public QuadTexture Top;
 
@@ -78,11 +78,6 @@ namespace UnderworldEngine.Game
             Back.Draw();
             Left.Draw();
             Right.Draw();
-        }
-
-        public override void ManagedDraw(Effect bem)
-        {
-            throw new NotImplementedException();
         }
     }
 }

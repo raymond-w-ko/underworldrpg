@@ -114,23 +114,5 @@ namespace UnderworldEngine.Game
                 this.vertices[ii].TextureCoordinate *= scale;
             }
         }
-
-        public override void ManagedDraw(Effect bem)
-        {
-           bem.Begin();
-
-            foreach (EffectPass pass in bem.CurrentTechnique.Passes) {
-                pass.Begin();
-
-                Game1.DefaultGraphicsDevice.DrawUserIndexedPrimitives<VertexPositionNormalTexture>(
-                    PrimitiveType.TriangleList,
-                    this.vertices, 0, 4,
-                    this.indexes, 0, 2);
-
-                pass.End();
-            }
-
-            bem.End();
-        }
     }
 }

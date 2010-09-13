@@ -50,8 +50,6 @@ namespace UnderworldEngine
 
         public Game1()
         {
-            AllocConsole();
-
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
@@ -79,9 +77,8 @@ namespace UnderworldEngine
             Game1.DefaultGraphicsDevice = GraphicsDevice;
             // global access to camera
             Game1.Camera = new Camera();
-            //Game1.Camera.MoveTo(10, 5, 10);
-            Game1.Camera.LookAt(5, 0, 5);
             Game1.Camera.SetFarPlaneDistance(1000);
+            Game1.Camera.LookAt(5, 0, 5);
 
             // console stuff
             GameConsole.Initialize(this, "Consolas", Color.Black, Color.White, 0.8f, 10);
@@ -113,7 +110,7 @@ namespace UnderworldEngine
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            gridMap = new GridMap(12, 12);
+            gridMap = new GridMap(20, 20);
         }
 
         /// <summary>
@@ -123,7 +120,6 @@ namespace UnderworldEngine
         protected override void UnloadContent()
         {
             // TODO: Unload any non ContentManager content here
-            FreeConsole();
             Game1.Debug.Close();
         }
 

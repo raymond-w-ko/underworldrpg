@@ -66,10 +66,5 @@ namespace UnderworldEngine.Game
                 g.Draw();
             }
         }
-
-        public override void ManagedDraw(Effect effect)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

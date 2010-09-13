@@ -42,10 +42,7 @@ namespace UnderworldEngine.GraphicsEngine
         private float farPlaneDistance = 100.0f;
         public class PlaneDistanceException : System.ApplicationException { };
 
-        private float zoomFactor = 50.0f;
-        public class InvalidZoomFactor : ApplicationException { }
-
-        private const float NORMAL_CAMERA_BOX_SIZE = 10.0f;
+        private const float NORMAL_CAMERA_BOX_SIZE = 12.0f;
         private float cameraBoxSize = NORMAL_CAMERA_BOX_SIZE;
         private Vector3[] allowableCameraPositions = {
             Vector3.Zero,
@@ -70,32 +67,43 @@ namespace UnderworldEngine.GraphicsEngine
         Matrix turnMatrix;
 
         private CameraLocation futureCameraLocation;
-        private Vector3 futureCameraPosition;
+        private Vector3 futurePosition;
+
+        private bool IsAcceptingCommands;
+
+        private Vector3 futureTarget;
+        private float moveSpeed;
+        private Vector3 direction;
 
         public Camera()
         {
-            this.MoveTo(0, 0, 0);
-            this.LookAt(0, 0, 0);
             this.SetUpVector(Vector3.Up);
 
             this.SetNearPlaneDistance(0.0f);
             this.SetFarPlaneDistance(100.0f);
 
             allowableCameraPositions = new Vector3[4];
-            ringPosition = new Vector3(0, cameraBoxSize, 0);
-            turnSpeed = MathHelper.ToRadians((float)(45.0 / (60.0 / 3.0)));
-            
+            ringPosition = new Vector3(cameraBoxSize, cameraBoxSize, -cameraBoxSize);
+
+            // Velocities
+            turnSpeed = MathHelper.ToRadians((float)(45.0 / (60.0 / 4.0)));
             turnMatrix = Matrix.CreateRotationY(turnSpeed);
+            moveSpeed = (float)(10.0 / 60.0);
 
-            futureCameraLocation = currentCameraLocation;
-            futureCameraPosition = currentPosition;
+            futureCameraLocation = currentCameraLocation = CameraLocation.LowerRight;
+            currentTarget = new Vector3(0, 0, 0);
+            futureTarget = new Vector3(0, 0, 0);
+            currentPosition = new Vector3(8, 8, 8);
+            futurePosition = new Vector3(8, 8, 8);
+
+            this.IsAcceptingCommands = true;
         }
 
-        private void MoveTo(float x, float y, float z)
+        private void moveTo(float x, float y, float z)
         {
-            MoveTo(new Vector3(x, y, z));
+            moveTo(new Vector3(x, y, z));
         }
-        private void MoveTo(Vector3 vector)
+        private void moveTo(Vector3 vector)
         {
             this.currentPosition = vector;
         }
@@ -106,25 +114,31 @@ namespace UnderworldEngine.GraphicsEngine
         }
         public void LookAt(Vector3 vector)
         {
-            currentTarget = vector;
+            if (IsAcceptingCommands) {
+                IsAcceptingCommands = false;
+            }
+            else {
+                return;
+            }
+            futureTarget = vector;
 
-            allowableCameraPositions[0].X = currentTarget.X - cameraBoxSize;
-            allowableCameraPositions[0].Y = currentTarget.Y + cameraBoxSize;
-            allowableCameraPositions[0].Z = currentTarget.Z + cameraBoxSize;
+            allowableCameraPositions[0].X = vector.X - cameraBoxSize;
+            allowableCameraPositions[0].Y = vector.Y + cameraBoxSize;
+            allowableCameraPositions[0].Z = vector.Z + cameraBoxSize;
 
-            allowableCameraPositions[1].X = currentTarget.X + cameraBoxSize;
-            allowableCameraPositions[1].Y = currentTarget.Y + cameraBoxSize;
-            allowableCameraPositions[1].Z = currentTarget.Z + cameraBoxSize;
+            allowableCameraPositions[1].X = vector.X + cameraBoxSize;
+            allowableCameraPositions[1].Y = vector.Y + cameraBoxSize;
+            allowableCameraPositions[1].Z = vector.Z + cameraBoxSize;
 
-            allowableCameraPositions[2].X = currentTarget.X + cameraBoxSize;
-            allowableCameraPositions[2].Y = currentTarget.Y + cameraBoxSize;
-            allowableCameraPositions[2].Z = currentTarget.Z - cameraBoxSize;
+            allowableCameraPositions[2].X = vector.X + cameraBoxSize;
+            allowableCameraPositions[2].Y = vector.Y + cameraBoxSize;
+            allowableCameraPositions[2].Z = vector.Z - cameraBoxSize;
 
-            allowableCameraPositions[3].X = currentTarget.X - cameraBoxSize;
-            allowableCameraPositions[3].Y = currentTarget.Y + cameraBoxSize;
-            allowableCameraPositions[3].Z = currentTarget.Z - cameraBoxSize;
+            allowableCameraPositions[3].X = vector.X - cameraBoxSize;
+            allowableCameraPositions[3].Y = vector.Y + cameraBoxSize;
+            allowableCameraPositions[3].Z = vector.Z - cameraBoxSize;
 
-            this.MoveTo(allowableCameraPositions[(int)currentCameraLocation]);
+            futurePosition = allowableCameraPositions[(int)currentCameraLocation];
             if (currentCameraLocation == CameraLocation.UpperLeft) {
                 ringPosition.X = -cameraBoxSize;
                 ringPosition.Z = +cameraBoxSize;
@@ -144,6 +158,10 @@ namespace UnderworldEngine.GraphicsEngine
             ringPosition.Y = cameraBoxSize;
 
             recalculateViewMatrix();
+
+            direction = futureTarget - currentTarget;
+            direction.Normalize();
+            direction *= moveSpeed;
         }
 
         public void SetUpVector(float x, float y, float z)
@@ -159,8 +177,8 @@ namespace UnderworldEngine.GraphicsEngine
        
         public void SetNearPlaneDistance(float dist)
         {
-            if (dist < 1.0f) {
-                //throw new PlaneDistanceException();
+            if (dist < 0.0f) {
+                throw new PlaneDistanceException();
             }
             this.nearPlaneDistance = dist;
 
@@ -175,18 +193,6 @@ namespace UnderworldEngine.GraphicsEngine
             this.farPlaneDistance = dist;
 
             this.recalculateProjectionMatrix();
-        }
-
-        
-        public void SetZoomFactor(float zoom)
-        {
-            if (zoom <= 0.0f) {
-                throw new InvalidZoomFactor();
-            }
-
-            this.zoomFactor = zoom;
-
-            this.recalculateViewMatrix();
         }
 
         private void recalculateViewMatrix()
@@ -204,68 +210,80 @@ namespace UnderworldEngine.GraphicsEngine
                 this.nearPlaneDistance, this.farPlaneDistance);
         }
 
-        Keys lastPressedKey = Keys.F13;
-
-        public void Update()
-        {
-            KeyboardState keyState = Keyboard.GetState();
-            if (currentCameraLocation != futureCameraLocation)
-            {
-                advanceCamera();
-                if (currentPosition.AlmostEquals(futureCameraPosition, 0.01f)) {
-                    currentCameraLocation = futureCameraLocation;
-                }
-            }
-            else if (keyState.IsKeyDown(Keys.A)) {
-                lastPressedKey = Keys.A;
-            }
-            else if (keyState.IsKeyDown(Keys.D)) {
-                lastPressedKey = Keys.D;
-            }
-            else if (keyState.IsKeyUp(Keys.A) && lastPressedKey == Keys.A) {
-                lastPressedKey = Keys.F13;
-                prevCameraView();
-            }
-            else if (keyState.IsKeyUp(Keys.D) && lastPressedKey == Keys.D) {
-                lastPressedKey = Keys.F13;
-                nextCameraView();
-            }
-
-            recalculateViewMatrix();
-        }
-
-        private void advanceCamera()
+        private void rotateAlongRing()
         {
             Vector3.Transform(ref ringPosition,
                 ref turnMatrix,
                 out ringPosition
                 );
-            currentPosition.X = ringPosition.X + currentTarget.X;
-            currentPosition.Z = ringPosition.Z + currentTarget.Z;
+            currentPosition = currentTarget + ringPosition;
         }
 
-        public void prevCameraView()
+        private void moveSmoothly()
         {
+            currentTarget += direction;
+            currentPosition = currentTarget + ringPosition;
+        }
+
+        public void PrevCameraView()
+        {
+            if (IsAcceptingCommands) {
+                IsAcceptingCommands = false;
+            }
+            else {
+                return;
+            }
+
             int temp = (int)currentCameraLocation;
             temp--;
             temp += Camera.NUM_CAMERA_LOCATIONS;
             temp %= Camera.NUM_CAMERA_LOCATIONS;
             futureCameraLocation = (CameraLocation)temp;
-            futureCameraPosition = allowableCameraPositions[(int)futureCameraLocation];
+            futurePosition = allowableCameraPositions[(int)futureCameraLocation];
             turnMatrix = Matrix.CreateRotationY(-turnSpeed);
             LookAt(currentTarget);
         }
 
-        public void nextCameraView()
+        public void NextCameraView()
         {
+            if (IsAcceptingCommands) {
+                IsAcceptingCommands = false;
+            }
+            else {
+                return;
+            }
+
+            IsAcceptingCommands = false;
             int temp = (int)currentCameraLocation;
             temp++;
             temp += Camera.NUM_CAMERA_LOCATIONS;
             temp %= Camera.NUM_CAMERA_LOCATIONS;
             futureCameraLocation = (CameraLocation)temp;
-            futureCameraPosition = allowableCameraPositions[(int)futureCameraLocation];
+            futurePosition = allowableCameraPositions[(int)futureCameraLocation];
             turnMatrix = Matrix.CreateRotationY(turnSpeed);
             LookAt(currentTarget);
+        }
+
+        public void Update()
+        {
+            if (currentCameraLocation != futureCameraLocation) {
+                rotateAlongRing();
+                if (currentPosition.AlmostEquals(futurePosition, 0.001f)) {
+                    currentCameraLocation = futureCameraLocation;
+                    currentPosition = this.allowableCameraPositions[(int)currentCameraLocation];
+                    IsAcceptingCommands = true;
+                }
+            }
+            else if (currentTarget != futureTarget) {
+                moveSmoothly();
+                if (currentTarget.AlmostEquals(futureTarget, moveSpeed)) {
+                    currentTarget = futureTarget;
+                    currentPosition = this.allowableCameraPositions[(int)currentCameraLocation];
+                    IsAcceptingCommands = true;
+                }
+            }
+
+            recalculateViewMatrix();
         }
     }
 
