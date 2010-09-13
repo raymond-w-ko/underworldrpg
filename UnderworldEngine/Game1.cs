@@ -76,7 +76,6 @@ namespace UnderworldEngine
         protected override void Initialize()
         {
             Game1.DefaultGraphicsDevice = GraphicsDevice;
-            graphics.SynchronizeWithVerticalRetrace = false;
 
             // global access to camera
             Game1.Camera = new Camera();
@@ -113,7 +112,7 @@ namespace UnderworldEngine
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            gridMap = new GridMap(20, 20);
+            ///gridMap = new GridMap(20, 20);
             gom = new GameObjectModel("Models/testmap2");
         }
 
@@ -185,7 +184,7 @@ namespace UnderworldEngine
             GraphicsDevice.Clear(Color.Black);
 
             // TODO: Add your drawing code here
-            gridMap.Draw();
+            //gridMap.Draw();
             gom.Draw();
 
             VertexDeclaration vd = GraphicsDevice.VertexDeclaration;
