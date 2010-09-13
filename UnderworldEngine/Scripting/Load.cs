@@ -14,7 +14,7 @@ namespace UnderworldEngine.Scripting
         public Load()
         {
             functions = new Dictionary<string, ILoader>();
-            functions["soundpkg"] = new SoundLoader();
+            functions["sndpkg"] = new SoundLoader();
         }
 
         public void run(string function)
@@ -26,7 +26,7 @@ namespace UnderworldEngine.Scripting
             }
             catch
             {
-                throw new ArgumentException("Option " + command[1] + " is not a valid command");
+                throw new ArgumentException("Option " + command[1] + " is not valid");
             }
         }
     }

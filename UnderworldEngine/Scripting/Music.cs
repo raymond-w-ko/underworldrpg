@@ -19,19 +19,23 @@ namespace UnderworldEngine.Scripting
             switch (command[1])
             {
                 case "play":
+                case "p":
                     Game1.audioManager.PlaySound(command[2]);
                     break;
                 case "pause":
+                case "a":
                     Game1.audioManager.PauseAll();
                     break;
                 case "stop":
+                case "s":
                     Game1.audioManager.StopAll();
                     break;
                 case "resume":
+                case "r":
                     Game1.audioManager.ResumeAll();
                     break;
                 default:
-                    throw new ArgumentException("Option " + command[1] + " is an invalid option");
+                    throw new ArgumentException("invalid option", command[1]);
             }
         }
 
