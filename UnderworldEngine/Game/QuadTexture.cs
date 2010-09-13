@@ -12,7 +12,7 @@ using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
-using UnderworldEngine.GraphicsEngine;
+using UnderworldEngine.Graphics;
 
 namespace UnderworldEngine.Game
 {
