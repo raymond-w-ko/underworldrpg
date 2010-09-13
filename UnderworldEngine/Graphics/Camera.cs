@@ -268,7 +268,7 @@ namespace UnderworldEngine.Graphics
         {
             if (currentCameraLocation != futureCameraLocation) {
                 rotateAlongRing();
-                if (currentPosition.AlmostEquals(futurePosition, 0.001f)) {
+                if (currentPosition.AlmostEquals(futurePosition, this.cameraBoxSize/10000.0f)) {
                     currentCameraLocation = futureCameraLocation;
                     currentPosition = this.allowableCameraPositions[(int)currentCameraLocation];
                     IsAcceptingCommands = true;
