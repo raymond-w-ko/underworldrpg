@@ -12,7 +12,7 @@ using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
-using UnderworldEngine.GraphicsEngine;
+using UnderworldEngine.Graphics;
 using UnderworldEngine.Game;
 using UnderworldEngine.Audio;
 using System.IO;
@@ -46,6 +46,7 @@ namespace UnderworldEngine
         internal static IGameConsole console;
 
         GridMap gridMap;
+        GameObjectModel gom;
         KeyboardState mLastKeyboardState;
 
         public Game1()
@@ -77,7 +78,7 @@ namespace UnderworldEngine
             Game1.DefaultGraphicsDevice = GraphicsDevice;
             // global access to camera
             Game1.Camera = new Camera();
-            Game1.Camera.SetFarPlaneDistance(1000);
+            Game1.Camera.SetFarPlaneDistance(10000);
             Game1.Camera.LookAt(5, 0, 5);
 
             // console stuff
@@ -110,7 +111,8 @@ namespace UnderworldEngine
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            gridMap = new GridMap(20, 20);
+            //gridMap = new GridMap(20, 20);
+            gom = new GameObjectModel("Models/testmap");
         }
 
         /// <summary>
@@ -186,7 +188,8 @@ namespace UnderworldEngine
             GraphicsDevice.Clear(Color.Black);
 
             // TODO: Add your drawing code here
-            gridMap.Draw();
+            //gridMap.Draw();
+            gom.Draw();
 
             base.Draw(gameTime);
         }
