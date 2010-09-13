@@ -50,12 +50,12 @@ namespace UnderworldEngine.Scripting
                     }
                 case "next":
                     {
-                        Game1.Camera.nextCameraView();
+                        Game1.Camera.NextCameraView();
                         break;
                     }
                 case "prev":
                     {
-                        Game1.Camera.prevCameraView();
+                        Game1.Camera.PrevCameraView();
                         break;
                     }
             }

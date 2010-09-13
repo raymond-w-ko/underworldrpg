@@ -19,7 +19,7 @@ namespace UnderworldEngine.Game
     /// <summary>
     /// Renderable object that exists within the game world
     /// </summary>
-    public abstract class GameObject : IDraw, IManagedDraw
+    public abstract class GameObject : IDraw
     {
         private class Transformation
         {
@@ -61,7 +61,6 @@ namespace UnderworldEngine.Game
                 this.needTransformationCompile = true;
             }
         }
-        public BoundingBox BoundingBox { get; set; }
         public bool IsVisible { get; set; }
 
         /// <summary>
@@ -74,16 +73,14 @@ namespace UnderworldEngine.Game
         public GameObject()
         {
             this.Position = Vector3.Zero;
-            this.BoundingBox = new BoundingBox();
             this.IsVisible = true;
-            this.worldMatrix = Matrix.Identity;
 
+            this.worldMatrix = Matrix.Identity;
             this.transformationList = new List<Transformation>();
             this.needTransformationCompile = true;
         }
 
         public abstract void Draw();
-        public abstract void ManagedDraw(Effect effect);
 
         public void Scale(float degrees)
         {

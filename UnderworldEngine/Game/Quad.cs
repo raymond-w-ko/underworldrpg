@@ -46,16 +46,6 @@ namespace UnderworldEngine.Game
             this.lowerRight = upperRight - (up * height);
 
             this.effect = new BasicEffectManager();
-
-            /*
-            Game1.Debug.WriteLine("Quad Points");
-            Game1.Debug.WriteLine(upperLeft);
-            Game1.Debug.WriteLine(upperRight);
-            Game1.Debug.WriteLine(lowerLeft);
-            Game1.Debug.WriteLine(lowerRight);
-            */
         }
-
-        
     }
 }
