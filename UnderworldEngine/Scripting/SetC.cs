@@ -39,14 +39,12 @@ namespace UnderworldEngine.Scripting
                         break;
                     }
                 case "nplane":
-                case "z":
                     {
                         float dist = (float)Convert.ToDouble(command[2]);
                         Game1.Camera.SetNearPlaneDistance(dist);
                         break;
                     }
                 case "fplane":
-                case "f":
                     {
                         float dist = (float)Convert.ToDouble(command[2]);
                         Game1.Camera.SetFarPlaneDistance(dist);
@@ -62,6 +60,18 @@ namespace UnderworldEngine.Scripting
                 case "p":
                     {
                         Game1.Camera.PrevCameraView();
+                        break;
+                    }
+                case "closer":
+                case "z":
+                    {
+                        Game1.Camera.ZoomCloser(2);
+                        break;
+                    }
+                case "farther":
+                case "f":
+                    {
+                        Game1.Camera.ZoomFarther(2);
                         break;
                     }
                 default:
