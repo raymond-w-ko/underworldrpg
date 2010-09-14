@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace UnderworldEngine.Game.Interfaces
+namespace UnderworldEngine.Graphics.Interfaces
 {
     interface IDraw
     {

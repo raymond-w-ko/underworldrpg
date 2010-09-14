@@ -36,15 +36,22 @@ namespace UnderworldEngine
         SpriteBatch spriteBatch;
         GraphicsDeviceManager graphics;
 
-        internal static Camera Camera;
-        internal static ContentManager DefaultContent;
-        internal static GraphicsDeviceManager DefaultGraphics;
-        internal static GraphicsDevice DefaultGraphicsDevice;
+        // Graphics Globals
+        internal static Camera Camera = null;
+        internal static GraphicsDeviceManager DefaultGraphics = null;
+        internal static GraphicsDevice DefaultGraphicsDevice = null;
+        internal static SpriteBatch DefaultSpriteBatch = null;
+        // Audio Globals
         internal static AudioManager audioManager;
+        // Content Globals
+        internal static ContentManager DefaultContent = null;
+        // Components Globals
         internal static Interpreter interpreter;
         internal static ControllerManager controller1;
         internal static IGameConsole console;
 
+        // Renderables
+        private FpsCounter _fps;
         GridMap gridMap;
         GameObjectModel gom;
         KeyboardState mLastKeyboardState;
@@ -54,12 +61,14 @@ namespace UnderworldEngine
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
+            // create a debug log text file
             Game1.FileStream = new FileStream("log.txt", FileMode.Truncate);
             Game1.Debug = new StreamWriter(Game1.FileStream);
 
             Game1.audioManager = new AudioManager();
 
             // global access to rarely changing elements
+            // graphics
             Game1.DefaultContent = Content;
             Game1.DefaultGraphics = graphics;
 
@@ -75,6 +84,7 @@ namespace UnderworldEngine
         /// </summary>
         protected override void Initialize()
         {
+            // Not initialized yet in constructor
             Game1.DefaultGraphicsDevice = GraphicsDevice;
 
             // global access to camera
@@ -110,9 +120,13 @@ namespace UnderworldEngine
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            Game1.DefaultSpriteBatch = spriteBatch;
+            
+            // FPS Counter
+            _fps = new FpsCounter();
 
             // TODO: use this.Content to load your game content here
-            ///gridMap = new GridMap(20, 20);
+            //gridMap = new GridMap(20, 20);
             gom = new GameObjectModel("Models/testmap2");
         }
 
@@ -134,8 +148,6 @@ namespace UnderworldEngine
         
         protected override void Update(GameTime gameTime)
         {
-            FpsCounter(gameTime);
-
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
@@ -160,18 +172,8 @@ namespace UnderworldEngine
             //controller stuff
             Game1.controller1.UpdateInput();
 
+            _fps.Update(gameTime);
             base.Update(gameTime);
-        }
-
-        int numOfFrames = 0;
-        double FPS = 0;  
-        private void FpsCounter(GameTime gameTime)
-        {
-            // Calculate FPS
-            if (gameTime.TotalGameTime.Milliseconds == 0) {
-                FPS = numOfFrames;
-                numOfFrames = 0;
-            }  
         }
 
         /// <summary>
@@ -184,19 +186,16 @@ namespace UnderworldEngine
             GraphicsDevice.Clear(Color.Black);
 
             // TODO: Add your drawing code here
+            // Draw 3D here
             //gridMap.Draw();
             gom.Draw();
 
-            VertexDeclaration vd = GraphicsDevice.VertexDeclaration;
-
-            SpriteFont sf = Game1.DefaultContent.Load<SpriteFont>("Consolas");
-            numOfFrames++;
-            spriteBatch.Begin(SpriteBlendMode.Additive, SpriteSortMode.Immediate, SaveStateMode.SaveState);
-            spriteBatch.DrawString(sf, FPS.ToString(), new Vector2(0, 0), Color.Yellow);
+            // Draw 2D Sprites Here
+            spriteBatch.Begin();
+            // Queue Sprites Here
+            _fps.Draw();
             spriteBatch.End();
-
-            GraphicsDevice.VertexDeclaration = vd;
-
+            spriteBatch.ResetFor3d();
             base.Draw(gameTime);
         }
     }

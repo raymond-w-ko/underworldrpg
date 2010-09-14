@@ -1,5 +1,5 @@
-setv width 800
-setv height 600
+setv width 1280
+setv height 800
 setv windowed
 setv update
 bind leftshoulder setc prev
