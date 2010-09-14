@@ -136,9 +136,11 @@ namespace UnderworldEngine
             // TODO: use this.Content to load your game content here
             //gridMap = new GridMap(20, 20);
             gom = new GameObjectModel("Models/testmap2");
-            gom.Scale(.0285f);
-            gom.OffsetBy(5, 0, 5);
-            map = new Grid(10, 10);
+            gom.Scale(12.0f * gom.BoundingBox.FindScaleToUnitFactor());
+            gom.OffsetBy(6, 0, 6);
+            console.Log((12.0f * gom.BoundingBox.FindScaleToUnitFactor()).ToString());
+
+            map = new Grid(12, 12);
         }
 
         /// <summary>
