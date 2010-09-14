@@ -13,7 +13,7 @@ using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
 using UnderworldEngine.Graphics;
-
+/*
 namespace UnderworldEngine.Game
 {
     public class GridMap : GameObject
@@ -68,3 +68,4 @@ namespace UnderworldEngine.Game
         }
     }
 }
+*/
