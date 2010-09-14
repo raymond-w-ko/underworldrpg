@@ -4,22 +4,26 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace UnderworldEngine.Graphics
 {
-    class MouseMenu
+    class MouseMenu : Menu
     {
         private MouseState _mouseStateCurrent;
         private MouseState _mouseStatePrevious;
-        private bool _isVisible;
 
         private bool _isLeftClicking;
         private Vector2 _clickPosition;
 
-        public MouseMenu()
+        public MouseMenu(string fontName,
+            Color defaultTextColor,
+            Color backgroundColor, float backgroundAlpha,
+            float width, float height)
+            : base(fontName, defaultTextColor, backgroundColor, backgroundAlpha, width, height)
         {
             _mouseStateCurrent = _mouseStatePrevious = Mouse.GetState();
-            _isVisible = false;
+            IsVisible = false;
         }
 
         public void Update(Microsoft.Xna.Framework.GameTime gameTime)
@@ -28,27 +32,32 @@ namespace UnderworldEngine.Graphics
             // Move the sprite to the current mouse position when the left button is pressed
             if (_mouseStateCurrent.LeftButton == ButtonState.Pressed &&
                 _mouseStatePrevious.LeftButton == ButtonState.Released) {
+                _isLeftClicking = true;
                 _clickPosition = new Vector2(_mouseStateCurrent.X, _mouseStateCurrent.Y);
             }
 
             // Change the horizontal direction of the sprite when the right mouse button is clicked
             if (_mouseStateCurrent.RightButton == ButtonState.Pressed &&
                 _mouseStatePrevious.RightButton == ButtonState.Released) {
-                _isVisible = !_isVisible;
+                IsVisible = !IsVisible;
+                _clickPosition = new Vector2(_mouseStateCurrent.X, _mouseStateCurrent.Y);
+                _position = _clickPosition;
             }     
 
             _mouseStatePrevious = _mouseStateCurrent;
 
-            if (!_isVisible) {
+            if (!IsVisible) {
                 return;
             }
         }
 
-        public void Draw()
+        public override void Draw()
         {
-            if (!_isVisible) {
+            if (!IsVisible) {
                 return;
             }
+
+            base.Draw();
         }
     }
 }

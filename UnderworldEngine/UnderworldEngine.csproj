@@ -101,6 +101,7 @@
     <Compile Include="Game\GameObject.cs" />
     <Compile Include="Graphics\ExtensionMethods.cs" />
     <Compile Include="Graphics\FpsCounter.cs" />
+    <Compile Include="Graphics\Menu.cs" />
     <Compile Include="Graphics\MouseMenu.cs" />
     <Compile Include="Graphics\Old\OldCamera.cs" />
     <Compile Include="Graphics\PrimitiveBatch.cs" />
