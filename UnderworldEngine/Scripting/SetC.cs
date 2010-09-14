@@ -74,6 +74,22 @@ namespace UnderworldEngine.Scripting
                         Game1.Camera.ZoomFarther(2);
                         break;
                     }
+                case "up": {
+                        Game1.Camera.LookUp();
+                        break;
+                    }
+                case "down": {
+                        Game1.Camera.LookDown();
+                        break;
+                    }
+                case "left": {
+                        Game1.Camera.LookLeft();
+                        break;
+                    }
+                case "right": {
+                        Game1.Camera.LookRight();
+                        break;
+                    }
                 default:
                     throw new ArgumentException("invalid option", command[1]);
             }
