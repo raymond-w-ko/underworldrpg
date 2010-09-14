@@ -16,12 +16,9 @@ namespace UnderworldEngine.Game
 {
     class Map
     {
-        private Map() { }
-
-        public Map Load()
+        public Map(string mapName)
         {
-            Map map = new Map();
-            return map;
+            ;
         }
     }
 }
