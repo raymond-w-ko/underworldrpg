@@ -2,12 +2,25 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Xna.Framework.Input;
 
 namespace UnderworldEngine.Scripting
 {
     class Bind : IInterpretable
     {
         #region IInterpretable Members
+        List<string> keyNames;
+
+        public Bind()
+        {
+            keyNames = new List<string>();
+            string[] kn = Enum.GetNames(typeof(Keys));
+
+            for (int i = 0; i < kn.Length; i++)
+            {
+                keyNames.Add(kn[i].ToLower());
+            }
+        }
 
         public void run(string function)
         {
@@ -91,9 +104,30 @@ namespace UnderworldEngine.Scripting
                     break;
                 #endregion
 
+                case "kb":
+                    bindKeyboard(command);
+                    break;
                 default:
                     throw new ArgumentException("invalid option", command[1]);
             }
+        }
+
+        private void bindKeyboard(string[] command)
+        {
+            string keyToBind = command[2];
+            StringBuilder sb = new StringBuilder();
+            for (int i = 3; i < command.Length; i++)
+            {
+                sb.Append(command[i]);
+                sb.Append(" ");
+            }
+
+            keyToBind = keyToBind.ToLower();
+            if (!keyNames.Contains(keyToBind))
+                throw new ArgumentException("invalid option", keyToBind);
+
+            //else
+            Game1.kb.KeyToAction[keyToBind] = sb.ToString();
         }
 
         #endregion

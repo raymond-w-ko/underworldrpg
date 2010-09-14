@@ -48,6 +48,7 @@ namespace UnderworldEngine
         // Components Globals
         internal static Interpreter interpreter;
         internal static ControllerManager controller1;
+        internal static KeyboardManager kb;
         internal static IGameConsole console;
 
         // Renderables
@@ -74,6 +75,7 @@ namespace UnderworldEngine
 
             // global access to controllers
             Game1.controller1 = new ControllerManager(PlayerIndex.One);
+            Game1.kb = new KeyboardManager();
         }
 
         /// <summary>
@@ -107,7 +109,7 @@ namespace UnderworldEngine
             // interpreter
             Game1.interpreter = new Interpreter();
             //set up surprise
-            interpreter.run("run test.rs");
+            Game1.interpreter.run("run test.rs");
 
             base.Initialize();
         }
@@ -171,6 +173,7 @@ namespace UnderworldEngine
 
             //controller stuff
             Game1.controller1.UpdateInput();
+            Game1.kb.UpdateInput();
 
             _fps.Update(gameTime);
             base.Update(gameTime);
