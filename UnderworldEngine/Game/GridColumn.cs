@@ -12,7 +12,7 @@ using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 using UnderworldEngine.Graphics;
-
+/*
 namespace UnderworldEngine.Game
 {
     public class GridColumn : GameObject
@@ -81,3 +81,4 @@ namespace UnderworldEngine.Game
         }
     }
 }
+*/
