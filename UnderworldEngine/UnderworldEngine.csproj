@@ -90,8 +90,10 @@
     <Compile Include="Game\GameObjectPrimitive.cs" />
     <Compile Include="Game\GridColumn.cs" />
     <Compile Include="Game\GridMap.cs" />
+    <Compile Include="Game\GridSquare.cs" />
+    <Compile Include="Game\Old\MapSquare.cs" />
     <Compile Include="Graphics\Interfaces\IDraw.cs" />
-    <Compile Include="Game\Map.cs" />
+    <Compile Include="Game\Grid.cs" />
     <Compile Include="Game\Quad.cs" />
     <Compile Include="Game\QuadTexture.cs" />
     <Compile Include="Graphics\Camera.cs" />
@@ -99,6 +101,7 @@
     <Compile Include="Game\GameObject.cs" />
     <Compile Include="Graphics\ExtensionMethods.cs" />
     <Compile Include="Graphics\FpsCounter.cs" />
+    <Compile Include="Graphics\MouseMenu.cs" />
     <Compile Include="Graphics\Old\OldCamera.cs" />
     <Compile Include="Graphics\PrimitiveBatch.cs" />
     <Compile Include="IO\ControllerManager.cs" />

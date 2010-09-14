@@ -33,8 +33,10 @@ namespace UnderworldEngine
         public static FileStream FileStream;
         public static StreamWriter Debug;
 
-        SpriteBatch spriteBatch;
         GraphicsDeviceManager graphics;
+        SpriteBatch spriteBatch;
+        PrimitiveBatch<VertexPositionNormalTexture> primitiveBatch;
+        private MouseMenu _mouseMenu;
 
         // Graphics Globals
         internal static Camera Camera = null;
@@ -53,9 +55,9 @@ namespace UnderworldEngine
         internal static FpsCounter fps;
 
         // Renderables
-        GridMap gridMap;
         GameObjectModel gom;
         KeyboardState mLastKeyboardState;
+        Grid map;
 
         public Game1()
         {
@@ -111,6 +113,10 @@ namespace UnderworldEngine
             //set up surprise
             Game1.interpreter.run("run test.rs");
 
+            // mouse menu
+            this.IsMouseVisible = true;
+            _mouseMenu = new MouseMenu();
+
             base.Initialize();
         }
 
@@ -130,6 +136,9 @@ namespace UnderworldEngine
             // TODO: use this.Content to load your game content here
             //gridMap = new GridMap(20, 20);
             gom = new GameObjectModel("Models/testmap2");
+            gom.Scale(.0285f);
+            gom.OffsetBy(5, 0, 5);
+            map = new Grid(10, 10);
         }
 
         /// <summary>
@@ -175,6 +184,7 @@ namespace UnderworldEngine
             Game1.controller1.UpdateInput();
             Game1.kb.UpdateInput();
 
+            _mouseMenu.Update(gameTime);
             fps.Update(gameTime);
             base.Update(gameTime);
         }
@@ -192,7 +202,10 @@ namespace UnderworldEngine
             // Draw 3D here
             //gridMap.Draw();
             gom.Draw();
-
+            map.Draw();
+            
+            // Mouse Menu
+            _mouseMenu.Draw();
             // Draw 2D Sprites Here
             spriteBatch.Begin();
             // Queue Sprites Here
