@@ -50,9 +50,9 @@ namespace UnderworldEngine
         internal static ControllerManager controller1;
         internal static KeyboardManager kb;
         internal static IGameConsole console;
+        internal static FpsCounter fps;
 
         // Renderables
-        private FpsCounter _fps;
         GridMap gridMap;
         GameObjectModel gom;
         KeyboardState mLastKeyboardState;
@@ -125,7 +125,7 @@ namespace UnderworldEngine
             Game1.DefaultSpriteBatch = spriteBatch;
             
             // FPS Counter
-            _fps = new FpsCounter();
+            fps = new FpsCounter();
 
             // TODO: use this.Content to load your game content here
             //gridMap = new GridMap(20, 20);
@@ -175,7 +175,7 @@ namespace UnderworldEngine
             Game1.controller1.UpdateInput();
             Game1.kb.UpdateInput();
 
-            _fps.Update(gameTime);
+            fps.Update(gameTime);
             base.Update(gameTime);
         }
 
@@ -196,7 +196,7 @@ namespace UnderworldEngine
             // Draw 2D Sprites Here
             spriteBatch.Begin();
             // Queue Sprites Here
-            _fps.Draw();
+            fps.Draw();
             spriteBatch.End();
             spriteBatch.ResetFor3d();
             base.Draw(gameTime);

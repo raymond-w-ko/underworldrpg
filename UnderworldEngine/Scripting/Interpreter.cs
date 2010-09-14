@@ -28,12 +28,15 @@ namespace UnderworldEngine.Scripting
 
         private void loadFunctions()
         {
+            #region interpreterBinds
             functions["load"] = new Load();
             functions["music"] = new Music();
             functions["bind"] = new Bind();
             functions["run"] = new Run();
             functions["setv"] = new SetV();
             functions["setc"] = new SetC();
+            functions["show"] = new Show();
+            #endregion
 
             foreach (string key in functions.Keys)
             {
