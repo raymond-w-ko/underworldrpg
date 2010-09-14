@@ -47,7 +47,7 @@ namespace UnderworldEngine.Game
             _grid = new GridSquare[_xSize, zSize];
             for (uint xx = 0; xx < xSize; xx++) {
                 for (uint zz = 0; zz < zSize; zz++) {
-                    float height = _useRandomY ? (int)Math.Ceiling((_rand.NextDouble() * 2)) : 2;
+                    float height = _useRandomY ? (int)Math.Ceiling((_rand.NextDouble() * 2)) : 0.01f;
                     _grid[xx, zz] = new GridSquare(xx, zz, height);
                     _grid[xx, zz].TopAngle = 0.0f;
                     _grid[xx, zz].CompileVertices();
@@ -113,12 +113,10 @@ namespace UnderworldEngine.Game
 
             // enable alpha blending
             Game1.DefaultGraphics.GraphicsDevice.RenderState.AlphaBlendEnable = true;
-            /*
             Game1.DefaultGraphics.GraphicsDevice.RenderState.AlphaBlendOperation = BlendFunction.Add;
             Game1.DefaultGraphics.GraphicsDevice.RenderState.SourceBlend = Blend.SourceAlpha;
             Game1.DefaultGraphics.GraphicsDevice.RenderState.DestinationBlend = Blend.InverseSourceAlpha;
             Game1.DefaultGraphics.GraphicsDevice.RenderState.SeparateAlphaBlendEnabled = false;
-            */
 
             Game1.DefaultGraphicsDevice.VertexDeclaration = _vertexDeclaration;
 

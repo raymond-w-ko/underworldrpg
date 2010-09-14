@@ -19,6 +19,7 @@ namespace UnderworldEngine.Game
         private ContentManager content;
         private string modelName;
         private Model model;
+        public BoundingBox BoundingBox;
 
         public GameObjectModel(string name)
             : base()
@@ -26,8 +27,7 @@ namespace UnderworldEngine.Game
             this.content = Game1.DefaultContent;
             this.modelName = name;
             this.model = content.Load<Model>(modelName);
-
-            GetBoundingBoxFromModel(model);
+            CalculateBoundingBox();
         }
 
         public GameObjectModel(ContentManager c, string name)
@@ -36,6 +36,12 @@ namespace UnderworldEngine.Game
             this.content = c;
             this.modelName = name;
             this.model = content.Load<Model>(modelName);
+            CalculateBoundingBox();
+        }
+
+        public void CalculateBoundingBox()
+        {
+            BoundingBox = GetBoundingBoxFromModel(model);
         }
 
         public override void Draw()
@@ -69,7 +75,7 @@ namespace UnderworldEngine.Game
 
         public BoundingBox GetBoundingBoxFromModel(Model model)
         {
-            //Game1.Debug.WriteLine("Creating Bounding Box...");
+            Game1.Debug.WriteLine("Creating Bounding Box...");
             BoundingBox boundingBox = new BoundingBox();
             foreach (ModelMesh mesh in model.Meshes) {
                 VertexPositionNormalTexture[] vertices =
@@ -81,13 +87,37 @@ namespace UnderworldEngine.Game
 
                 for (int index = 0; index < vertexs.Length; index++) {
                     vertexs[index] = vertices[index].Position;
-                    //Game1.Debug.WriteLine(index.ToString() + vertexs[index]);
                 }
 
                 boundingBox = BoundingBox.CreateMerged(boundingBox,  BoundingBox.CreateFromPoints(vertexs));
             }
 
+            Game1.Debug.WriteLine(boundingBox.Min.ToString());
+            Game1.Debug.WriteLine(boundingBox.Max.ToString());
+
             return boundingBox;
+        }
+    }
+
+    public static class MyExtensions
+    {
+        //public class MapNotSquareException : ApplicationException { }
+        public static float FindScaleToUnitFactor(this BoundingBox bb)
+        {
+            float length = bb.Max.X - bb.Min.X;
+            float length2 = bb.Max.X - bb.Min.X;
+
+            /*
+            if (length != length2) {
+                throw new MapNotSquareException();
+            }
+            */
+
+            if (length2 > length) {
+                length = length2;
+            }
+
+            return 1.0f / length;
         }
     }
 }
