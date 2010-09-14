@@ -39,7 +39,7 @@ namespace UnderworldEngine.Scripting
                         break;
                     }
                 case "nplane":
-                case "p":
+                case "z":
                     {
                         float dist = (float)Convert.ToDouble(command[2]);
                         Game1.Camera.SetNearPlaneDistance(dist);
