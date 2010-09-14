@@ -42,8 +42,9 @@ namespace UnderworldEngine.Graphics
         private float farPlaneDistance = 100.0f;
         public class PlaneDistanceException : System.ApplicationException { };
 
-        private const float NORMAL_CAMERA_BOX_SIZE = 500.0f;
+        private const float NORMAL_CAMERA_BOX_SIZE = 10.0f;
         private float cameraBoxSize = NORMAL_CAMERA_BOX_SIZE;
+        private float futureCameraBoxSize = NORMAL_CAMERA_BOX_SIZE;
         private Vector3[] allowableCameraPositions = {
             Vector3.Zero,
             Vector3.Zero,
@@ -73,6 +74,9 @@ namespace UnderworldEngine.Graphics
 
         private Vector3 futureTarget;
         private float moveSpeed;
+
+        private float zoomSpeed;
+
         private Vector3 direction;
 
         public Camera()
@@ -89,6 +93,7 @@ namespace UnderworldEngine.Graphics
             turnSpeed = MathHelper.ToRadians((float)(45.0 / (60.0 / 4.0)));
             turnMatrix = Matrix.CreateRotationY(turnSpeed);
             moveSpeed = (float)(10.0 / 60.0);
+            zoomSpeed = (float)(5.0 / 60.0);
 
             futureCameraLocation = currentCameraLocation = CameraLocation.LowerRight;
             currentTarget = new Vector3(0, 0, 0);
@@ -97,6 +102,12 @@ namespace UnderworldEngine.Graphics
             futurePosition = new Vector3(8, 8, 8);
 
             this.IsAcceptingCommands = true;
+
+            calculateCameraBox(currentTarget);
+            currentPosition = currentTarget + ringPosition;
+
+            recalculateProjectionMatrix();
+            recalculateViewMatrix();
         }
 
         private void moveTo(float x, float y, float z)
@@ -122,6 +133,19 @@ namespace UnderworldEngine.Graphics
             }
             futureTarget = vector;
 
+            calculateCameraBox(vector);
+
+            futurePosition = allowableCameraPositions[(int)currentCameraLocation];
+            
+            recalculateViewMatrix();
+
+            direction = futureTarget - currentTarget;
+            direction.Normalize();
+            direction *= moveSpeed;
+        }
+
+        private void calculateCameraBox(Vector3 vector)
+        {
             allowableCameraPositions[0].X = vector.X - cameraBoxSize;
             allowableCameraPositions[0].Y = vector.Y + cameraBoxSize;
             allowableCameraPositions[0].Z = vector.Z + cameraBoxSize;
@@ -138,7 +162,6 @@ namespace UnderworldEngine.Graphics
             allowableCameraPositions[3].Y = vector.Y + cameraBoxSize;
             allowableCameraPositions[3].Z = vector.Z - cameraBoxSize;
 
-            futurePosition = allowableCameraPositions[(int)currentCameraLocation];
             if (currentCameraLocation == CameraLocation.UpperLeft) {
                 ringPosition.X = -cameraBoxSize;
                 ringPosition.Z = +cameraBoxSize;
@@ -156,12 +179,6 @@ namespace UnderworldEngine.Graphics
                 ringPosition.Z = -cameraBoxSize;
             }
             ringPosition.Y = cameraBoxSize;
-
-            recalculateViewMatrix();
-
-            direction = futureTarget - currentTarget;
-            direction.Normalize();
-            direction *= moveSpeed;
         }
 
         public void SetUpVector(float x, float y, float z)
@@ -198,7 +215,6 @@ namespace UnderworldEngine.Graphics
         private void recalculateViewMatrix()
         {
             viewMatrix = Matrix.CreateLookAt(currentPosition, currentTarget, currentUpVector);
-
         }
 
         private void recalculateProjectionMatrix()
@@ -264,6 +280,46 @@ namespace UnderworldEngine.Graphics
             LookAt(currentTarget);
         }
 
+        private void zoomSmoothly()
+        {
+            if (futureCameraBoxSize > cameraBoxSize) {
+                this.cameraBoxSize += zoomSpeed;
+            }
+            else if (futureCameraBoxSize < cameraBoxSize) {
+                this.cameraBoxSize -= zoomSpeed;
+            }
+
+            calculateCameraBox(currentTarget);
+            currentPosition = currentTarget + ringPosition;
+
+            recalculateViewMatrix();
+            recalculateProjectionMatrix();
+        }
+
+        public void ZoomCloser(uint dist)
+        {
+            if (IsAcceptingCommands) {
+                IsAcceptingCommands = false;
+            }
+            else {
+                return;
+            }
+            this.futureCameraBoxSize = this.cameraBoxSize - dist;
+            Game1.console.Log("Zooming to: " + futureCameraBoxSize);
+        }
+
+        public void ZoomFarther(uint dist)
+        {
+            if (IsAcceptingCommands) {
+                IsAcceptingCommands = false;
+            }
+            else {
+                return;
+            }
+            this.futureCameraBoxSize = this.cameraBoxSize + dist;
+            Game1.console.Log("Zooming to: " + futureCameraBoxSize);
+        }
+
         public void Update()
         {
             if (currentCameraLocation != futureCameraLocation) {
@@ -282,8 +338,17 @@ namespace UnderworldEngine.Graphics
                     IsAcceptingCommands = true;
                 }
             }
+            else if (cameraBoxSize != futureCameraBoxSize) {
+                zoomSmoothly();
+                if (cameraBoxSize.AlmostEquals(futureCameraBoxSize, zoomSpeed)) {
+                    currentPosition = this.allowableCameraPositions[(int)currentCameraLocation];
+                    cameraBoxSize = futureCameraBoxSize;
+                    IsAcceptingCommands = true;
+                }
+            }
 
             recalculateViewMatrix();
+            recalculateProjectionMatrix();
         }
     }
 
@@ -295,6 +360,12 @@ namespace UnderworldEngine.Graphics
             bool bRet2 = (((vec2.Y - nEpsilon) < vec.Y) && (vec.Y < (vec2.Y + nEpsilon)));
             bool bRet3 = (((vec2.Z - nEpsilon) < vec.Z) && (vec.Z < (vec2.Z + nEpsilon)));
 	        return bRet1 && bRet2 && bRet3;
+        }
+
+        public static bool AlmostEquals(this float f1, float f2, float nEpsilon)
+        {
+            bool bRet1 = (((f2 - nEpsilon) < f1) && (f1 < (f2 + nEpsilon)));
+            return bRet1;
         }
     }
 }
