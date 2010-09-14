@@ -115,7 +115,7 @@ namespace UnderworldEngine
 
             // mouse menu
             this.IsMouseVisible = true;
-            _mouseMenu = new MouseMenu();
+            _mouseMenu = new MouseMenu("Consolas", Color.Black, new Color(225, 225, 225), 1.0f, 200, 500);
 
             base.Initialize();
         }
@@ -206,14 +206,14 @@ namespace UnderworldEngine
             gom.Draw();
             map.Draw();
             
-            // Mouse Menu
-            _mouseMenu.Draw();
             // Draw 2D Sprites Here
             spriteBatch.Begin();
             // Queue Sprites Here
             fps.Draw();
             spriteBatch.End();
             spriteBatch.ResetFor3d();
+            // Mouse Menu
+            _mouseMenu.Draw();
             base.Draw(gameTime);
         }
     }
