@@ -93,9 +93,9 @@ namespace UnderworldEngine.Graphics
             turnSpeed = MathHelper.ToRadians((float)(45.0 / (60.0 / 4.0)));
             turnMatrix = Matrix.CreateRotationY(turnSpeed);
             moveSpeed = (float)(10.0 / 60.0);
-            zoomSpeed = (float)(5.0 / 60.0);
+            zoomSpeed = (float)(10.0 / 60.0);
 
-            futureCameraLocation = currentCameraLocation = CameraLocation.LowerRight;
+            futureCameraLocation = currentCameraLocation = CameraLocation.LowerLeft;
             currentTarget = new Vector3(0, 0, 0);
             futureTarget = new Vector3(0, 0, 0);
             currentPosition = new Vector3(8, 8, 8);
@@ -118,6 +118,8 @@ namespace UnderworldEngine.Graphics
         {
             this.currentPosition = vector;
         }
+
+        #region Look At
 
         public void LookAt(float x, float y, float z)
         {
@@ -143,6 +145,28 @@ namespace UnderworldEngine.Graphics
             direction.Normalize();
             direction *= moveSpeed;
         }
+
+        public void LookUp()
+        {
+            LookAt(currentTarget.X+1, currentTarget.Y, currentTarget.Z + 1);
+        }
+
+        public void LookDown()
+        {
+            LookAt(currentTarget.X - 1, currentTarget.Y, currentTarget.Z - 1);
+        }
+
+        public void LookLeft()
+        {
+            LookAt(currentTarget.X + 1, currentTarget.Y, currentTarget.Z - 1);
+        }
+
+        public void LookRight()
+        {
+            LookAt(currentTarget.X - 1, currentTarget.Y, currentTarget.Z + 1);
+        }
+
+        #endregion
 
         private void calculateCameraBox(Vector3 vector)
         {
@@ -181,6 +205,8 @@ namespace UnderworldEngine.Graphics
             ringPosition.Y = cameraBoxSize;
         }
 
+        #region Up Vector
+
         public void SetUpVector(float x, float y, float z)
         {
             SetUpVector(x, y, z);
@@ -191,7 +217,9 @@ namespace UnderworldEngine.Graphics
             recalculateViewMatrix();
         }
 
-       
+        #endregion
+
+        #region Near and Far Plane
         public void SetNearPlaneDistance(float dist)
         {
             if (dist < 0.0f) {
@@ -211,7 +239,9 @@ namespace UnderworldEngine.Graphics
 
             this.recalculateProjectionMatrix();
         }
+        #endregion
 
+        #region Recalculation of View and Projection Matrices
         private void recalculateViewMatrix()
         {
             viewMatrix = Matrix.CreateLookAt(currentPosition, currentTarget, currentUpVector);
@@ -225,7 +255,9 @@ namespace UnderworldEngine.Graphics
                 viewWidth, viewHeight,
                 this.nearPlaneDistance, this.farPlaneDistance);
         }
+        #endregion
 
+        #region Camera Rotation
         private void rotateAlongRing()
         {
             Vector3.Transform(ref ringPosition,
@@ -280,6 +312,9 @@ namespace UnderworldEngine.Graphics
             LookAt(currentTarget);
         }
 
+        #endregion
+
+        #region Camera Zoom
         private void zoomSmoothly()
         {
             if (futureCameraBoxSize > cameraBoxSize) {
@@ -305,7 +340,8 @@ namespace UnderworldEngine.Graphics
                 return;
             }
             this.futureCameraBoxSize = this.cameraBoxSize - dist;
-            Game1.console.Log("Zooming to: " + futureCameraBoxSize);
+            this.futureCameraBoxSize = (float)Math.Round(this.futureCameraBoxSize);
+            //Game1.console.Log("Zooming to: " + futureCameraBoxSize);
         }
 
         public void ZoomFarther(uint dist)
@@ -317,8 +353,10 @@ namespace UnderworldEngine.Graphics
                 return;
             }
             this.futureCameraBoxSize = this.cameraBoxSize + dist;
-            Game1.console.Log("Zooming to: " + futureCameraBoxSize);
+            this.futureCameraBoxSize = (float)Math.Round(this.futureCameraBoxSize);
+            //Game1.console.Log("Zooming to: " + futureCameraBoxSize);
         }
+        #endregion
 
         public void Update()
         {
@@ -352,6 +390,7 @@ namespace UnderworldEngine.Graphics
         }
     }
 
+    #region Extensions
     public static class MyExtensions
     {
         public static bool AlmostEquals(this Vector3 vec, Vector3 vec2, float nEpsilon)
@@ -368,4 +407,5 @@ namespace UnderworldEngine.Graphics
             return bRet1;
         }
     }
+    #endregion
 }
