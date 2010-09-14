@@ -42,7 +42,7 @@ namespace UnderworldEngine.Graphics
         private float farPlaneDistance = 100.0f;
         public class PlaneDistanceException : System.ApplicationException { };
 
-        private const float NORMAL_CAMERA_BOX_SIZE = 10.0f;
+        private const float NORMAL_CAMERA_BOX_SIZE = 12.0f;
         private float cameraBoxSize = NORMAL_CAMERA_BOX_SIZE;
         private float futureCameraBoxSize = NORMAL_CAMERA_BOX_SIZE;
         private Vector3[] allowableCameraPositions = {
