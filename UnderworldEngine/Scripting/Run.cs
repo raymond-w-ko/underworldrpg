@@ -14,12 +14,15 @@ namespace UnderworldEngine.Scripting
         {
             string[] command = function.Split(new Char[] { ' ' });
 
-            StreamReader reader = new StreamReader(".\\Content\\Scripts\\" + command[1]);
+            RageScript rs = Game1.DefaultContent.Load<RageScript>("./Scripts/" + command[1]);
+            StreamReader reader = new StreamReader(rs.stream);
 
             while (!reader.EndOfStream)
             {
                 Game1.interpreter.run(reader.ReadLine().TrimStart().TrimEnd());
             }
+
+            rs.Unload();
         }
 
         #endregion

@@ -119,6 +119,8 @@
     <Compile Include="Scripting\Interpreter.cs" />
     <Compile Include="Scripting\Load.cs" />
     <Compile Include="Scripting\Music.cs" />
+    <Compile Include="Scripting\RageScript.cs" />
+    <Compile Include="Scripting\RageScriptReader.cs" />
     <Compile Include="Scripting\Run.cs" />
     <Compile Include="Scripting\SetC.cs" />
     <Compile Include="Scripting\SetV.cs" />
@@ -171,6 +173,12 @@
       <ProductName>Microsoft XNA Framework Redistributable 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RageScriptExtension\RageScriptExtension.csproj">
+      <Project>{20981B9A-5E7B-47C4-AF87-54378773BC85}</Project>
+      <Name>RageScriptExtension</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />
