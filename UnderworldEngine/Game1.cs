@@ -111,7 +111,7 @@ namespace UnderworldEngine
             // interpreter
             Game1.interpreter = new Interpreter();
             //set up surprise
-            Game1.interpreter.run("run test.rs");
+            Game1.interpreter.run("run test");
 
             // mouse menu
             this.IsMouseVisible = true;

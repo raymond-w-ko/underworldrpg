@@ -89,10 +89,11 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\test.rs">
+    <Compile Include="Scripts\test.rs">
       <Name>test</Name>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+      <Importer>RageScriptImporter</Importer>
+      <Processor>RageScriptProcessor</Processor>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Consolas.spritefont">
@@ -124,6 +125,12 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\RageScriptExtension\RageScriptExtension.csproj">
+      <Project>{20981B9A-5E7B-47C4-AF87-54378773BC85}</Project>
+      <Name>RageScriptExtension</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
