@@ -24,6 +24,7 @@ namespace UnderworldEngine.Scripting
         {
             // TODO: read a value from the input ContentReader.
             int length = input.ReadInt32();
+            input.ReadChars(2);
             string source = new String(input.ReadChars(length));
 
             return new RageScript(source);
