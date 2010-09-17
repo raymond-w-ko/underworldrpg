@@ -38,10 +38,10 @@ namespace UnderworldEngine.Scripting
             functions["let"] = new Let();
             #endregion
 
-            foreach (string key in functions.Keys)
+            /*foreach (string key in functions.Keys)
             {
                 Game1.console.BindCommandHandler(key, new ConsoleCommandHandler(run), new Char[] { ' ' });
-            }
+            }*/
         }
 
         public void run(string function)
