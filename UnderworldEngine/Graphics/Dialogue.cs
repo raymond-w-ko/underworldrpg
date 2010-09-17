@@ -27,6 +27,7 @@ namespace UnderworldEngine.Graphics
         public static Color BackgroundColor = new Color(255, 240, 209);
         public static float BackgroundAlpha = 0.9f;
         public static Color BorderColor = new Color(54, 30, 26);
+        private Color[] _borderColors;
 
         protected Vector2 _position;
         private float _xSize;
@@ -36,6 +37,8 @@ namespace UnderworldEngine.Graphics
         private SpriteBatch _spriteBatch;
         private BasicEffect _basicEffect;
         private VertexDeclaration _vertexDeclaration;
+        private Vector3[] _vertices;
+        private short[] _indices;
 
         private DialogueManager _dialogueManager;
 
@@ -48,6 +51,13 @@ namespace UnderworldEngine.Graphics
             _xSize = xSize;
             _ySize = ySize;
 
+            initializeGraphics();
+
+            calculateFancyBorder();
+        }
+
+        private void initializeGraphics()
+        {
             _spriteBatch = new SpriteBatch(Game1.DefaultGraphicsDevice);
 
             _basicEffect = new BasicEffect(Game1.DefaultGraphicsDevice, null);
@@ -63,6 +73,30 @@ namespace UnderworldEngine.Graphics
                         VertexElementMethod.Default, VertexElementUsage.Position, 0)
                 }
             );
+
+            // create vertices for the background quad
+            _vertices = new Vector3[]
+            {
+                new Vector3(0, 0, 0),
+                new Vector3(_xSize, 0, 0),
+                new Vector3(_xSize, _ySize, 0),
+                new Vector3(0, _ySize, 0),
+            };
+
+            // create indices for the background quad
+            _indices = new short[] { 0, 1, 2, 2, 3, 0 };
+
+            // create an orthographic projection to draw the quad as a sprite
+            _basicEffect.Projection = Matrix.CreateOrthographicOffCenter(0,
+                Game1.DefaultGraphics.GraphicsDevice.Viewport.Width,
+                Game1.DefaultGraphics.GraphicsDevice.Viewport.Height, 0,
+                0, 1);
+
+            _basicEffect.DiffuseColor = BackgroundColor.ToVector3();
+            _basicEffect.Alpha = BackgroundAlpha;
+
+            // move to correct position
+            _basicEffect.World = Matrix.CreateTranslation(_position.X, _position.Y, 0);
         }
 
         public static void Initialize()
@@ -90,7 +124,7 @@ namespace UnderworldEngine.Graphics
             }
 
             calculateAverageCharLength();
-
+            
             IsInitialized = true;
         }
 
@@ -115,28 +149,7 @@ namespace UnderworldEngine.Graphics
                 throw new ApplicationException("Dialogue class was not initialized");
             }
 
-            // create vertices for the background quad
-            Vector3[] vertices = new Vector3[]
-            {
-                new Vector3(0, 0, 0),
-                new Vector3(_xSize, 0, 0),
-                new Vector3(_xSize, _ySize, 0),
-                new Vector3(0, _ySize, 0),
-            };
-
-            // create indices for the background quad
-            short[] indices = new short[] { 0, 1, 2, 2, 3, 0 };
-
-            // create an orthographic projection to draw the quad as a sprite
-            _basicEffect.Projection = Matrix.CreateOrthographicOffCenter(0,
-                Game1.DefaultGraphics.GraphicsDevice.Viewport.Width,
-                Game1.DefaultGraphics.GraphicsDevice.Viewport.Height, 0,
-                0, 1);
-
-            _basicEffect.DiffuseColor = BackgroundColor.ToVector3();
-            _basicEffect.Alpha = BackgroundAlpha;
-
-            // set the vertex declaration
+             // set the vertex declaration
             Game1.DefaultGraphics.GraphicsDevice.VertexDeclaration = _vertexDeclaration;
 
             // save current blending mode
@@ -149,9 +162,6 @@ namespace UnderworldEngine.Graphics
             Game1.DefaultGraphics.GraphicsDevice.RenderState.DestinationBlend = Blend.InverseSourceAlpha;
             Game1.DefaultGraphics.GraphicsDevice.RenderState.SeparateAlphaBlendEnabled = false;
 
-            // move to correct position
-            _basicEffect.World = Matrix.CreateTranslation(_position.X, _position.Y, 0);
-
             _basicEffect.Begin();
 
             // draw the quad
@@ -160,7 +170,7 @@ namespace UnderworldEngine.Graphics
 
                 Game1.DefaultGraphics.GraphicsDevice.DrawUserIndexedPrimitives(
                     PrimitiveType.TriangleList,
-                    vertices, 0, 4, indices, 0, 2);
+                    _vertices, 0, 4, _indices, 0, 2);
 
                 pass.End();
             }
@@ -175,7 +185,6 @@ namespace UnderworldEngine.Graphics
             Game1.DefaultGraphics.GraphicsDevice.RenderState.AlphaBlendEnable = blend;
 
             // Draw lines of dialogue
-            
             // Write strings to screen
             string[] lines = _dialogueManager.GetLinesToWrite();
             Vector2 textStart = new Vector2(_position.X + 5, _position.Y + 5);
@@ -193,9 +202,6 @@ namespace UnderworldEngine.Graphics
         {
             // line of text to display
             String textToDisplay = line;
-
-            
-
             return "";
         }
 
@@ -219,50 +225,59 @@ namespace UnderworldEngine.Graphics
                 );
         }
 
-        private void drawFancyBorders()
+        private void calculateFancyBorder()
         {
             Vector3 startColor = BackgroundColor.ToVector3();
             Vector3 endColor = BorderColor.ToVector3();
 
-            Color[] colors = new Color[6];
+            _borderColors = new Color[6];
 
             Vector3 diff = endColor - startColor;
             for (int ii = 1; ii <= 6; ii++) {
                 float step = ((float)((float)ii / 6.0f));
-                colors[ii - 1] = new Color(startColor + (step * diff));
+                _borderColors[ii - 1] = new Color(startColor + (step * diff));
             }
+        }
 
+        private void drawFancyBorders()
+        {
+            Vector2 start;
+            Vector2 end;
             for (int ii = 0; ii < 6; ii++) {
                 // Top Border
-                _spriteBatch.DrawLine(1, colors[ii],
-                    new Vector2(_position.X - ii, _position.Y - ii),
-                    new Vector2(_position.X + _xSize + ii, _position.Y - ii)
-                    );
+                start.X = _position.X - ii;
+                start.Y = _position.Y - ii;
+                end.X = _position.X + _xSize + ii;
+                end.Y = _position.Y - ii;
+                _spriteBatch.DrawLine(1, _borderColors[ii], start, end);
                 // Right Border
-                _spriteBatch.DrawLine(1, colors[ii],
-                    new Vector2(_position.X + _xSize + ii, _position.Y - ii),
-                    new Vector2(_position.X + _xSize + ii, _position.Y + _ySize + ii)
-                    );
+                start.X = _position.X + _xSize + ii;
+                start.Y = _position.Y - ii;
+                end.X = _position.X + _xSize + ii;
+                end.Y = _position.Y + _ySize + ii;
+                _spriteBatch.DrawLine(1, _borderColors[ii], start, end);
                 // Bottom Border
-                _spriteBatch.DrawLine(1, colors[ii],
-                    new Vector2(_position.X - ii - 1, _position.Y + _ySize + ii),
-                    new Vector2(_position.X + _xSize + ii, _position.Y + _ySize + ii)
-                    );
+                start.X = _position.X - ii - 1;
+                start.Y = _position.Y + _ySize + ii;
+                end.X = _position.X + _xSize + ii;
+                end.Y = _position.Y + _ySize + ii;
+                _spriteBatch.DrawLine(1, _borderColors[ii], start, end);
                 // Left Border
-                _spriteBatch.DrawLine(1, colors[ii],
-                    new Vector2(_position.X - ii, _position.Y - ii),
-                    new Vector2(_position.X - ii, _position.Y + _ySize + ii)
-                    );
+                start.X = _position.X - ii;
+                start.Y = _position.Y - ii;
+                end.X = _position.X - ii;
+                end.Y = _position.Y + _ySize + ii;
+                _spriteBatch.DrawLine(1, _borderColors[ii], start, end);
             }
         }
     }
 
     public static class SpriteExtensions
     {
+        public static Texture2D pointTexture = new Texture2D(Game1.DefaultGraphicsDevice, 1, 1, 1, TextureUsage.None, SurfaceFormat.Color);
         public static void DrawLine(this SpriteBatch sb, //Texture2D blank,
               float width, Color color, Vector2 point1, Vector2 point2)
         {
-            Texture2D pointTexture = new Texture2D(Game1.DefaultGraphicsDevice, 1, 1, 1, TextureUsage.None, SurfaceFormat.Color);
             pointTexture.SetData(new[] { Color.White });
 
             float angle = (float)Math.Atan2(point2.Y - point1.Y, point2.X - point1.X);
