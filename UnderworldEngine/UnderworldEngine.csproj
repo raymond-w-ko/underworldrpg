@@ -92,6 +92,8 @@
     <Compile Include="Game\GridMap.cs" />
     <Compile Include="Game\GridSquare.cs" />
     <Compile Include="Game\Old\MapSquare.cs" />
+    <Compile Include="Graphics\Dialogue.cs" />
+    <Compile Include="Graphics\DialogueManager.cs" />
     <Compile Include="Graphics\Interfaces\IDraw.cs" />
     <Compile Include="Game\Grid.cs" />
     <Compile Include="Game\Quad.cs" />

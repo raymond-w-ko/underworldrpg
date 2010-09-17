@@ -35,7 +35,7 @@ namespace UnderworldEngine
 
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        private MouseMenu _mouseMenu;
+        
 
         // Graphics Globals
         internal static Camera Camera = null;
@@ -57,7 +57,8 @@ namespace UnderworldEngine
         GameObjectModel gom;
         KeyboardState mLastKeyboardState;
         Grid map;
-        Menu _testMenu;
+        //private MouseMenu _mouseMenu;
+        DialogueManager _testDialogue;
 
         public Game1()
         {
@@ -108,26 +109,23 @@ namespace UnderworldEngine
             Game1.interpreter.run("run test");
 
             // mouse menu
-            this.IsMouseVisible = true;
-            Color backgroundColor = new Color(255, 240, 209);
-            Color borderColor = new Color(54, 30, 26);
-            Color textColor = new Color(17, 11, 0);
+            /*
             _mouseMenu = new MouseMenu("WascoSans18", textColor, backgroundColor, 1.0f,
                 borderColor, 200, 500);
             _mouseMenu.AddEntry(Menu.MenuEntryType.Label, "Test");
+             */
             
-            _testMenu = new Menu("WascoSans18", textColor, backgroundColor, .90f,
-                borderColor, DefaultGraphicsDevice.Viewport.Width - 20,
-                (DefaultGraphicsDevice.Viewport.Height / 4) - 20,
-                10, 10);
-            _testMenu.AddEntry(Menu.MenuEntryType.Label,
+            _testDialogue = new DialogueManager(
+                DefaultGraphicsDevice.Viewport.Width - 40, (DefaultGraphicsDevice.Viewport.Height / 4) - 20,
+                20, 530);
+            _testDialogue.AddLines(
                 "To be, or not to be: that is the question: " +
                 "Whether 'tis nobler in the mind to suffer the slings and arrows of outrageous fortune, " +
                 "or to take arms against a sea of troubles, and by opposing end them? " +
                 "To die, to sleep; To sleep: perchance to dream: ay, there's the rub; " +
                 "For in that sleep of death what dreams may come when we have shuffled off this mortal coil, " +
-                "Must give us pause: there's the respect that makes calamity of so long life;" +
-                "For who would bear the whips and scorns of time,"
+                "Must give us pause: there's the respect that makes calamity of so long life; " +
+                "For who would bear the whips and scorns of time, "
                 );
 
             base.Initialize();
@@ -199,10 +197,10 @@ namespace UnderworldEngine
             Game1.controller1.UpdateInput();
             Game1.kb.UpdateInput();
 
-            _mouseMenu.Update(gameTime);
+            //_mouseMenu.Update(gameTime);
             fps.Update(gameTime);
+            _testDialogue.Update();
 
-            //Game1.DefaultGraphicsDevice.Viewport.Project();
             base.Update(gameTime);
         }
 
@@ -230,8 +228,8 @@ namespace UnderworldEngine
             spriteBatch.End();
             spriteBatch.ResetFor3d();
             // Mouse Menu
-            _mouseMenu.Draw();
-            _testMenu.Draw();
+            //_mouseMenu.Draw();
+            _testDialogue.Draw();
             base.Draw(gameTime);
         }
     }
