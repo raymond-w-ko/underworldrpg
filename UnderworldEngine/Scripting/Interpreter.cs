@@ -36,6 +36,7 @@ namespace UnderworldEngine.Scripting
             functions["setc"] = new SetC();
             functions["show"] = new Show();
             functions["let"] = new Let();
+            functions["repeat"] = new Repeat();
             #endregion
 
             /*foreach (string key in functions.Keys)
