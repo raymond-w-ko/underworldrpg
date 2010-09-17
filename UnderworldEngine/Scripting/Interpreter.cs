@@ -17,6 +17,8 @@ namespace UnderworldEngine.Scripting
             }
         }
 
+        public Char[] Mask = new Char[] { ' ' };
+
         public Interpreter()
         {
             functions = new Dictionary<string, IInterpretable>();
@@ -37,6 +39,7 @@ namespace UnderworldEngine.Scripting
             functions["show"] = new Show();
             functions["let"] = new Let();
             functions["repeat"] = new Repeat();
+            functions["if"] = new If();
             #endregion
 
             /*foreach (string key in functions.Keys)

@@ -11,7 +11,7 @@ namespace UnderworldEngine.Scripting
 
         public void run(string function)
         {
-            string[] command = function.Split(new Char[] { ' ' });
+            string[] command = function.Split(Game1.interpreter.Mask);
             command[1] = command[1].ToLower();
             switch (command[1])
             {

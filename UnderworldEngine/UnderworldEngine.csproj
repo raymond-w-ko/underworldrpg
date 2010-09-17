@@ -112,6 +112,7 @@
     <Compile Include="Scripting\Bind.cs" />
     <Compile Include="Scripting\ConsoleKeyMap.cs" />
     <Compile Include="Scripting\GameConsole.cs" />
+    <Compile Include="Scripting\If.cs" />
     <Compile Include="Scripting\IGameConsole.cs" />
     <Compile Include="Scripting\IInterpretable.cs" />
     <Compile Include="Scripting\ILoader.cs" />

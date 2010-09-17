@@ -19,7 +19,7 @@ namespace UnderworldEngine.Scripting
 
         public void run(string function)
         {
-            string[] command = function.Split(new Char[] { ' ' });
+            string[] command = function.Split(Game1.interpreter.Mask);
             try
             {
                 functions[command[1]].load(command[2]);
