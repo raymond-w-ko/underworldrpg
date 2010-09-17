@@ -11,7 +11,7 @@ namespace UnderworldEngine.Scripting
 
         public void run(string function)
         {
-            string[] command = function.Split(new Char[] { ' ' });
+            string[] command = function.Split(Game1.interpreter.Mask);
             switch (command[1])
             {
                 case "fps":

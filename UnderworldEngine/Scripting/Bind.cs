@@ -24,7 +24,7 @@ namespace UnderworldEngine.Scripting
 
         public void run(string function)
         {
-            string[] command = function.Split(new Char[] { ' ' });
+            string[] command = function.Split(Game1.interpreter.Mask);
             string keyToBind = command[1];
             StringBuilder bindingTemp = new StringBuilder();
             string binding;
