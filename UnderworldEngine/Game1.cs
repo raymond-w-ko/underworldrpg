@@ -99,12 +99,6 @@ namespace UnderworldEngine
             GameConsole.Initialize(this, "Consolas", Color.Black, Color.White, 0.8f, 10);
             Game1.console = (IGameConsole)Services.GetService(typeof(IGameConsole));
 
-            console.BindCommandHandler("hello", delegate(GameTime time, string args)
-            {
-                console.Log(args);
-            }
-            , ' ');
-
             mLastKeyboardState = Keyboard.GetState();
 
             // interpreter
