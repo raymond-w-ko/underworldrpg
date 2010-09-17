@@ -54,13 +54,14 @@ namespace UnderworldEngine.Scripting
             string[] command = function.Split(new Char[] { ' ' });
 
             //replace marked variables
+            #region bash replace
             for (int i = 0; i < command.Length; i++)
             {
                 if (command[i].Contains('$'))
                 {
-                    command[i] = command[i].Split(new Char[] { '$' })[1];
                     try
                     {
+                        command[i] = command[i].Split(new Char[] { '$' })[1];
                         command[i] = env[command[i]];
                     }
                     catch (Exception e)
@@ -69,6 +70,7 @@ namespace UnderworldEngine.Scripting
                     }
                 }
             }
+            #endregion
 
             try
             {
