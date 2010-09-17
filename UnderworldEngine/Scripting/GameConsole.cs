@@ -694,8 +694,9 @@ namespace UnderworldEngine.Scripting
                 // clear the current text
                 mCurrentText.Remove(0, mCurrentText.Length);
 
+                Game1.interpreter.run(input);
                 // call any command handlers registered to the command
-                if (mCommandHandlers.ContainsKey(command[0]))
+                /*if (mCommandHandlers.ContainsKey(command[0]))
                 {
                     string args = "";
 
@@ -707,10 +708,10 @@ namespace UnderworldEngine.Scripting
 
                     mCommandHandlers[command[0]].Handler(gameTime, args);
                 }
-                else if (mAlertOnUnrecognizedCommand)
+                /*Uelse if (mAlertOnUnrecognizedCommand)
                 {
                     Log(string.Format("Unrecognized Command: '{0}'", command[0]), 0);
-                }
+                }*/
             }
             //check for if history is requested
             if (kb[Keys.Up] == KeyState.Down && mLastKeyboardState[Keys.Up] == KeyState.Up)

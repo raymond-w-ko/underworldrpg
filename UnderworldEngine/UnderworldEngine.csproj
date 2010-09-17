@@ -116,6 +116,7 @@
     <Compile Include="Scripting\IInterpretable.cs" />
     <Compile Include="Scripting\ILoader.cs" />
     <Compile Include="Scripting\Interpreter.cs" />
+    <Compile Include="Scripting\Let.cs" />
     <Compile Include="Scripting\Load.cs" />
     <Compile Include="Scripting\Music.cs" />
     <Compile Include="Scripting\RageScript.cs" />

@@ -8,20 +8,19 @@ namespace UnderworldEngine.Scripting
     class Interpreter
     {
         Dictionary<string, IInterpretable> functions;
-        LinkedList<string> history;
-
-        public LinkedList<string> History
+        Dictionary<string, string> env;
+        public Dictionary<string, string> Env
         {
             get
             {
-                return history;
+                return env;
             }
         }
 
         public Interpreter()
         {
             functions = new Dictionary<string, IInterpretable>();
-            history = new LinkedList<string>();
+            env = new Dictionary<string,string>();
 
             loadFunctions();
         }
@@ -36,6 +35,7 @@ namespace UnderworldEngine.Scripting
             functions["setv"] = new SetV();
             functions["setc"] = new SetC();
             functions["show"] = new Show();
+            functions["let"] = new Let();
             #endregion
 
             foreach (string key in functions.Keys)
@@ -52,6 +52,23 @@ namespace UnderworldEngine.Scripting
             }
 
             string[] command = function.Split(new Char[] { ' ' });
+
+            //replace marked variables
+            for (int i = 0; i < command.Length; i++)
+            {
+                if (command[i].Contains('$'))
+                {
+                    command[i] = command[i].Split(new Char[] { '$' })[1];
+                    try
+                    {
+                        command[i] = env[command[i]];
+                    }
+                    catch (Exception e)
+                    {
+                        Game1.console.Log(e.Message);
+                    }
+                }
+            }
 
             try
             {
