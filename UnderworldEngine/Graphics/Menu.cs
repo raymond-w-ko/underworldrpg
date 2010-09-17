@@ -17,6 +17,25 @@ namespace UnderworldEngine.Graphics
             Separator
         }
 
+        public struct MenuEntry
+        {
+            MenuEntryType menuEntryType;
+            string text;
+            public string Text
+            {
+                get
+                {
+                    return text;
+                }
+            }
+
+            public MenuEntry(MenuEntryType met, string s)
+            {
+                menuEntryType = met;
+                text = s;
+            }
+        }
+
         public bool IsVisible = true;
 
         protected Vector2 _position;
@@ -37,9 +56,14 @@ namespace UnderworldEngine.Graphics
 
         private Color _backgroundColor;
         private float _backgroundAlpha;
+        private Color _borderColor;
+        
+        // content
+        public LinkedList<MenuEntry> MenuEntries;
 
         public Menu(string fontName, Color defaultTextColor,
             Color backgroundColor, float backgroundAlpha,
+            Color borderColor,
             float width, float height)
         {
             _position = new Vector2(0, 0);
@@ -50,6 +74,7 @@ namespace UnderworldEngine.Graphics
             _defaultTextColor = defaultTextColor;
             _backgroundColor = backgroundColor;
             _backgroundAlpha = backgroundAlpha;
+            _borderColor = borderColor;
 
             _spriteBatch = new SpriteBatch(Game1.DefaultGraphicsDevice);
             _font = Game1.DefaultContent.Load<SpriteFont>(_fontName);
@@ -78,6 +103,8 @@ namespace UnderworldEngine.Graphics
                             VertexElementMethod.Default, VertexElementUsage.Position, 0)
                     }
                 );
+
+            MenuEntries = new LinkedList<MenuEntry>();
         }
 
         public void MoveTo(Vector2 pos)
@@ -92,7 +119,7 @@ namespace UnderworldEngine.Graphics
             }
 
             // measure the height of a line in the current font
-            float height = (_fontHeight + _verticalSpacing);
+            float fontHeight = (_fontHeight + _verticalSpacing);
 
             // create vertices for the background quad
             Vector3[] vertices = new Vector3[]
@@ -129,7 +156,6 @@ namespace UnderworldEngine.Graphics
             Game1.DefaultGraphics.GraphicsDevice.RenderState.SeparateAlphaBlendEnabled = false;
 
             // move to correct position
-            Game1.console.Log(_position.ToString());
             _basicEffect.World = Matrix.CreateTranslation(_position.X, _position.Y, 0);
 
             _basicEffect.Begin();
@@ -147,8 +173,105 @@ namespace UnderworldEngine.Graphics
 
             _basicEffect.End();
 
+            _spriteBatch.Begin();
+            drawFancyBorders();
+            
             // restore previous alpha blend
             Game1.DefaultGraphics.GraphicsDevice.RenderState.AlphaBlendEnable = blend;
+
+            // Draw Menu Entries
+            Vector2 textStart = new Vector2(_position.X + 5, _position.Y + 5);
+            Vector2 textEnd = new Vector2(_position.X + _width - 5, _position.Y + _height - 5);
+            foreach (MenuEntry menuEntry in MenuEntries) {
+                Vector2 measurement = _font.MeasureString(menuEntry.Text);
+                _spriteBatch.DrawString(_font, menuEntry.Text, textStart, _defaultTextColor);
+            }
+            
+            _spriteBatch.End();
+            _spriteBatch.ResetFor3d();
+        }
+
+        public void AddEntry(MenuEntryType menuEntryType, string s)
+        {
+            MenuEntry me = new MenuEntry(menuEntryType, s);
+            MenuEntries.AddLast(me);
+        }
+
+        private void drawBorders()
+        {
+            _spriteBatch.DrawLine(5, _borderColor,
+                new Vector2(_position.X, _position.Y),
+                new Vector2(_position.X + _width, _position.Y)
+                );
+            _spriteBatch.DrawLine(5, _borderColor,
+                new Vector2(_position.X + _width, _position.Y),
+                new Vector2(_position.X + _width, _position.Y + _height)
+                );
+            _spriteBatch.DrawLine(5, _borderColor,
+                new Vector2(_position.X + _width, _position.Y + _height),
+                new Vector2(_position.X, _position.Y + _height)
+                );
+            _spriteBatch.DrawLine(5, _borderColor,
+                new Vector2(_position.X, _position.Y),
+                new Vector2(_position.X, _position.Y + _height)
+                );
+        }
+
+        private void drawFancyBorders()
+        {
+            Vector3 startColor = _backgroundColor.ToVector3();
+            Vector3 endColor = _borderColor.ToVector3();
+
+            Color[] colors = new Color[6];
+
+            Vector3 diff = endColor - startColor;
+            for (int ii = 1; ii <= 6; ii++) {
+                float step = ((float)((float)ii/6.0f));
+                colors[ii-1] = new Color(startColor + (step * diff));
+            }
+
+            for (int ii = 0; ii < 6; ii++) {
+                // Top Border
+                _spriteBatch.DrawLine(1, colors[ii],
+                    new Vector2(_position.X - ii, _position.Y - ii),
+                    new Vector2(_position.X + _width + ii, _position.Y - ii)
+                    );
+                // Right Border
+                _spriteBatch.DrawLine(1, colors[ii],
+                    new Vector2(_position.X + _width + ii, _position.Y - ii),
+                    new Vector2(_position.X + _width + ii, _position.Y + _height + ii)
+                    );
+                // Bottom Border
+                _spriteBatch.DrawLine(1, colors[ii],
+                    new Vector2(_position.X - ii - 1, _position.Y + _height + ii),
+                    new Vector2(_position.X + _width + ii, _position.Y + _height + ii)
+                    );
+                // Left Border
+                _spriteBatch.DrawLine(1, colors[ii],
+                    new Vector2(_position.X - ii, _position.Y - ii),
+                    new Vector2(_position.X - ii, _position.Y + _height + ii)
+                    );
+            }
+        }
+    }
+
+
+    public static class SpriteExtensions
+    {
+        public static void DrawLine(this SpriteBatch sb, //Texture2D blank,
+              float width, Color color, Vector2 point1, Vector2 point2)
+        {
+            Texture2D pointTexture = new Texture2D(Game1.DefaultGraphicsDevice, 1, 1, 1, TextureUsage.None, SurfaceFormat.Color);
+            pointTexture.SetData(new[] { Color.White });
+
+            float angle = (float)Math.Atan2(point2.Y - point1.Y, point2.X - point1.X);
+            float length = Vector2.Distance(point1, point2);
+
+            Vector2 newOrigin = (point1 + point2) / 2;
+
+            sb.Draw(pointTexture, point1, null, color,
+              angle, new Vector2(0, 0), new Vector2(length, width),
+              SpriteEffects.None, 0);
         }
     }
 }

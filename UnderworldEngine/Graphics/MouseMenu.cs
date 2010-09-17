@@ -19,8 +19,12 @@ namespace UnderworldEngine.Graphics
         public MouseMenu(string fontName,
             Color defaultTextColor,
             Color backgroundColor, float backgroundAlpha,
+            Color borderColor,
             float width, float height)
-            : base(fontName, defaultTextColor, backgroundColor, backgroundAlpha, width, height)
+            : base(fontName, defaultTextColor,
+                backgroundColor, backgroundAlpha,
+                borderColor,
+                width, height)
         {
             _mouseStateCurrent = _mouseStatePrevious = Mouse.GetState();
             IsVisible = false;
@@ -42,7 +46,7 @@ namespace UnderworldEngine.Graphics
                 IsVisible = !IsVisible;
                 _clickPosition = new Vector2(_mouseStateCurrent.X, _mouseStateCurrent.Y);
                 _position = _clickPosition;
-            }     
+            }
 
             _mouseStatePrevious = _mouseStateCurrent;
 
