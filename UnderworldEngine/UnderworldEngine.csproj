@@ -121,6 +121,7 @@
     <Compile Include="Scripting\Music.cs" />
     <Compile Include="Scripting\RageScript.cs" />
     <Compile Include="Scripting\RageScriptReader.cs" />
+    <Compile Include="Scripting\Repeat.cs" />
     <Compile Include="Scripting\Run.cs" />
     <Compile Include="Scripting\SetC.cs" />
     <Compile Include="Scripting\SetV.cs" />
