@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-
+/*
 namespace UnderworldEngine.Graphics
 {
     class MouseMenu : Menu
@@ -66,3 +66,4 @@ namespace UnderworldEngine.Graphics
         }
     }
 }
+*/
