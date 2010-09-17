@@ -35,7 +35,6 @@ namespace UnderworldEngine
 
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        PrimitiveBatch<VertexPositionNormalTexture> primitiveBatch;
         private MouseMenu _mouseMenu;
 
         // Graphics Globals
@@ -115,7 +114,12 @@ namespace UnderworldEngine
 
             // mouse menu
             this.IsMouseVisible = true;
-            _mouseMenu = new MouseMenu("Consolas", Color.Black, new Color(225, 225, 225), 1.0f, 200, 500);
+            Color backgroundColor = new Color(255, 240, 209);
+            Color borderColor = new Color(54, 30, 26);
+            Color textColor = new Color(17, 11, 0);
+            _mouseMenu = new MouseMenu("WascoSans18", textColor, backgroundColor, 1.0f,
+                borderColor, 200, 500);
+            _mouseMenu.AddEntry(Menu.MenuEntryType.Label, "This is a test");
 
             base.Initialize();
         }
