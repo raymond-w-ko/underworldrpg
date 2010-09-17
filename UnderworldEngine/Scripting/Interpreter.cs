@@ -79,6 +79,9 @@ namespace UnderworldEngine.Scripting
             }
             catch (Exception e)
             {
+                if (function == String.Empty)
+                    return;
+
                 Game1.console.Log(e.Message); 
             }
         }
