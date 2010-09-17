@@ -39,8 +39,8 @@ namespace UnderworldEngine.Graphics
         public bool IsVisible = true;
 
         protected Vector2 _position;
-        private float _width;
-        private float _height;
+        private float _xSize;
+        private float _ySize;
 
         // graphics
         private SpriteBatch _spriteBatch;
@@ -51,7 +51,7 @@ namespace UnderworldEngine.Graphics
         // display
         private string _fontName;
         private float _fontHeight;
-        private float _verticalSpacing = 0.0f;
+        private float _verticalSpacing = 5.0f;
         private Color _defaultTextColor;
 
         private Color _backgroundColor;
@@ -59,16 +59,20 @@ namespace UnderworldEngine.Graphics
         private Color _borderColor;
         
         // content
-        public LinkedList<MenuEntry> MenuEntries;
+        public List<MenuEntry> MenuEntries;
+        private Vector2 _averageCharSize;
+        private int _menuEntryToDisplay;
+        private string _menuRemainingText;
 
         public Menu(string fontName, Color defaultTextColor,
             Color backgroundColor, float backgroundAlpha,
             Color borderColor,
-            float width, float height)
+            float xSize, float ySize,
+            float xPosition, float yPosition)
         {
-            _position = new Vector2(0, 0);
-            _width = width;
-            _height = height;
+            _position = new Vector2(xPosition, yPosition);
+            _xSize = xSize;
+            _ySize = ySize;
 
             _fontName = fontName;
             _defaultTextColor = defaultTextColor;
@@ -104,7 +108,21 @@ namespace UnderworldEngine.Graphics
                     }
                 );
 
-            MenuEntries = new LinkedList<MenuEntry>();
+            MenuEntries = new List<MenuEntry>();
+            _averageCharSize = calculateAverageCharLength();
+            _menuEntryToDisplay = 0;
+            _menuRemainingText = "";
+        }
+
+        private Vector2 calculateAverageCharLength()
+        {
+            string alphabet = "abcdefghijklmnopqrstuvwxyz" +
+                              ",.?\"\"()";
+            Vector2 measurement = _font.MeasureString(alphabet);
+
+            measurement.X /= (float)alphabet.Length;
+
+            return measurement;
         }
 
         public void MoveTo(Vector2 pos)
@@ -125,9 +143,9 @@ namespace UnderworldEngine.Graphics
             Vector3[] vertices = new Vector3[]
             {
                 new Vector3(0, 0, 0),
-                new Vector3(_width, 0, 0),
-                new Vector3(_width, _height, 0),
-                new Vector3(0, _height, 0),
+                new Vector3(_xSize, 0, 0),
+                new Vector3(_xSize, _ySize, 0),
+                new Vector3(0, _ySize, 0),
             };
 
             // create indices for the background quad
@@ -181,39 +199,111 @@ namespace UnderworldEngine.Graphics
 
             // Draw Menu Entries
             Vector2 textStart = new Vector2(_position.X + 5, _position.Y + 5);
-            Vector2 textEnd = new Vector2(_position.X + _width - 5, _position.Y + _height - 5);
-            foreach (MenuEntry menuEntry in MenuEntries) {
-                Vector2 measurement = _font.MeasureString(menuEntry.Text);
-                _spriteBatch.DrawString(_font, menuEntry.Text, textStart, _defaultTextColor);
+            Vector2 textEnd = new Vector2(_position.X + _xSize - 5, _position.Y + _ySize - 5);
+            float maxTextWidth = _xSize - 5;
+            for (int ii = _menuEntryToDisplay; ii < MenuEntries.Count(); ii++) {
+                bool result = displayEntry((MenuEntries[ii]), ref textStart, ref textEnd, maxTextWidth);
+                if (result) {
+                    continue;
+                }
+                else {
+                    break;
+                }
             }
-            
             _spriteBatch.End();
             _spriteBatch.ResetFor3d();
+        }
+
+        public bool displayEntry(MenuEntry entry, ref Vector2 textStart, ref Vector2 textEnd, float maxTextWidth)
+        {
+            // line of text to display
+            String textToDisplay;
+            if (_menuRemainingText.Length > 0) {
+                textToDisplay = _menuRemainingText;
+            }
+            else {
+                textToDisplay = entry.Text;
+            }
+
+            while (textToDisplay.Length > 0) {
+                Vector2 measurement = _font.MeasureString(textToDisplay);
+
+                // Find estimated number of characters can fit width;
+                int estimatedChars = (int)(maxTextWidth / _averageCharSize.X);
+                int numChars = estimatedChars > textToDisplay.Length ?
+                    textToDisplay.Length : estimatedChars;
+                String candidate = new String(textToDisplay.ToCharArray(), 0, numChars);
+                // Increment until string fits
+                while ((_font.MeasureString(candidate).X < maxTextWidth) &&
+                       (textToDisplay.Length > candidate.Length)
+                      ) {
+                    candidate = new String(textToDisplay.ToCharArray(), 0, candidate.Length + 1);
+                }
+                // Decrement until string fits
+                while (_font.MeasureString(candidate).X > maxTextWidth) {
+                    candidate = new String(candidate.ToCharArray(), 0, candidate.Length - 1);
+                }
+
+                // Adaptive averaging
+                _averageCharSize =  (_font.MeasureString(candidate));
+                _averageCharSize.X *= (1.0f / (float)candidate.Length);
+
+                // Write string to screen
+                _spriteBatch.DrawString(_font, candidate, textStart, _defaultTextColor);
+
+                // Cut out written string
+                numChars = textToDisplay.Length - candidate.Length > 0 ?
+                    textToDisplay.Length - candidate.Length : textToDisplay.Length;
+                if (numChars != textToDisplay.Length) {
+                    textToDisplay =
+                        new String(textToDisplay.ToCharArray(),
+                        candidate.Length, numChars
+                        );
+                }
+                else {
+                    textToDisplay = "";
+                }
+
+                // move "cursor" to next line
+                textStart.Y += _fontHeight + _verticalSpacing;
+
+                // check to see if there is even a next line
+                if (textStart.Y >= textEnd.Y) {
+                    _menuRemainingText = textToDisplay;
+                    return false;
+                }
+            }
+            return true;
         }
 
         public void AddEntry(MenuEntryType menuEntryType, string s)
         {
             MenuEntry me = new MenuEntry(menuEntryType, s);
-            MenuEntries.AddLast(me);
+            MenuEntries.Add(me);
+        }
+
+        public void Advance()
+        {
+            ;
         }
 
         private void drawBorders()
         {
             _spriteBatch.DrawLine(5, _borderColor,
                 new Vector2(_position.X, _position.Y),
-                new Vector2(_position.X + _width, _position.Y)
+                new Vector2(_position.X + _xSize, _position.Y)
                 );
             _spriteBatch.DrawLine(5, _borderColor,
-                new Vector2(_position.X + _width, _position.Y),
-                new Vector2(_position.X + _width, _position.Y + _height)
+                new Vector2(_position.X + _xSize, _position.Y),
+                new Vector2(_position.X + _xSize, _position.Y + _ySize)
                 );
             _spriteBatch.DrawLine(5, _borderColor,
-                new Vector2(_position.X + _width, _position.Y + _height),
-                new Vector2(_position.X, _position.Y + _height)
+                new Vector2(_position.X + _xSize, _position.Y + _ySize),
+                new Vector2(_position.X, _position.Y + _ySize)
                 );
             _spriteBatch.DrawLine(5, _borderColor,
                 new Vector2(_position.X, _position.Y),
-                new Vector2(_position.X, _position.Y + _height)
+                new Vector2(_position.X, _position.Y + _ySize)
                 );
         }
 
@@ -234,27 +324,26 @@ namespace UnderworldEngine.Graphics
                 // Top Border
                 _spriteBatch.DrawLine(1, colors[ii],
                     new Vector2(_position.X - ii, _position.Y - ii),
-                    new Vector2(_position.X + _width + ii, _position.Y - ii)
+                    new Vector2(_position.X + _xSize + ii, _position.Y - ii)
                     );
                 // Right Border
                 _spriteBatch.DrawLine(1, colors[ii],
-                    new Vector2(_position.X + _width + ii, _position.Y - ii),
-                    new Vector2(_position.X + _width + ii, _position.Y + _height + ii)
+                    new Vector2(_position.X + _xSize + ii, _position.Y - ii),
+                    new Vector2(_position.X + _xSize + ii, _position.Y + _ySize + ii)
                     );
                 // Bottom Border
                 _spriteBatch.DrawLine(1, colors[ii],
-                    new Vector2(_position.X - ii - 1, _position.Y + _height + ii),
-                    new Vector2(_position.X + _width + ii, _position.Y + _height + ii)
+                    new Vector2(_position.X - ii - 1, _position.Y + _ySize + ii),
+                    new Vector2(_position.X + _xSize + ii, _position.Y + _ySize + ii)
                     );
                 // Left Border
                 _spriteBatch.DrawLine(1, colors[ii],
                     new Vector2(_position.X - ii, _position.Y - ii),
-                    new Vector2(_position.X - ii, _position.Y + _height + ii)
+                    new Vector2(_position.X - ii, _position.Y + _ySize + ii)
                     );
             }
         }
     }
-
 
     public static class SpriteExtensions
     {
@@ -266,8 +355,6 @@ namespace UnderworldEngine.Graphics
 
             float angle = (float)Math.Atan2(point2.Y - point1.Y, point2.X - point1.X);
             float length = Vector2.Distance(point1, point2);
-
-            Vector2 newOrigin = (point1 + point2) / 2;
 
             sb.Draw(pointTexture, point1, null, color,
               angle, new Vector2(0, 0), new Vector2(length, width),

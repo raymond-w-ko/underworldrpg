@@ -24,7 +24,8 @@ namespace UnderworldEngine.Graphics
             : base(fontName, defaultTextColor,
                 backgroundColor, backgroundAlpha,
                 borderColor,
-                width, height)
+                width, height,
+                0, 0)
         {
             _mouseStateCurrent = _mouseStatePrevious = Mouse.GetState();
             IsVisible = false;

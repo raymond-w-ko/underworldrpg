@@ -123,7 +123,7 @@ namespace UnderworldEngine.Scripting
 
             char[] numMods = new char[]
             {
-                ')', '!', '@', '#', '$', '%', '^', '&', '*', '(' 
+                ')', '!', '@', '#', '$', '%', '^', '&', '*', '('
             };
 
             for (char ch = '0'; ch <= '9'; ++ch)
