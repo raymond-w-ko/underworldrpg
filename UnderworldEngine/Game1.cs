@@ -18,6 +18,7 @@ using UnderworldEngine.Audio;
 using System.IO;
 using UnderworldEngine.Scripting;
 using UnderworldEngine.IO;
+using UnderworldEngine.GameState;
 
 namespace UnderworldEngine
 {
@@ -51,6 +52,7 @@ namespace UnderworldEngine
         internal static KeyboardManager kb;
         internal static IGameConsole console;
         internal static FpsCounter fps;
+        internal static ScreenManager screenManager;
 
         Picker _picker;
         // Renderables
@@ -81,6 +83,9 @@ namespace UnderworldEngine
             // global access to controllers
             Game1.controller1 = new ControllerManager(PlayerIndex.One);
             Game1.kb = new KeyboardManager();
+
+            //global access to Screen Manager
+            Game1.screenManager = new ScreenManager();
         }
 
         /// <summary>
@@ -130,7 +135,8 @@ namespace UnderworldEngine
                 "For who would bear the whips and scorns of time, "
                 );
 
-            
+            //add screens to screenManager
+            Game1.screenManager.AddScreen("blank", new BlankScreen());
 
             base.Initialize();
         }
@@ -153,6 +159,8 @@ namespace UnderworldEngine
             gom = new GameObjectModel("Models/testmap2");
             gom.Scale(12.0f * gom.BoundingBox.FindScaleToUnitFactor());
             gom.OffsetBy(6, 0, 6);
+            gom.IsFocused = true;
+            Game1.screenManager.AddScreen("map", gom);
             console.Log((12.0f * gom.BoundingBox.FindScaleToUnitFactor()).ToString());
 
             _grid = new Grid(12, 12);
@@ -222,8 +230,9 @@ namespace UnderworldEngine
             // TODO: Add your drawing code here
             // Draw 3D here
             //gridMap.Draw();
-            gom.Draw();
+            //gom.Draw();
             _grid.Draw();
+            Game1.screenManager.Draw();
             
             
             // Draw 2D Sprites Here

@@ -120,6 +120,11 @@
     <Content Include="Maps\level01.bin">
       <Name>level01</Name>
     </Content>
+    <Compile Include="Textures\blank.png">
+      <Name>blank</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
     <Compile Include="Textures\red.jpg">
       <Name>red</Name>
       <Importer>TextureImporter</Importer>
