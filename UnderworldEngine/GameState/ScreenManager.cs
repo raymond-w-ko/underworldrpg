@@ -33,6 +33,22 @@ namespace UnderworldEngine.GameState
             nameToScreen[name].IsFocused = true;
         }
 
+        public void SwitchOn(string name)
+        {
+            nameToScreen[name].IsFocused = true;
+        }
+
+        public void SwitchOff(string name)
+        {
+            nameToScreen[name].IsFocused = false;
+        }
+
+        public void Remove(string name)
+        {
+            nameToScreen[name].Unload();
+            nameToScreen.Remove(name);
+        }
+
         /// <summary>
         /// Update the IScreen that is in focus
         /// </summary>
@@ -43,7 +59,6 @@ namespace UnderworldEngine.GameState
                 if (sc.IsFocused)
                 {
                     sc.Update();
-                    return;
                 }
             }
         }
@@ -58,7 +73,6 @@ namespace UnderworldEngine.GameState
                 if (sc.IsFocused)
                 {
                     sc.Draw();
-                    return;
                 }
             }
         }
