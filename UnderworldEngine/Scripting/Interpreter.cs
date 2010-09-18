@@ -40,6 +40,7 @@ namespace UnderworldEngine.Scripting
             functions["let"] = new Let();
             functions["repeat"] = new Repeat();
             functions["if"] = new If();
+            functions["pick"] = new Pick();
             #endregion
 
             /*foreach (string key in functions.Keys)
