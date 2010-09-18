@@ -224,7 +224,6 @@ namespace UnderworldEngine
             //gridMap.Draw();
             gom.Draw();
             _grid.Draw();
-
             
             
             // Draw 2D Sprites Here
