@@ -61,11 +61,7 @@ namespace UnderworldEngine.Graphics
             _spriteBatch = new SpriteBatch(Game1.DefaultGraphicsDevice);
 
             _basicEffect = new BasicEffect(Game1.DefaultGraphicsDevice, null);
-            _basicEffect.VertexColorEnabled = false;
-            _basicEffect.LightingEnabled = false;
-            _basicEffect.TextureEnabled = false;
-            _basicEffect.View = Matrix.Identity;
-            _basicEffect.World = Matrix.Identity;
+            Orthographic.SetOrthoEffect(_basicEffect);
 
             _vertexDeclaration = new VertexDeclaration(Game1.DefaultGraphics.GraphicsDevice,
                 new VertexElement[] {
@@ -152,15 +148,7 @@ namespace UnderworldEngine.Graphics
              // set the vertex declaration
             Game1.DefaultGraphics.GraphicsDevice.VertexDeclaration = _vertexDeclaration;
 
-            // save current blending mode
-            bool blend = Game1.DefaultGraphics.GraphicsDevice.RenderState.AlphaBlendEnable;
-
-            // enable alpha blending
-            Game1.DefaultGraphics.GraphicsDevice.RenderState.AlphaBlendEnable = true;
-            Game1.DefaultGraphics.GraphicsDevice.RenderState.AlphaBlendOperation = BlendFunction.Add;
-            Game1.DefaultGraphics.GraphicsDevice.RenderState.SourceBlend = Blend.SourceAlpha;
-            Game1.DefaultGraphics.GraphicsDevice.RenderState.DestinationBlend = Blend.InverseSourceAlpha;
-            Game1.DefaultGraphics.GraphicsDevice.RenderState.SeparateAlphaBlendEnabled = false;
+            Orthographic.StartOrtho();
 
             _basicEffect.Begin();
 
@@ -181,8 +169,7 @@ namespace UnderworldEngine.Graphics
 
             drawFancyBorders();
 
-            // restore previous alpha blend
-            Game1.DefaultGraphics.GraphicsDevice.RenderState.AlphaBlendEnable = blend;
+            Orthographic.EndOrtho();
 
             // Draw lines of dialogue
             // Write strings to screen
