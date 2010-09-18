@@ -36,7 +36,6 @@ namespace UnderworldEngine
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         
-
         // Graphics Globals
         internal static Camera Camera = null;
         internal static GraphicsDeviceManager DefaultGraphics = null;
@@ -53,15 +52,18 @@ namespace UnderworldEngine
         internal static IGameConsole console;
         internal static FpsCounter fps;
 
+        Picker _picker;
         // Renderables
         GameObjectModel gom;
         KeyboardState mLastKeyboardState;
-        Grid map;
+        Grid _grid;
         //private MouseMenu _mouseMenu;
         DialogueManager _testDialogue;
 
         public Game1()
         {
+            this.IsMouseVisible = true;
+
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
@@ -128,6 +130,8 @@ namespace UnderworldEngine
                 "For who would bear the whips and scorns of time, "
                 );
 
+            
+
             base.Initialize();
         }
 
@@ -151,7 +155,8 @@ namespace UnderworldEngine
             gom.OffsetBy(6, 0, 6);
             console.Log((12.0f * gom.BoundingBox.FindScaleToUnitFactor()).ToString());
 
-            map = new Grid(12, 12);
+            _grid = new Grid(12, 12);
+            _picker = new Picker(_grid);
         }
 
         /// <summary>
@@ -200,6 +205,7 @@ namespace UnderworldEngine
             //_mouseMenu.Update(gameTime);
             fps.Update(gameTime);
             _testDialogue.Update();
+            _picker.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -217,7 +223,7 @@ namespace UnderworldEngine
             // Draw 3D here
             //gridMap.Draw();
             gom.Draw();
-            map.Draw();
+            _grid.Draw();
 
             
             

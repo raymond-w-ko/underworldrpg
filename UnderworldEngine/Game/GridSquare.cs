@@ -13,7 +13,22 @@ namespace UnderworldEngine.Game
         public bool IsWalkable = true;
 
         private uint _xIndex;
+        public uint XIndex
+        {
+            get
+            {
+                return _xIndex;
+            }
+        }
+
         private uint _zIndex;
+        public uint ZIndex
+        {
+            get
+            {
+                return _zIndex;
+            }
+        }
         public float Height = 0;
         public static float MIN_FLOOR_HEIGHT = 0;
 
@@ -60,6 +75,15 @@ namespace UnderworldEngine.Game
         public VertexPositionTexture[] Vertices;
         public int[] Indices;
 
+        private BoundingBox _boundingBox;
+        public BoundingBox BoundingBox
+        {
+            get
+            {
+                return _boundingBox;
+            }
+        }
+
         public GridSquare(uint xIndex, uint zIndex, float height)
         {
             Height = height;
@@ -94,6 +118,14 @@ namespace UnderworldEngine.Game
             Indices = new int[6];
 
             convertToVerticesAndIndices(Top, Vertices, 4 * 0, Indices, 6 * 0, _xIndex, _zIndex);
+
+            // calculate bounding box
+            Vector3[] points = new Vector3[4];
+            for (int ii = 0; ii < 4; ii++) {
+                points[ii] = Vertices[ii].Position;
+            }
+            _boundingBox = BoundingBox.CreateFromPoints(points);
+            Game1.Debug.WriteLine(_boundingBox.ToString());
         }
 
         private void convertToVerticesAndIndices(Quad quad,

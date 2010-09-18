@@ -34,11 +34,54 @@ namespace UnderworldEngine.Graphics
             }
         }
 
+        private Matrix _viewProjectionMatrix;
+        public Matrix ViewProjectionMatrix
+        {
+            get
+            {
+                return _viewProjectionMatrix;
+            }
+        }
+
+        private Matrix _viewInverseMatrix;
+        public Matrix ViewInverseMatrix
+        {
+            get
+            {
+                return _viewInverseMatrix;
+            }
+        }
+
+        private Matrix _projectionInverseMatrix;
+        public Matrix ProjectionInverseMatrix
+        {
+            get
+            {
+                return _projectionInverseMatrix;
+            }
+        }
+
+        private Matrix _viewProjectionInverseMatrix;
+        public Matrix ViewProjectionInverseMatrix
+        {
+            get
+            {
+                return _viewProjectionInverseMatrix;
+            }
+        }
+
         private Vector3 currentPosition = Vector3.Zero;
         private Vector3 currentTarget = Vector3.Zero;
         private Vector3 currentUpVector = Vector3.Zero;
 
-        private float nearPlaneDistance = 0.0f;
+        private float nearPlaneDistance = 0.1f;
+        public float NearPlaneDistance
+        {
+            get
+            {
+                return nearPlaneDistance;
+            }
+        }
         private float farPlaneDistance = 100.0f;
         public class PlaneDistanceException : System.ApplicationException { };
 
@@ -83,7 +126,7 @@ namespace UnderworldEngine.Graphics
         {
             this.SetUpVector(Vector3.Up);
 
-            this.SetNearPlaneDistance(0.0f);
+            this.SetNearPlaneDistance(1.0f);
             this.SetFarPlaneDistance(100.0f);
 
             allowableCameraPositions = new Vector3[4];
@@ -245,6 +288,7 @@ namespace UnderworldEngine.Graphics
         private void recalculateViewMatrix()
         {
             viewMatrix = Matrix.CreateLookAt(currentPosition, currentTarget, currentUpVector);
+            recalculateMiscMatrices();
         }
 
         private void recalculateProjectionMatrix()
@@ -254,6 +298,16 @@ namespace UnderworldEngine.Graphics
             projectionMatrix = Matrix.CreateOrthographic(
                 viewWidth, viewHeight,
                 this.nearPlaneDistance, this.farPlaneDistance);
+            recalculateMiscMatrices();
+        }
+
+        // http://forums.xna.com/forums/p/6939/36985.aspx#36985
+        private void recalculateMiscMatrices()
+        {
+            _viewProjectionMatrix = viewMatrix * projectionMatrix;
+            _viewInverseMatrix = Matrix.Invert(viewMatrix);
+            _projectionInverseMatrix = Matrix.Invert(projectionMatrix);
+            _viewProjectionInverseMatrix = ProjectionInverseMatrix * ViewInverseMatrix;
         }
         #endregion
 
