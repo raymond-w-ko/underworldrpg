@@ -119,12 +119,8 @@
   <ItemGroup>
     <Content Include="Maps\level01.bin">
       <Name>level01</Name>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Compile Include="Textures\blank.png">
-      <Name>blank</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
     <Compile Include="Textures\red.jpg">
       <Name>red</Name>
       <Importer>TextureImporter</Importer>
@@ -156,6 +152,13 @@
       <Name>clearGamePad</Name>
       <Importer>RageScriptImporter</Importer>
       <Processor>RageScriptProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Models\skull.x">
+      <Name>skull</Name>
+      <Importer>XImporter</Importer>
+      <Processor>ModelProcessor</Processor>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />

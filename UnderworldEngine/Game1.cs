@@ -19,6 +19,8 @@ using System.IO;
 using UnderworldEngine.Scripting;
 using UnderworldEngine.IO;
 using UnderworldEngine.GameState;
+using UnderworldEngine.Game.Map;
+using System.Xml;
 
 namespace UnderworldEngine
 {
@@ -54,13 +56,11 @@ namespace UnderworldEngine
         internal static FpsCounter fps;
         internal static ScreenManager screenManager;
 
-        Picker _picker;
         // Renderables
-        GameObjectModel gom;
         KeyboardState mLastKeyboardState;
-        Grid _grid;
         //private MouseMenu _mouseMenu;
         DialogueManager _testDialogue;
+        Map _map;
 
         public Game1()
         {
@@ -102,7 +102,7 @@ namespace UnderworldEngine
             // global access to camera
             Game1.Camera = new Camera();
             Game1.Camera.SetFarPlaneDistance(10000);
-            Game1.Camera.LookAt(5, 0, 5);
+            Game1.Camera.LookAt(7, 0, 3);
 
             // console stuff
             GameConsole.Initialize(this, "Consolas", Color.Black, Color.White, 0.8f, 10);
@@ -155,16 +155,15 @@ namespace UnderworldEngine
             fps = new FpsCounter();
 
             // TODO: use this.Content to load your game content here
-            //gridMap = new GridMap(20, 20);
-            gom = new GameObjectModel("Models/testmap2");
-            gom.Scale(12.0f * gom.BoundingBox.FindScaleToUnitFactor());
-            gom.OffsetBy(6, 0, 6);
-            gom.IsFocused = true;
-            Game1.screenManager.AddScreen("map", gom);
-            console.Log((12.0f * gom.BoundingBox.FindScaleToUnitFactor()).ToString());
-
-            _grid = new Grid(12, 12);
-            _picker = new Picker(_grid);
+            _map = new Map("Content\\Maps\\level01.bin");
+            /*
+            GameObjectModel skull = new GameObjectModel("Models/skull");
+            skull.Scale(skull.BoundingBox.FindScaleToUnitFactor());
+            skull.ApplyRotationY(180);
+            skull.TranslateBy(7, 1.0f, 3.5f);
+            
+            _map.AddModel(skull);
+            */
         }
 
         /// <summary>
@@ -174,6 +173,7 @@ namespace UnderworldEngine
         protected override void UnloadContent()
         {
             // TODO: Unload any non ContentManager content here
+            //_map.SaveTo("Content\\Maps\\level01.bin.out");
             Game1.Debug.Close();
         }
 
@@ -210,10 +210,9 @@ namespace UnderworldEngine
             Game1.controller1.UpdateInput();
             Game1.kb.UpdateInput();
 
-            //_mouseMenu.Update(gameTime);
+            _map.Update(gameTime);
             fps.Update(gameTime);
             _testDialogue.Update();
-            _picker.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -230,10 +229,8 @@ namespace UnderworldEngine
             // TODO: Add your drawing code here
             // Draw 3D here
             //gridMap.Draw();
-            //gom.Draw();
-            _grid.Draw();
             Game1.screenManager.Draw();
-            
+            _map.Draw();
             
             // Draw 2D Sprites Here
             spriteBatch.Begin();

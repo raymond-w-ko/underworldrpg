@@ -13,6 +13,7 @@ using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
 using UnderworldEngine.Graphics.Interfaces;
+using System.Xml;
 
 namespace UnderworldEngine.Game
 {
@@ -39,7 +40,7 @@ namespace UnderworldEngine.Game
 
             public int Operations;
             public Axes Axis = Axes.X;
-            public float Degrees = 0;
+            public float Value = 0;
             public Vector3 Offset = Vector3.Zero;
 
             public Transformation()
@@ -86,7 +87,7 @@ namespace UnderworldEngine.Game
         {
             Transformation trans = new Transformation();
             trans.Operations |= (int)Transformation.Operation.Scale;
-            trans.Degrees = degrees;
+            trans.Value = degrees;
             transformationList.Add(trans);
             this.needTransformationCompile = true;
         }
@@ -96,7 +97,7 @@ namespace UnderworldEngine.Game
             Transformation trans = new Transformation();
             trans.Operations |= (int)Transformation.Operation.Rotate;
             trans.Axis = Transformation.Axes.X;
-            trans.Degrees = degrees;
+            trans.Value = degrees;
             transformationList.Add(trans);
             this.needTransformationCompile = true;
         }
@@ -106,7 +107,7 @@ namespace UnderworldEngine.Game
             Transformation trans = new Transformation();
             trans.Operations |= (int)Transformation.Operation.Rotate;
             trans.Axis = Transformation.Axes.Y;
-            trans.Degrees = degrees;
+            trans.Value = degrees;
             transformationList.Add(trans);
             this.needTransformationCompile = true;
         }
@@ -116,12 +117,12 @@ namespace UnderworldEngine.Game
             Transformation trans = new Transformation();
             trans.Operations |= (int)Transformation.Operation.Rotate;
             trans.Axis = Transformation.Axes.Z;
-            trans.Degrees = degrees;
+            trans.Value = degrees;
             transformationList.Add(trans);
             this.needTransformationCompile = true;
         }
 
-        public void OffsetBy(float x, float y, float z)
+        public void TranslateBy(float x, float y, float z)
         {
             Transformation trans = new Transformation();
             trans.Operations |= (int)Transformation.Operation.Translate;
@@ -140,18 +141,18 @@ namespace UnderworldEngine.Game
 
             foreach (Transformation trans in transformationList) {
                 if ((trans.Operations & (int)Transformation.Operation.Scale) != 0) {
-                    worldMatrix *= Matrix.CreateScale(trans.Degrees);
+                    worldMatrix *= Matrix.CreateScale(trans.Value);
                 }
 
                 if ((trans.Operations & (int)Transformation.Operation.Rotate) != 0) {
                     if (trans.Axis == Transformation.Axes.X) {
-                        worldMatrix *= Matrix.CreateRotationX(MathHelper.ToRadians(trans.Degrees));
+                        worldMatrix *= Matrix.CreateRotationX(MathHelper.ToRadians(trans.Value));
                     }
                     else if (trans.Axis == Transformation.Axes.Y) {
-                        worldMatrix *= Matrix.CreateRotationY(MathHelper.ToRadians(trans.Degrees));
+                        worldMatrix *= Matrix.CreateRotationY(MathHelper.ToRadians(trans.Value));
                     }
                     else if (trans.Axis == Transformation.Axes.Z) {
-                        worldMatrix *= Matrix.CreateRotationZ(MathHelper.ToRadians(trans.Degrees));
+                        worldMatrix *= Matrix.CreateRotationZ(MathHelper.ToRadians(trans.Value));
                     }
                 }
 
@@ -161,6 +162,104 @@ namespace UnderworldEngine.Game
             }
 
             this.needTransformationCompile = false;
+        }
+
+        /// <summary>
+        /// Writes out stored transformations
+        /// </summary>
+        /// <param name="xmlDocument"></param>
+        /// <param name="rootNode"></param>
+        public virtual void Save(XmlDocument xmlDocument, XmlNode rootNode)
+        {
+            XmlNode transformationsNode = xmlDocument.CreateElement("Transformations");
+
+            foreach (Transformation trans in transformationList) {
+                XmlNode operNode = null;
+                if ((Transformation.Operation)trans.Operations == Transformation.Operation.Scale) {
+                    operNode = xmlDocument.CreateElement("Scale");
+
+                    XmlNode valueNode = xmlDocument.CreateElement("Value");
+                    valueNode.AppendChild(xmlDocument.CreateTextNode(trans.Value.ToString()));
+
+                    operNode.AppendChild(valueNode);
+                }
+                else if ((Transformation.Operation)trans.Operations == Transformation.Operation.Rotate) {
+                    operNode = xmlDocument.CreateElement("Rotate");
+
+                    XmlNode valueNode = xmlDocument.CreateElement("Value");
+                    valueNode.AppendChild(xmlDocument.CreateTextNode(trans.Value.ToString()));
+
+                    XmlNode axisNode = xmlDocument.CreateElement("Axis");
+                    string axisString = "";
+                    if (trans.Axis == Transformation.Axes.X) {
+                        axisString = "X";
+                    }
+                    else if (trans.Axis == Transformation.Axes.Y) {
+                        axisString = "Y";
+                    }
+                    else if (trans.Axis == Transformation.Axes.Z) {
+                        axisString = "Z";
+                    }
+                    axisNode.AppendChild(xmlDocument.CreateTextNode(axisString));
+
+                    operNode.AppendChild(valueNode);
+                    operNode.AppendChild(axisNode);
+                }
+                else if ((Transformation.Operation)trans.Operations == Transformation.Operation.Translate) {
+                    operNode = xmlDocument.CreateElement("Translate");
+
+                    XmlNode offsetNode = xmlDocument.CreateElement("Offset");
+                    offsetNode.AppendChild(xmlDocument.CreateTextNode(
+                        trans.Offset.X.ToString() + " " +
+                        trans.Offset.Y.ToString() + " " +
+                        trans.Offset.Z.ToString()
+                        ));
+
+                    operNode.AppendChild(offsetNode);
+                }
+
+                transformationsNode.AppendChild(operNode);
+            }
+
+            rootNode.AppendChild(transformationsNode);
+        }
+
+        public void LoadTransformations(XmlDocument xmlDocument, XmlNode rootNode)
+        {
+            foreach (XmlNode trans in rootNode.ChildNodes) {
+                Transformation newTrans = new Transformation();
+
+                if (trans.Name == "Scale") {
+                    float value = (float) Convert.ToDouble(trans["Value"].InnerText);
+                    newTrans.Value = value;
+                    newTrans.Operations = (int)Transformation.Operation.Scale;
+                }
+                else if (trans.Name == "Rotate") {
+                    float value = (float) Convert.ToDouble(trans["Value"].InnerText);
+                    string axisString = trans["Axis"].InnerText;
+                    newTrans.Value = value;
+                    if (axisString == "X") {
+                        newTrans.Axis = Transformation.Axes.X;
+                    }
+                    else if (axisString == "Y") {
+                        newTrans.Axis = Transformation.Axes.Y;
+                    }
+                    else if (axisString == "Z") {
+                        newTrans.Axis = Transformation.Axes.Z;
+                    }
+                    newTrans.Operations = (int)Transformation.Operation.Rotate;
+                }
+                else if (trans.Name == "Translate") {
+                    Vector3 offset = new Vector3().GetFromString(trans["Offset"].InnerText);
+
+                    newTrans.Offset = offset;
+                    newTrans.Operations = (int)Transformation.Operation.Translate;
+                }
+
+                transformationList.Add(newTrans);
+            }
+
+            this.needTransformationCompile = true;
         }
     }
 }
