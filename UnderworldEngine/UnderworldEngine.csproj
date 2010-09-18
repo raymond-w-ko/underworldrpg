@@ -86,6 +86,9 @@
   <ItemGroup>
     <Compile Include="Audio\AudioInstance.cs" />
     <Compile Include="Audio\AudioManager.cs" />
+    <Compile Include="GameState\BlankScreen.cs" />
+    <Compile Include="GameState\IScreen.cs" />
+    <Compile Include="GameState\ScreenManager.cs" />
     <Compile Include="Game\GameObjectModel.cs" />
     <Compile Include="Game\GameObjectPrimitive.cs" />
     <Compile Include="Game\GridColumn.cs" />
@@ -133,6 +136,7 @@
     <Compile Include="Scripting\SetV.cs" />
     <Compile Include="Scripting\Show.cs" />
     <Compile Include="Scripting\SoundLoader.cs" />
+    <Compile Include="Scripting\Switch.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />

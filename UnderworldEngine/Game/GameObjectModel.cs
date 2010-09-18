@@ -11,15 +11,22 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
+using UnderworldEngine.GameState;
 
 namespace UnderworldEngine.Game
 {
-    class GameObjectModel : GameObject
+    class GameObjectModel : GameObject, IScreen
     {
         private ContentManager content;
         private string modelName;
         private Model model;
         public BoundingBox BoundingBox;
+        private bool isFocused;
+        public bool IsFocused
+        {
+            get { return isFocused; }
+            set { isFocused = value; }
+        }
 
         public GameObjectModel(string name)
             : base()
@@ -42,6 +49,16 @@ namespace UnderworldEngine.Game
         public void CalculateBoundingBox()
         {
             BoundingBox = GetBoundingBoxFromModel(model);
+        }
+
+        public void Unload()
+        {
+            //nothing to unload
+        }
+
+        public void Update()
+        {
+            //nothing to update
         }
 
         public override void Draw()
