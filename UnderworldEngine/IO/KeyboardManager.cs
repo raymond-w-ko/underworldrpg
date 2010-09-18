@@ -18,7 +18,7 @@ namespace UnderworldEngine.IO
             KeyToAction = new Dictionary<string, string>();
             foreach (string k in Enum.GetNames(typeof(Keys)))
             {
-                KeyToAction[k.ToLower()] = "";
+                KeyToAction[k.ToLower()] = "None";
             }
 
             prev = new HashSet<Keys>();

@@ -135,7 +135,6 @@
     <Compile Include="Scripting\SetC.cs" />
     <Compile Include="Scripting\SetV.cs" />
     <Compile Include="Scripting\Show.cs" />
-    <Compile Include="Scripting\SoundLoader.cs" />
     <Compile Include="Scripting\Switch.cs" />
   </ItemGroup>
   <ItemGroup>

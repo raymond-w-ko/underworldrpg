@@ -77,9 +77,14 @@ namespace UnderworldEngine.Scripting
                 }
             }
             #endregion
-
+            
             try
             {
+                //check to see if function is null
+                if (command[0].Contains("None"))
+                    return;
+
+                //else just run
                 functions[command[0]].run(function);
             }
             catch (Exception e)

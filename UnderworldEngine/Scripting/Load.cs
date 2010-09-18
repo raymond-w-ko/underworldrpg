@@ -8,25 +8,18 @@ namespace UnderworldEngine.Scripting
 {
     class Load : IInterpretable
     {
-        Dictionary<string, ILoader> functions;
-        
-
-        public Load()
-        {
-            functions = new Dictionary<string, ILoader>();
-            functions["sndpkg"] = new SoundLoader();
-        }
-
         public void run(string function)
         {
             string[] command = function.Split(Game1.interpreter.Mask);
-            try
+            
+            switch (command[1])
             {
-                functions[command[1]].load(command[2]);
-            }
-            catch
-            {
-                throw new ArgumentException("Option " + command[1] + " is not valid");
+                case "sndpkg":
+                    Game1.audioManager.AddSoundLibrary(command[2]);
+                    break;
+
+                case "map":
+                    break;
             }
         }
     }
