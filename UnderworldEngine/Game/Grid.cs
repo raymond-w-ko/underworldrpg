@@ -135,6 +135,7 @@ namespace UnderworldEngine.Game
                     }
                 }
                 */
+
                 Game1.DefaultGraphicsDevice.DrawUserIndexedPrimitives<VertexPositionTexture>(
                     PrimitiveType.TriangleList,
                     _vertices, 0, 4 * _xSize * _zSize,
@@ -146,6 +147,16 @@ namespace UnderworldEngine.Game
             _basicEffect.End();
 
             Game1.DefaultGraphics.GraphicsDevice.RenderState.AlphaBlendEnable = false;
+        }
+
+        public Vector2 FindIntersection(Ray ray)
+        {
+            foreach (GridSquare gs in _grid) {
+                if (ray.Intersects(gs.BoundingBox) != null) {
+                    return new Vector2(gs.XIndex, gs.ZIndex);
+                }
+            }
+            return new Vector2(-1, -1);
         }
     }
 }
