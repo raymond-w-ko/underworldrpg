@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 using UnderworldEngine.GameState;
+using System.Xml;
 
 namespace UnderworldEngine.Game
 {
@@ -92,7 +93,7 @@ namespace UnderworldEngine.Game
 
         public BoundingBox GetBoundingBoxFromModel(Model model)
         {
-            Game1.Debug.WriteLine("Creating Bounding Box...");
+            //Game1.Debug.WriteLine("Creating Bounding Box...");
             BoundingBox boundingBox = new BoundingBox();
             foreach (ModelMesh mesh in model.Meshes) {
                 VertexPositionNormalTexture[] vertices =
@@ -109,10 +110,35 @@ namespace UnderworldEngine.Game
                 boundingBox = BoundingBox.CreateMerged(boundingBox,  BoundingBox.CreateFromPoints(vertexs));
             }
 
-            Game1.Debug.WriteLine(boundingBox.Min.ToString());
-            Game1.Debug.WriteLine(boundingBox.Max.ToString());
+            //Game1.Debug.WriteLine(boundingBox.Min.ToString());
+            //Game1.Debug.WriteLine(boundingBox.Max.ToString());
 
             return boundingBox;
+        }
+
+        public override void Save(XmlDocument xmlDocument, XmlNode rootNode)
+        {
+            XmlNode modelNode = xmlDocument.CreateElement("Model");
+
+            XmlAttribute modelName = xmlDocument.CreateAttribute("name");
+            modelName.Value = this.modelName;
+            modelNode.Attributes.Append(modelName);
+
+            base.Save(xmlDocument, modelNode);
+
+            rootNode.AppendChild(modelNode);
+        }
+
+        public static GameObjectModel Load(XmlDocument xmlDocument, XmlNode rootNode)
+        {
+            string modelName = rootNode.Attributes["name"].Value;
+
+            GameObjectModel gom = new GameObjectModel(modelName);
+
+            gom.LoadTransformations(xmlDocument, rootNode["Transformations"]);
+            gom.CompileTransformations();
+
+            return gom;
         }
     }
 
