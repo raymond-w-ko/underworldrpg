@@ -12,15 +12,35 @@ namespace UnderworldEngine.Scripting
         public void run(string function)
         {
             string[] command = function.Split(Game1.interpreter.Mask);
-            if (command[1].Trim() == "1")
+            StringBuilder sb = new StringBuilder();
+            StringBuilder sbelse = new StringBuilder();
+            bool haselse = false;
+            for (int i = 2; i < command.Length; i++)
             {
-                StringBuilder sb = new StringBuilder();
-                for (int i = 2; i < command.Length; i++)
+                if (haselse)
+                {
+                    sbelse.Append(command[i]);
+                    sbelse.Append(" ");
+                }
+                else if (command[i] == "else")
+                {
+                    haselse = true;
+                }
+                else
                 {
                     sb.Append(command[i]);
                     sb.Append(" ");
                 }
+            }
+                
+            
+            if (command[1] == "1")
+            {
                 Game1.interpreter.run(sb.ToString());
+            }
+            else if(haselse)
+            {
+                Game1.interpreter.run(sbelse.ToString());
             }
             else
             {

@@ -114,6 +114,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Scripting\Bind.cs" />
+    <Compile Include="Scripting\Clear.cs" />
     <Compile Include="Scripting\ConsoleKeyMap.cs" />
     <Compile Include="Scripting\GameConsole.cs" />
     <Compile Include="Scripting\If.cs" />
