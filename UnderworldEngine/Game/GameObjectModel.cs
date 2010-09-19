@@ -16,7 +16,7 @@ using System.Xml;
 
 namespace UnderworldEngine.Game
 {
-    class GameObjectModel : GameObject, IScreen
+    public class GameObjectModel : GameObject, IScreen
     {
         private ContentManager content;
         private string modelName;

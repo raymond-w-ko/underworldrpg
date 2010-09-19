@@ -22,10 +22,12 @@ namespace UnderworldEngine.Scripting
             stream = new MemoryStream(Encoding.ASCII.GetBytes(source));
         }
 
+        /*
         public void Unload()
         {
             this.source = null;
             this.stream = null;
         }
+        */
     }
 }
