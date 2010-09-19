@@ -12,6 +12,7 @@ namespace UnderworldEngine.Game
     {
         public bool IsVisible = true;
         public bool IsWalkable = true;
+        public bool IsSelected = false;
 
         private int _xIndex;
         public int XIndex
@@ -139,12 +140,22 @@ namespace UnderworldEngine.Game
             Vertices[vertOffset + 2] = new VertexPositionTexture(quad.UpperRight, new Vector2(u + 1, v + 1));
             Vertices[vertOffset + 3] = new VertexPositionTexture(quad.LowerRight, new Vector2(u + 1, v));
 
-            Indices[indexOffset + 0] = 0 + indexOffset;
-            Indices[indexOffset + 1] = 1 + indexOffset;
-            Indices[indexOffset + 2] = 3 + indexOffset;
-            Indices[indexOffset + 3] = 3 + indexOffset;
-            Indices[indexOffset + 4] = 1 + indexOffset;
-            Indices[indexOffset + 5] = 2 + indexOffset;
+            if (IsVisible) {
+                Indices[indexOffset + 0] = 0 + indexOffset;
+                Indices[indexOffset + 1] = 1 + indexOffset;
+                Indices[indexOffset + 2] = 3 + indexOffset;
+                Indices[indexOffset + 3] = 3 + indexOffset;
+                Indices[indexOffset + 4] = 1 + indexOffset;
+                Indices[indexOffset + 5] = 2 + indexOffset;
+            }
+            else {
+                Indices[indexOffset + 0] = 3 + indexOffset;
+                Indices[indexOffset + 1] = 1 + indexOffset;
+                Indices[indexOffset + 2] = 0 + indexOffset;
+                Indices[indexOffset + 3] = 2 + indexOffset;
+                Indices[indexOffset + 4] = 1 + indexOffset;
+                Indices[indexOffset + 5] = 3 + indexOffset;
+            }
         }
 
         public void Save(XmlDocument xmlDocument, XmlNode rootNode)

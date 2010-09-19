@@ -173,7 +173,7 @@ namespace UnderworldEngine
         protected override void UnloadContent()
         {
             // TODO: Unload any non ContentManager content here
-            //_map.SaveTo("Content\\Maps\\level01.bin.out");
+            _map.SaveTo("Content\\Maps\\level01.bin.out");
             Game1.Debug.Close();
         }
 
