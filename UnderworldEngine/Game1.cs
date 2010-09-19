@@ -57,11 +57,6 @@ namespace UnderworldEngine
         internal static ScreenManager screenManager;
         internal static bool exit = false;
 
-        // Renderables
-        KeyboardState mLastKeyboardState;
-        //private MouseMenu _mouseMenu;
-        DialogueManager _testDialogue;
-
         public Game1()
         {
             this.IsMouseVisible = true;
@@ -101,27 +96,16 @@ namespace UnderworldEngine
 
             // global access to camera
             Game1.Camera = new Camera();
-            Game1.Camera.SetFarPlaneDistance(10000);
-            Game1.Camera.LookAt(7, 0, 3);
 
             // console stuff
             GameConsole.Initialize(this, "WascoSans10", Color.Black, Color.White, 0.8f, 10);
             Game1.console = (IGameConsole)Services.GetService(typeof(IGameConsole));
 
-            mLastKeyboardState = Keyboard.GetState();
-
             // interpreter
             Game1.interpreter = new Interpreter();
-            //set up surprise
-            Game1.interpreter.run("run test");
+            Game1.interpreter.run("run startup");
 
-            // mouse menu
             /*
-            _mouseMenu = new MouseMenu("WascoSans18", textColor, backgroundColor, 1.0f,
-                borderColor, 200, 500);
-            _mouseMenu.AddEntry(Menu.MenuEntryType.Label, "Test");
-             */
-            
             _testDialogue = new DialogueManager(
                 DefaultGraphicsDevice.Viewport.Width - 40, (DefaultGraphicsDevice.Viewport.Height / 4) - 20,
                 20, 530);
@@ -134,6 +118,7 @@ namespace UnderworldEngine
                 "Must give us pause: there's the respect that makes calamity of so long life; " +
                 "For who would bear the whips and scorns of time, "
                 );
+            */
 
             //add screens to screenManager
             Game1.screenManager.AddScreen("blank", new BlankScreen());
@@ -155,15 +140,6 @@ namespace UnderworldEngine
             fps = new FpsCounter();
 
             // TODO: use this.Content to load your game content here
-            //_map = new Map("Content\\Maps\\level01.bin");
-            /*
-            GameObjectModel skull = new GameObjectModel("Models/skull");
-            skull.Scale(skull.BoundingBox.FindScaleToUnitFactor());
-            skull.ApplyRotationY(180);
-            skull.TranslateBy(7, 1.0f, 3.5f);
-            
-            _map.AddModel(skull);
-            */
         }
 
         /// <summary>
@@ -172,8 +148,7 @@ namespace UnderworldEngine
         /// </summary>
         protected override void UnloadContent()
         {
-            // TODO: Unload any non ContentManager content here
-            //_map.SaveTo("Content\\Maps\\level01.bin.out");
+            // TODO: Unload any non ContentManager content here\
             Game1.Debug.Close();
         }
 
@@ -181,8 +156,7 @@ namespace UnderworldEngine
         /// Allows the game to run logic such as updating the world,
         /// checking for collisions, gathering input, and playing audio.
         /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        
+        /// <param name="gameTime">Provides a snapshot of timing values.</param>\
         protected override void Update(GameTime gameTime)
         {
             // Allows the game to exit
@@ -198,10 +172,7 @@ namespace UnderworldEngine
 
             Game1.screenManager.Update(gameTime);
 
-            //_map.Update(gameTime);
             fps.Update(gameTime);
-            //_testDialogue.Update();
-
             base.Update(gameTime);
         }
 
@@ -215,20 +186,18 @@ namespace UnderworldEngine
             GraphicsDevice.Clear(Color.Black);
 
             // TODO: Add your drawing code here
-            // Draw 3D here
-            //gridMap.Draw();
             Game1.screenManager.Draw();
-            //_map.Draw();
             
             // Draw 2D Sprites Here
             spriteBatch.Begin();
+
             // Queue Sprites Here
             fps.Draw();
             spriteBatch.End();
+
+            // End 2D Draw
             spriteBatch.ResetFor3d();
-            // Mouse Menu
-            //_mouseMenu.Draw();
-            //_testDialogue.Draw();
+
             base.Draw(gameTime);
         }
     }
