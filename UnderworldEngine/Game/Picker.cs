@@ -53,7 +53,7 @@ namespace UnderworldEngine.Graphics
         {
             Vector2 grid = _grid.FindIntersection(ray);
             Game1.console.Log(grid.ToString());
-            if ((grid.X == float.NaN || grid.Y == float.NaN)) {
+            if ((float.IsNaN(grid.X) || float.IsNaN(grid.Y))) {
                 return;
             }
 
