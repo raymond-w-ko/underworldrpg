@@ -65,6 +65,21 @@ namespace UnderworldEngine.Scripting
             }
 
             string[] command = function.Split(new Char[] { ' ' });
+            //comment checking stuff
+            #region comment check
+            if (command[0].Contains("#")) //if # is the first in the line, meaning the line is a comment
+                return;
+            for (int i = 0; i < command.Length; i++)
+            {
+                if (command[i].Contains("#"))
+                {
+                    string[] temp = new string[i];
+                    Array.ConstrainedCopy(command, 0, temp, 0, i);
+                    command = temp;
+                    break;
+                }
+            }
+            #endregion
 
             //multilining stuff
             #region multiline
