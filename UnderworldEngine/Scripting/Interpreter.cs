@@ -32,19 +32,23 @@ namespace UnderworldEngine.Scripting
         private void loadFunctions()
         {
             #region interpreterBinds
+
+            functions["bind"] = new Bind();
+            functions["clear"] = new Clear();
+            functions["console"] = new Console();
+            functions["exit"] = new Exit();
+            functions["if"] = new If();
+            functions["let"] = new Let();
             functions["load"] = new Load();
             functions["music"] = new Music();
-            functions["bind"] = new Bind();
+            functions["repeat"] = new Repeat();
+            functions["pick"] = new Pick();
             functions["run"] = new Run();
             functions["setv"] = new SetV();
             functions["setc"] = new SetC();
             functions["show"] = new Show();
-            functions["let"] = new Let();
-            functions["repeat"] = new Repeat();
-            functions["if"] = new If();
-            functions["pick"] = new Pick();
             functions["switch"] = new Switch();
-            functions["clear"] = new Clear();
+            
             #endregion
 
             /*foreach (string key in functions.Keys)

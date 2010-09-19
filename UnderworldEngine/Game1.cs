@@ -55,6 +55,7 @@ namespace UnderworldEngine
         internal static IGameConsole console;
         internal static FpsCounter fps;
         internal static ScreenManager screenManager;
+        internal static bool exit = false;
 
         // Renderables
         KeyboardState mLastKeyboardState;
@@ -186,25 +187,11 @@ namespace UnderworldEngine
         protected override void Update(GameTime gameTime)
         {
             // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
+            if (exit)
                 this.Exit();
-            if (Keyboard.GetState().IsKeyDown(Keys.Escape)) {
-                this.Exit();
-            }
 
             // TODO: Add your update logic here
             Game1.Camera.Update();
-
-            //Console stuff
-            KeyboardState kb = Keyboard.GetState();
-
-            if (kb[Keys.Escape] == KeyState.Down)
-                this.Exit();
-
-            if (!console.IsOpen && kb[Keys.OemTilde] == KeyState.Down && mLastKeyboardState[Keys.OemTilde] == KeyState.Up)
-                console.Open(Keys.OemTilde);
-
-            mLastKeyboardState = kb;
 
             //controller stuff
             Game1.controller1.UpdateInput();
