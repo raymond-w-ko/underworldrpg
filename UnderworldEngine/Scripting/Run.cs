@@ -21,6 +21,8 @@ namespace UnderworldEngine.Scripting
             {
                 Game1.interpreter.run(reader.ReadLine().TrimStart().TrimEnd());
             }
+
+            rs.Unload();
         }
 
         #endregion

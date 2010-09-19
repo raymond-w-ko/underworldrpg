@@ -119,7 +119,7 @@ namespace UnderworldEngine.Scripting
             if (keyToBind == "clear")
             {
                 Game1.kb.Clear();
-                Game1.interpreter.run("run test");
+                Game1.interpreter.run("run defaultKBBind");
                 return;
             }
 
