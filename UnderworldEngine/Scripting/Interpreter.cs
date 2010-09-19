@@ -61,8 +61,9 @@ namespace UnderworldEngine.Scripting
             }
 
             string[] command = function.Split(new Char[] { ' ' });
-            
+
             //multilining stuff
+            #region multiline
             if (command[0] == "\\\\")
                 return;
 
@@ -86,6 +87,7 @@ namespace UnderworldEngine.Scripting
                     return;
                 }
             }
+            #endregion
 
             //replace marked variables
             #region bash replace
@@ -120,8 +122,16 @@ namespace UnderworldEngine.Scripting
                     commandBuffer = new StringBuilder();
                 }
 
+                //put function back together from command array
+                StringBuilder f = new StringBuilder();
+                for (int i = 0; i < command.Length; i++)
+                {
+                    f.Append(command[i]);
+                    f.Append(" ");
+                }
+
                 //else just run
-                functions[command[0]].run(function);
+                functions[command[0]].run(f.ToString());
             }
             catch (Exception e)
             {

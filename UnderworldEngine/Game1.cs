@@ -105,7 +105,7 @@ namespace UnderworldEngine
             Game1.Camera.LookAt(7, 0, 3);
 
             // console stuff
-            GameConsole.Initialize(this, "Consolas", Color.Black, Color.White, 0.8f, 10);
+            GameConsole.Initialize(this, "WascoSans10", Color.Black, Color.White, 0.8f, 10);
             Game1.console = (IGameConsole)Services.GetService(typeof(IGameConsole));
 
             mLastKeyboardState = Keyboard.GetState();
