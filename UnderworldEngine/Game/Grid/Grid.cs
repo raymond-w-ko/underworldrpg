@@ -16,7 +16,7 @@ using UnderworldEngine.Scripting;
 
 namespace UnderworldEngine.Game
 {
-    class Grid
+    public class Grid
     {
         private int _xSize;
         private int _zSize;

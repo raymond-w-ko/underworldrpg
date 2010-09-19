@@ -8,7 +8,7 @@ using System.Xml;
 
 namespace UnderworldEngine.Game
 {
-    class GridSquare
+    public class GridSquare
     {
         public bool IsVisible = true;
         public bool IsWalkable = true;

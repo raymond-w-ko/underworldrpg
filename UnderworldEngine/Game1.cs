@@ -19,7 +19,7 @@ using System.IO;
 using UnderworldEngine.Scripting;
 using UnderworldEngine.IO;
 using UnderworldEngine.GameState;
-using UnderworldEngine.Game.Map;
+using UnderworldEngine.Game;
 using System.Xml;
 
 namespace UnderworldEngine

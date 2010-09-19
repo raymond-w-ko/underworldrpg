@@ -6,9 +6,9 @@ using System.Xml;
 using Microsoft.Xna.Framework;
 using UnderworldEngine.Graphics;
 
-namespace UnderworldEngine.Game.Map
+namespace UnderworldEngine.Game
 {
-    class Map
+    public class Map
     {
         private string _pathName;
         private XmlDocument _xmlDocument;
