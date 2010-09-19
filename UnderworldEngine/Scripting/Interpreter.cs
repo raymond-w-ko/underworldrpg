@@ -42,6 +42,7 @@ namespace UnderworldEngine.Scripting
             functions["if"] = new If();
             functions["pick"] = new Pick();
             functions["switch"] = new Switch();
+            functions["clear"] = new Clear();
             #endregion
 
             /*foreach (string key in functions.Keys)
