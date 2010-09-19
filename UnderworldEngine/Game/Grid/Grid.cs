@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 using System.Xml;
+using UnderworldEngine.Scripting;
 
 namespace UnderworldEngine.Game
 {
@@ -56,6 +57,7 @@ namespace UnderworldEngine.Game
 
             this.initializeGraphics(texture);
             this.compileVertices();
+            this.registerWithScripter();
         }
 
         private void initializeGraphics(string texture)
@@ -72,15 +74,6 @@ namespace UnderworldEngine.Game
         }
 
         public Grid(int xSize, int zSize) : this(xSize, zSize, "Textures/red") { }
-
-        /// <summary>
-        /// Loads a map from the Content Pipeline
-        /// </summary>
-        /// <param name="mapName"></param>
-        public Grid(string mapName)
-        {
-            ;
-        }
 
         /// <summary>
         /// Saves the entire map to a file
@@ -178,7 +171,7 @@ namespace UnderworldEngine.Game
                     return new Vector2(gs.XIndex, gs.ZIndex);
                 }
             }
-            return new Vector2(-1, -1);
+            return new Vector2(float.NaN, float.NaN);
         }
 
         public static Grid Load(XmlDocument xmlDocument, XmlNode rootNode)
@@ -214,6 +207,52 @@ namespace UnderworldEngine.Game
             NewGrid.compileVertices();
 
             return NewGrid;
+        }
+
+        public void Select(Vector2 target)
+        {
+            int xIndex = (int) Math.Round(target.X);
+            int zIndex = (int) Math.Round(target.Y);
+            //_grid[xIndex, zIndex].IsVisible = !_grid[xIndex, zIndex].IsVisible;
+            _grid[xIndex, zIndex].IsSelected = !_grid[xIndex, zIndex].IsSelected;
+            _grid[xIndex, zIndex].CompileVertices();
+            compileVertices();
+        }
+
+        private void registerWithScripter()
+        {
+            Pick.RaiseHandler += this.Raise;
+            Pick.LowerHandler += this.Lower;
+        }
+
+        public void Raise()
+        {
+            foreach (GridSquare gs in _grid) {
+                if (!gs.IsSelected) {
+                    continue;
+                }
+                gs.Height += 0.5f;
+                gs.CompileVertices();
+            }
+            this.compileVertices();
+        }
+
+        public void Lower()
+        {
+            foreach (GridSquare gs in _grid) {
+                if (!gs.IsSelected) {
+                    continue;
+                }
+                gs.Height -= 0.5f;
+                gs.CompileVertices();
+            }
+            this.compileVertices();
+        }
+
+        ~Grid()
+        {
+            Pick.RaiseHandler -= this.Raise;
+            Pick.LowerHandler -= this.Lower;
         }
     }
 

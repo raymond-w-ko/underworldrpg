@@ -19,8 +19,10 @@ namespace UnderworldEngine.Graphics
 
         public void Update(GameTime gameTime)
         {
-            MouseState mouseState = Mouse.GetState();
-            Vector3 nearSource = new Vector3(mouseState.X, mouseState.Y, 0);
+            _mouseStatePrev = _mouseStateCurrent;
+            _mouseStateCurrent = Mouse.GetState();
+
+            Vector3 nearSource = new Vector3(_mouseStateCurrent.X, _mouseStateCurrent.Y, 0);
             Vector3 farSource = nearSource;
             farSource.Z = Game1.Camera.NearPlaneDistance;
 
@@ -38,13 +40,24 @@ namespace UnderworldEngine.Graphics
 
             Ray ray = new Ray(nearPoint, direction);
 
-            // MouseState
-            if (mouseState.LeftButton != ButtonState.Pressed) {
+            if (_mouseStatePrev.LeftButton == ButtonState.Pressed &&
+                _mouseStateCurrent.LeftButton == ButtonState.Released) {
+                Click(ray);
+            }
+        }
+
+        private MouseState _mouseStateCurrent;
+        private MouseState _mouseStatePrev;
+
+        private void Click(Ray ray)
+        {
+            Vector2 grid = _grid.FindIntersection(ray);
+            Game1.console.Log(grid.ToString());
+            if ((grid.X == float.NaN || grid.Y == float.NaN)) {
                 return;
             }
 
-            Vector2 grid = _grid.FindIntersection(ray);
-            Game1.console.Log(grid.ToString());
+            _grid.Select(grid);
         }
 
         /*

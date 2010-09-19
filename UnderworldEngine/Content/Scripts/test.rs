@@ -12,3 +12,5 @@ bind kb j setc prev
 bind kb l setc next
 bind kb i setc closer
 bind kb k setc farther
+bind kb up pick raise
+bind kb down pick lower
