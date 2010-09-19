@@ -15,11 +15,7 @@ namespace UnderworldEngine.IO
 
         public KeyboardManager()
         {
-            KeyToAction = new Dictionary<string, string>();
-            foreach (string k in Enum.GetNames(typeof(Keys)))
-            {
-                KeyToAction[k.ToLower()] = "None";
-            }
+            Clear();
 
             prev = new HashSet<Keys>();
         }
@@ -54,6 +50,15 @@ namespace UnderworldEngine.IO
             for (int i = 0; i < pressed.Length; i++)
             {
                 prev.Add(pressed[i]);
+            }
+        }
+
+        public void Clear()
+        {
+            KeyToAction = new Dictionary<string, string>();
+            foreach (string k in Enum.GetNames(typeof(Keys)))
+            {
+                KeyToAction[k.ToLower()] = "None";
             }
         }
     }

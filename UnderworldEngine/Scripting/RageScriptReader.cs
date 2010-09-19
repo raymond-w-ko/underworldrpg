@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 // TODO: replace this with the type you want to read.
 using TRead = System.String;
+using System.Text.RegularExpressions;
 
 namespace UnderworldEngine.Scripting
 {
@@ -24,9 +25,9 @@ namespace UnderworldEngine.Scripting
         {
             // TODO: read a value from the input ContentReader.
             int length = input.ReadInt32();
-            input.ReadChars(2);
-            string source = new String(input.ReadChars(length));
-
+            
+            input.ReadChars(1 + length/256);
+            string source = new String(input.ReadChars(length + 1));
             return new RageScript(source);
         }
     }

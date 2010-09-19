@@ -168,6 +168,18 @@
       <Processor>FontDescriptionProcessor</Processor>
     </Compile>
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Scripts\defaultKBBind.rs">
+      <Name>defaultKBBind</Name>
+      <Importer>RageScriptImporter</Importer>
+      <Processor>RageScriptProcessor</Processor>
+    </Compile>
+    <Compile Include="Scripts\defaultVideo.rs">
+      <Name>defaultVideo</Name>
+      <Importer>RageScriptImporter</Importer>
+      <Processor>RageScriptProcessor</Processor>
+    </Compile>
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
