@@ -14,3 +14,5 @@ bind kb i setc closer
 bind kb k setc farther
 bind kb up pick raise
 bind kb down pick lower
+bind kb oemtilde console
+bind kb escape exit
