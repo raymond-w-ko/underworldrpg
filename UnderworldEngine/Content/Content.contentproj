@@ -119,7 +119,7 @@
   <ItemGroup>
     <Content Include="Maps\level01.bin">
       <Name>level01</Name>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Compile Include="Textures\red.jpg">
       <Name>red</Name>
