@@ -89,8 +89,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Scripts\test.rs">
-      <Name>test</Name>
+    <Compile Include="Scripts\startup.rs">
+      <Name>startup</Name>
       <Importer>RageScriptImporter</Importer>
       <Processor>RageScriptProcessor</Processor>
     </Compile>

@@ -106,6 +106,7 @@ namespace UnderworldEngine.Game
 
         internal void Unload()
         {
+            //SaveTo("Content\\Maps\\level01.bin.out");
             //throw new NotImplementedException();
         }
     }
