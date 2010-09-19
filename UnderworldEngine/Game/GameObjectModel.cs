@@ -57,7 +57,7 @@ namespace UnderworldEngine.Game
             //nothing to unload
         }
 
-        public void Update()
+        public void Update(GameTime gameTime)
         {
             //nothing to update
         }

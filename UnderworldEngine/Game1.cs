@@ -210,6 +210,8 @@ namespace UnderworldEngine
             Game1.controller1.UpdateInput();
             Game1.kb.UpdateInput();
 
+            Game1.screenManager.Update(gameTime);
+
             _map.Update(gameTime);
             fps.Update(gameTime);
             _testDialogue.Update();

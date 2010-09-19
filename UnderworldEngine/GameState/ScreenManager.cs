@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Xna.Framework;
 
 namespace UnderworldEngine.GameState
 {
@@ -52,13 +53,13 @@ namespace UnderworldEngine.GameState
         /// <summary>
         /// Update the IScreen that is in focus
         /// </summary>
-        public void Update()
+        public void Update(GameTime gameTime)
         {
             foreach(IScreen sc in nameToScreen.Values)
             {
                 if (sc.IsFocused)
                 {
-                    sc.Update();
+                    sc.Update(gameTime);
                 }
             }
         }
