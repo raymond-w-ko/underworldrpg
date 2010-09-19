@@ -61,7 +61,6 @@ namespace UnderworldEngine
         KeyboardState mLastKeyboardState;
         //private MouseMenu _mouseMenu;
         DialogueManager _testDialogue;
-        Map _map;
 
         public Game1()
         {
@@ -156,7 +155,7 @@ namespace UnderworldEngine
             fps = new FpsCounter();
 
             // TODO: use this.Content to load your game content here
-            _map = new Map("Content\\Maps\\level01.bin");
+            //_map = new Map("Content\\Maps\\level01.bin");
             /*
             GameObjectModel skull = new GameObjectModel("Models/skull");
             skull.Scale(skull.BoundingBox.FindScaleToUnitFactor());
@@ -174,7 +173,7 @@ namespace UnderworldEngine
         protected override void UnloadContent()
         {
             // TODO: Unload any non ContentManager content here
-            _map.SaveTo("Content\\Maps\\level01.bin.out");
+            //_map.SaveTo("Content\\Maps\\level01.bin.out");
             Game1.Debug.Close();
         }
 
@@ -199,9 +198,9 @@ namespace UnderworldEngine
 
             Game1.screenManager.Update(gameTime);
 
-            _map.Update(gameTime);
+            //_map.Update(gameTime);
             fps.Update(gameTime);
-            _testDialogue.Update();
+            //_testDialogue.Update();
 
             base.Update(gameTime);
         }
@@ -219,7 +218,7 @@ namespace UnderworldEngine
             // Draw 3D here
             //gridMap.Draw();
             Game1.screenManager.Draw();
-            _map.Draw();
+            //_map.Draw();
             
             // Draw 2D Sprites Here
             spriteBatch.Begin();
@@ -229,7 +228,7 @@ namespace UnderworldEngine
             spriteBatch.ResetFor3d();
             // Mouse Menu
             //_mouseMenu.Draw();
-            _testDialogue.Draw();
+            //_testDialogue.Draw();
             base.Draw(gameTime);
         }
     }

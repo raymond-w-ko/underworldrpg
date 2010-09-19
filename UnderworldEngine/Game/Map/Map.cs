@@ -25,6 +25,7 @@ namespace UnderworldEngine.Game
         /// <param name="mapPathName"></param>
         public Map(string mapPathName)
         {
+            mapPathName = "Content/Maps/" + mapPathName;
             _pathName = mapPathName;
             Load();
             _picker = new Picker(_grid);
@@ -101,6 +102,11 @@ namespace UnderworldEngine.Game
             }
 
             _grid.Draw();
+        }
+
+        internal void Unload()
+        {
+            //throw new NotImplementedException();
         }
     }
 }
