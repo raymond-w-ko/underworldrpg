@@ -117,10 +117,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Maps\level01.bin">
+    <None Include="Maps\Chapter_01\level01.map">
       <Name>level01</Name>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    </None>
     <Compile Include="Textures\red.jpg">
       <Name>red</Name>
       <Importer>TextureImporter</Importer>
@@ -176,6 +176,13 @@
     </Compile>
     <Compile Include="Scripts\defaultVideo.rs">
       <Name>defaultVideo</Name>
+      <Importer>RageScriptImporter</Importer>
+      <Processor>RageScriptProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Scripts\Chapter_01\ch01.rs">
+      <Name>ch01</Name>
       <Importer>RageScriptImporter</Importer>
       <Processor>RageScriptProcessor</Processor>
     </Compile>

@@ -46,6 +46,9 @@ namespace UnderworldEngine.GameState
 
         public void Remove(string name)
         {
+            if (name == "level" && nameToScreen[name] == null) {
+                return;
+            }
             nameToScreen[name].Unload();
             nameToScreen.Remove(name);
         }

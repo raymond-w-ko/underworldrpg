@@ -18,7 +18,7 @@ namespace UnderworldEngine.Scripting
                 case "to":
                     Game1.screenManager.SwitchTo(command[2]);
                     break;
-                case "on":
+                case "on":  
                     Game1.screenManager.SwitchOn(command[2]);
                     break;
                 case "off":

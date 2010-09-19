@@ -8,40 +8,38 @@ namespace UnderworldEngine.Game.Level
     class Level : UnderworldEngine.GameState.IScreen
     {
         private Map _map;
-        public Level()
+
+        public Level(string mapName)
         {
-            ;
+            this._map = new Map(mapName);
         }
 
-        #region IScreen Members
-
+        public bool _isFocused;
         public bool IsFocused
         {
             get
             {
-                throw new NotImplementedException();
+                return _isFocused;
             }
             set
             {
-                throw new NotImplementedException();
+                _isFocused = value;
             }
         }
 
         public void Unload()
         {
-            throw new NotImplementedException();
+            _map.Unload();
         }
 
         public void Update(Microsoft.Xna.Framework.GameTime gameTime)
         {
-            throw new NotImplementedException();
+            _map.Update(gameTime);
         }
 
         public void Draw()
         {
-            throw new NotImplementedException();
+            _map.Draw();
         }
-
-        #endregion
     }
 }

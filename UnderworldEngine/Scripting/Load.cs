@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnderworldEngine.Audio;
+using UnderworldEngine.Game.Level;
 
 namespace UnderworldEngine.Scripting
 {
@@ -18,8 +19,11 @@ namespace UnderworldEngine.Scripting
                     Game1.audioManager.AddSoundLibrary(command[2]);
                     break;
 
-                case "map":
-                    break;
+                case "map": {
+                        Level level = new Level(command[2]);
+                        Game1.screenManager.AddScreen("level", level);
+                        break;
+                    }
             }
         }
     }
