@@ -114,7 +114,15 @@ namespace UnderworldEngine.Scripting
 
         private void bindKeyboard(string[] command)
         {
+
             string keyToBind = command[2];
+            if (keyToBind == "clear")
+            {
+                Game1.kb.Clear();
+                Game1.interpreter.run("run test");
+                return;
+            }
+
             StringBuilder sb = new StringBuilder();
             for (int i = 3; i < command.Length; i++)
             {
