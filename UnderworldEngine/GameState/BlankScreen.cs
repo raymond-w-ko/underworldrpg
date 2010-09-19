@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 
 namespace UnderworldEngine.GameState
 {
@@ -28,7 +29,7 @@ namespace UnderworldEngine.GameState
             //nothing to unload
         }
 
-        public void Update()
+        public void Update(GameTime gameTime)
         {
             //nothing to update
         }
