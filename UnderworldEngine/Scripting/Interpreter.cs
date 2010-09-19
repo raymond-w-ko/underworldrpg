@@ -7,6 +7,7 @@ namespace UnderworldEngine.Scripting
 {
     class Interpreter
     {
+        StringBuilder commandBuffer;
         Dictionary<string, IInterpretable> functions;
         Dictionary<string, string> env;
         public Dictionary<string, string> Env
@@ -17,13 +18,14 @@ namespace UnderworldEngine.Scripting
             }
         }
 
+
         public Char[] Mask = new Char[] { ' ' };
 
         public Interpreter()
         {
             functions = new Dictionary<string, IInterpretable>();
             env = new Dictionary<string,string>();
-
+            commandBuffer = new StringBuilder();
             loadFunctions();
         }
 
@@ -59,6 +61,31 @@ namespace UnderworldEngine.Scripting
             }
 
             string[] command = function.Split(new Char[] { ' ' });
+            
+            //multilining stuff
+            if (command[0] == "\\\\")
+                return;
+
+            if (command[command.Length - 1] == "\\\\" || commandBuffer.Length > 0)
+            {
+                if (commandBuffer.Length > 0 && command[command.Length - 1] != "\\\\")
+                {
+                    for (int i = 0; i < command.Length; i++)
+                    {
+                        commandBuffer.Append(command[i]);
+                        commandBuffer.Append(" ");
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < command.Length - 1; i++)
+                    {
+                        commandBuffer.Append(command[i]);
+                        commandBuffer.Append(" ");
+                    }
+                    return;
+                }
+            }
 
             //replace marked variables
             #region bash replace
@@ -83,7 +110,15 @@ namespace UnderworldEngine.Scripting
             {
                 //check to see if function is null
                 if (command[0].Contains("None"))
+                {
                     return;
+                }
+                else if (commandBuffer.Length > 0) //then check to see if multilined
+                {
+                    function = commandBuffer.ToString(); 
+                    command = function.Split(Game1.interpreter.Mask);
+                    commandBuffer = new StringBuilder();
+                }
 
                 //else just run
                 functions[command[0]].run(function);
