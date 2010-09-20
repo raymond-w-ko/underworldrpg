@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnderworldEngine.Audio;
-using UnderworldEngine.Game.Level;
+using UnderworldEngine.Game;
 
 namespace UnderworldEngine.Scripting
 {

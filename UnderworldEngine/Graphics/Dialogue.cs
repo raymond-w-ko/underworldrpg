@@ -258,21 +258,4 @@ namespace UnderworldEngine.Graphics
             }
         }
     }
-
-    public static class SpriteExtensions
-    {
-        public static Texture2D pointTexture = new Texture2D(Game1.DefaultGraphicsDevice, 1, 1, 1, TextureUsage.None, SurfaceFormat.Color);
-        public static void DrawLine(this SpriteBatch sb, //Texture2D blank,
-              float width, Color color, Vector2 point1, Vector2 point2)
-        {
-            pointTexture.SetData(new[] { Color.White });
-
-            float angle = (float)Math.Atan2(point2.Y - point1.Y, point2.X - point1.X);
-            float length = Vector2.Distance(point1, point2);
-
-            sb.Draw(pointTexture, point1, null, color,
-              angle, new Vector2(0, 0), new Vector2(length, width),
-              SpriteEffects.None, 0);
-        }
-    }
 }

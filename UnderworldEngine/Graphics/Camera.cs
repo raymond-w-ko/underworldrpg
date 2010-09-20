@@ -34,42 +34,6 @@ namespace UnderworldEngine.Graphics
             }
         }
 
-        private Matrix _viewProjectionMatrix;
-        public Matrix ViewProjectionMatrix
-        {
-            get
-            {
-                return _viewProjectionMatrix;
-            }
-        }
-
-        private Matrix _viewInverseMatrix;
-        public Matrix ViewInverseMatrix
-        {
-            get
-            {
-                return _viewInverseMatrix;
-            }
-        }
-
-        private Matrix _projectionInverseMatrix;
-        public Matrix ProjectionInverseMatrix
-        {
-            get
-            {
-                return _projectionInverseMatrix;
-            }
-        }
-
-        private Matrix _viewProjectionInverseMatrix;
-        public Matrix ViewProjectionInverseMatrix
-        {
-            get
-            {
-                return _viewProjectionInverseMatrix;
-            }
-        }
-
         private Vector3 currentPosition = Vector3.Zero;
         private Vector3 currentTarget = Vector3.Zero;
         private Vector3 currentUpVector = Vector3.Zero;
@@ -288,7 +252,6 @@ namespace UnderworldEngine.Graphics
         private void recalculateViewMatrix()
         {
             viewMatrix = Matrix.CreateLookAt(currentPosition, currentTarget, currentUpVector);
-            recalculateMiscMatrices();
         }
 
         private void recalculateProjectionMatrix()
@@ -298,16 +261,6 @@ namespace UnderworldEngine.Graphics
             projectionMatrix = Matrix.CreateOrthographic(
                 viewWidth, viewHeight,
                 this.nearPlaneDistance, this.farPlaneDistance);
-            recalculateMiscMatrices();
-        }
-
-        // http://forums.xna.com/forums/p/6939/36985.aspx#36985
-        private void recalculateMiscMatrices()
-        {
-            _viewProjectionMatrix = viewMatrix * projectionMatrix;
-            _viewInverseMatrix = Matrix.Invert(viewMatrix);
-            _projectionInverseMatrix = Matrix.Invert(projectionMatrix);
-            _viewProjectionInverseMatrix = ProjectionInverseMatrix * ViewInverseMatrix;
         }
         #endregion
 
@@ -387,15 +340,20 @@ namespace UnderworldEngine.Graphics
 
         public void ZoomCloser(uint dist)
         {
+            // Check to make sure camera will not move too close
+            if (this.cameraBoxSize - dist < 2) {
+                return;
+            }
+
             if (IsAcceptingCommands) {
                 IsAcceptingCommands = false;
             }
             else {
                 return;
             }
+            
             this.futureCameraBoxSize = this.cameraBoxSize - dist;
             this.futureCameraBoxSize = (float)Math.Round(this.futureCameraBoxSize);
-            //Game1.console.Log("Zooming to: " + futureCameraBoxSize);
         }
 
         public void ZoomFarther(uint dist)
@@ -408,7 +366,6 @@ namespace UnderworldEngine.Graphics
             }
             this.futureCameraBoxSize = this.cameraBoxSize + dist;
             this.futureCameraBoxSize = (float)Math.Round(this.futureCameraBoxSize);
-            //Game1.console.Log("Zooming to: " + futureCameraBoxSize);
         }
         #endregion
 
@@ -443,23 +400,4 @@ namespace UnderworldEngine.Graphics
             recalculateProjectionMatrix();
         }
     }
-
-    #region Extensions
-    public static class MyExtensions
-    {
-        public static bool AlmostEquals(this Vector3 vec, Vector3 vec2, float nEpsilon)
-        {
-	        bool bRet1 = (((vec2.X - nEpsilon) < vec.X) && (vec.X < (vec2.X + nEpsilon)));
-            bool bRet2 = (((vec2.Y - nEpsilon) < vec.Y) && (vec.Y < (vec2.Y + nEpsilon)));
-            bool bRet3 = (((vec2.Z - nEpsilon) < vec.Z) && (vec.Z < (vec2.Z + nEpsilon)));
-	        return bRet1 && bRet2 && bRet3;
-        }
-
-        public static bool AlmostEquals(this float f1, float f2, float nEpsilon)
-        {
-            bool bRet1 = (((f2 - nEpsilon) < f1) && (f1 < (f2 + nEpsilon)));
-            return bRet1;
-        }
-    }
-    #endregion
 }
