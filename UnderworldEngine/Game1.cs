@@ -65,7 +65,7 @@ namespace UnderworldEngine
             Content.RootDirectory = "Content";
 
             // create a debug log text file
-            Game1.FileStream = new FileStream("log.txt", FileMode.Truncate);
+            Game1.FileStream = new FileStream("log.txt", FileMode.Create);
             Game1.Debug = new StreamWriter(Game1.FileStream);
 
             Game1.audioManager = new AudioManager();
