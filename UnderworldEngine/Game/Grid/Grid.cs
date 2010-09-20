@@ -16,6 +16,12 @@ using UnderworldEngine.Scripting;
 
 namespace UnderworldEngine.Game
 {
+    /// <summary>
+    /// Grid is a transparent overlay on top of the ground model
+    /// that is used to represent what distinct regions an Entity
+    /// can move to. For now, each region uses the same texture,
+    /// and should be tilable.
+    /// </summary>
     public class Grid
     {
         private int _xSize;
@@ -24,8 +30,6 @@ namespace UnderworldEngine.Game
 
         private GridSquare[,] _grid;
 
-        private bool _useRandomY = false;
-
         private BasicEffect _basicEffect;
         private VertexDeclaration _vertexDeclaration;
 
@@ -33,6 +37,8 @@ namespace UnderworldEngine.Game
 
         private VertexPositionTexture[] _vertices;
         private int[] _indices;
+
+        #region Initialization
 
         /// <summary>
         /// Creates an empty map of X by Z size
@@ -75,104 +81,9 @@ namespace UnderworldEngine.Game
 
         public Grid(int xSize, int zSize) : this(xSize, zSize, "Textures/red") { }
 
-        /// <summary>
-        /// Saves the entire map to a file
-        /// </summary>
-        /// <param name="mapName"></param>
-        public void Save(XmlDocument xmlDocument, XmlNode rootNode)
-        {
-            XmlNode gridNode = xmlDocument.CreateElement("Grid");
+        #endregion
 
-            XmlAttribute xSizeAttribute = xmlDocument.CreateAttribute("xSize");
-            xSizeAttribute.Value = _xSize.ToString();
-            XmlAttribute zSizeAttribute = xmlDocument.CreateAttribute("zSize");
-            zSizeAttribute.Value = _zSize.ToString();
-            XmlAttribute textureAttribute = xmlDocument.CreateAttribute("texture");
-            textureAttribute.Value = _textureName;
-            gridNode.Attributes.Append(xSizeAttribute);
-            gridNode.Attributes.Append(zSizeAttribute);
-            gridNode.Attributes.Append(textureAttribute);
-
-            for (int xx = 0; xx < _xSize; xx++) {
-                for (int zz = 0; zz < _zSize; zz++) {
-                    _grid[xx, zz].Save(xmlDocument, gridNode);
-                }
-            }
-
-            rootNode.AppendChild(gridNode);
-        }
-
-        private void compileVertices()
-        {
-            _vertices = new VertexPositionTexture[_xSize * _zSize * 4];
-            _indices = new int[_xSize * _zSize * 6];
-            int vertCounter = 0;
-            int indexCounter = 0;
-            for (uint xx = 0; xx < _xSize; xx++) {
-                for (uint zz = 0; zz < _zSize; zz++) {
-                    for (int jj = 0; jj < 6; jj++, indexCounter++) {
-                        _indices[indexCounter] = _grid[xx, zz].Indices[jj] + vertCounter;
-                    }
-                    for (int ii = 0; ii < 4; ii++, vertCounter++) {
-                        _vertices[vertCounter] = _grid[xx, zz].Vertices[ii];
-                    }
-                }
-            }
-        }
-
-        public void Draw()
-        {
-            _basicEffect.View = Game1.Camera.ViewMatrix;
-            _basicEffect.Projection = Game1.Camera.ProjectionMatrix;
-            _basicEffect.World = Matrix.Identity;
-
-            // enable alpha blending
-            Game1.DefaultGraphics.GraphicsDevice.RenderState.AlphaBlendEnable = true;
-            Game1.DefaultGraphics.GraphicsDevice.RenderState.AlphaBlendOperation = BlendFunction.Add;
-            Game1.DefaultGraphics.GraphicsDevice.RenderState.SourceBlend = Blend.SourceAlpha;
-            Game1.DefaultGraphics.GraphicsDevice.RenderState.DestinationBlend = Blend.InverseSourceAlpha;
-            Game1.DefaultGraphics.GraphicsDevice.RenderState.SeparateAlphaBlendEnabled = false;
-
-            Game1.DefaultGraphicsDevice.VertexDeclaration = _vertexDeclaration;
-
-            _basicEffect.Begin();
-            foreach (EffectPass pass in _basicEffect.CurrentTechnique.Passes) {
-                pass.Begin();
-
-                /*
-                for (uint xx = 0; xx < _xSize; xx++) {
-                    for (uint zz = 0; zz < _zSize; zz++) {
-                        Game1.DefaultGraphicsDevice.DrawUserIndexedPrimitives<VertexPositionTexture>(
-                            PrimitiveType.TriangleList,
-                            _grid[xx, zz].Vertices, 0, 4,
-                            _grid[xx, zz].Indices, 0, 2
-                            );
-                    }
-                }
-                */
-
-                Game1.DefaultGraphicsDevice.DrawUserIndexedPrimitives<VertexPositionTexture>(
-                    PrimitiveType.TriangleList,
-                    _vertices, 0, 4 * _xSize * _zSize,
-                    _indices, 0, 2 * _xSize * _zSize
-                    );
-
-                pass.End();
-            }
-            _basicEffect.End();
-
-            Game1.DefaultGraphics.GraphicsDevice.RenderState.AlphaBlendEnable = false;
-        }
-
-        public Vector2 FindIntersection(Ray ray)
-        {
-            foreach (GridSquare gs in _grid) {
-                if (ray.Intersects(gs.BoundingBox) != null) {
-                    return new Vector2(gs.XIndex, gs.ZIndex);
-                }
-            }
-            return new Vector2(float.NaN, float.NaN);
-        }
+        #region XML Save and Load
 
         public static Grid Load(XmlDocument xmlDocument, XmlNode rootNode)
         {
@@ -209,13 +120,106 @@ namespace UnderworldEngine.Game
             return NewGrid;
         }
 
+        /// <summary>
+        /// Saves the entire map to a file
+        /// </summary>
+        /// <param name="mapName"></param>
+        public void Save(XmlDocument xmlDocument, XmlNode rootNode)
+        {
+            XmlNode gridNode = xmlDocument.CreateElement("Grid");
+
+            XmlAttribute xSizeAttribute = xmlDocument.CreateAttribute("xSize");
+            xSizeAttribute.Value = _xSize.ToString();
+            XmlAttribute zSizeAttribute = xmlDocument.CreateAttribute("zSize");
+            zSizeAttribute.Value = _zSize.ToString();
+            XmlAttribute textureAttribute = xmlDocument.CreateAttribute("texture");
+            textureAttribute.Value = _textureName;
+            gridNode.Attributes.Append(xSizeAttribute);
+            gridNode.Attributes.Append(zSizeAttribute);
+            gridNode.Attributes.Append(textureAttribute);
+
+            for (int xx = 0; xx < _xSize; xx++) {
+                for (int zz = 0; zz < _zSize; zz++) {
+                    _grid[xx, zz].Save(xmlDocument, gridNode);
+                }
+            }
+
+            rootNode.AppendChild(gridNode);
+        }
+
+        #endregion
+
+        private void compileVertices()
+        {
+            _vertices = new VertexPositionTexture[_xSize * _zSize * 4];
+            _indices = new int[_xSize * _zSize * 6];
+            int vertCounter = 0;
+            int indexCounter = 0;
+            for (uint xx = 0; xx < _xSize; xx++) {
+                for (uint zz = 0; zz < _zSize; zz++) {
+                    // don't include invisible squares in compilation
+                    if (!_grid[xx, zz].IsVisible) {
+                        continue;
+                    }
+
+                    for (int jj = 0; jj < 6; jj++, indexCounter++) {
+                        _indices[indexCounter] = _grid[xx, zz].Indices[jj] + vertCounter;
+                    }
+                    for (int ii = 0; ii < 4; ii++, vertCounter++) {
+                        _vertices[vertCounter] = _grid[xx, zz].Vertices[ii];
+                    }
+                }
+            }
+        }
+
+        public void Draw()
+        {
+            _basicEffect.View = Game1.Camera.ViewMatrix;
+            _basicEffect.Projection = Game1.Camera.ProjectionMatrix;
+            _basicEffect.World = Matrix.Identity;
+
+            // enable alpha blending
+            Game1.DefaultGraphics.GraphicsDevice.RenderState.AlphaBlendEnable = true;
+            Game1.DefaultGraphics.GraphicsDevice.RenderState.AlphaBlendOperation = BlendFunction.Add;
+            Game1.DefaultGraphics.GraphicsDevice.RenderState.SourceBlend = Blend.SourceAlpha;
+            Game1.DefaultGraphics.GraphicsDevice.RenderState.DestinationBlend = Blend.InverseSourceAlpha;
+            Game1.DefaultGraphics.GraphicsDevice.RenderState.SeparateAlphaBlendEnabled = false;
+
+            Game1.DefaultGraphicsDevice.VertexDeclaration = _vertexDeclaration;
+
+            _basicEffect.Begin();
+            foreach (EffectPass pass in _basicEffect.CurrentTechnique.Passes) {
+                pass.Begin();
+
+                Game1.DefaultGraphicsDevice.DrawUserIndexedPrimitives<VertexPositionTexture>(
+                    PrimitiveType.TriangleList,
+                    _vertices, 0, 4 * _xSize * _zSize,
+                    _indices, 0, 2 * _xSize * _zSize
+                    );
+
+                pass.End();
+            }
+            _basicEffect.End();
+
+            Game1.DefaultGraphics.GraphicsDevice.RenderState.AlphaBlendEnable = false;
+        }
+
+        public Vector2 FindIntersection(Ray ray)
+        {
+            foreach (GridSquare gs in _grid) {
+                if (ray.Intersects(gs.BoundingBox) != null) {
+                    return new Vector2(gs.XIndex, gs.ZIndex);
+                }
+            }
+            return new Vector2(float.NaN, float.NaN);
+        }
+
         public void Select(Vector2 target)
         {
             int xIndex = (int) Math.Round(target.X);
             int zIndex = (int) Math.Round(target.Y);
-            //_grid[xIndex, zIndex].IsVisible = !_grid[xIndex, zIndex].IsVisible;
+            _grid[xIndex, zIndex].IsVisible = !_grid[xIndex, zIndex].IsVisible;
             _grid[xIndex, zIndex].IsSelected = !_grid[xIndex, zIndex].IsSelected;
-            _grid[xIndex, zIndex].CompileVertices();
             compileVertices();
         }
 
@@ -253,18 +257,6 @@ namespace UnderworldEngine.Game
         {
             Pick.RaiseHandler -= this.Raise;
             Pick.LowerHandler -= this.Lower;
-        }
-    }
-
-    public static class Extensions
-    {
-        public static Vector3 GetFromString(this Vector3 vec, string s)
-        {
-            string[] values = s.Split(' ');
-            vec.X = (float)Convert.ToDouble(values[0]);
-            vec.Y = (float)Convert.ToDouble(values[1]);
-            vec.Z = (float)Convert.ToDouble(values[2]);
-            return vec;
         }
     }
 }
