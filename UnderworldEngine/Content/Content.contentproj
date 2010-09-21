@@ -121,6 +121,11 @@
       <Name>level01</Name>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Compile Include="Scripts\defaultCamera.rs">
+      <Name>defaultCamera</Name>
+      <Importer>RageScriptImporter</Importer>
+      <Processor>RageScriptProcessor</Processor>
+    </Compile>
     <Compile Include="Textures\red.jpg">
       <Name>red</Name>
       <Importer>TextureImporter</Importer>

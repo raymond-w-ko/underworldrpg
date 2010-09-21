@@ -148,7 +148,7 @@ namespace UnderworldEngine
         /// </summary>
         protected override void UnloadContent()
         {
-            // TODO: Unload any non ContentManager content here\
+            // TODO: Unload any non ContentManager content here
             Game1.Debug.Close();
         }
 
@@ -164,7 +164,7 @@ namespace UnderworldEngine
                 this.Exit();
 
             // TODO: Add your update logic here
-            Game1.Camera.Update();
+            Game1.Camera.Update(gameTime);
 
             //controller stuff
             Game1.controller1.UpdateInput();

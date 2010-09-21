@@ -90,6 +90,18 @@ namespace UnderworldEngine.Scripting
                         Game1.Camera.LookRight();
                         break;
                     }
+                case "turnspeed": {
+                        Game1.Camera.TurnSpeed = (float)Convert.ToDouble(command[2]);
+                        break;
+                    }
+                case "zoomspeed": {
+                        Game1.Camera.ZoomSpeed = (float)Convert.ToDouble(command[2]);
+                        break;
+                    }
+                case "movespeed": {
+                        Game1.Camera.MoveSpeed = (float)Convert.ToDouble(command[2]);
+                        break;
+                    }
                 default:
                     throw new ArgumentException("invalid option", command[1]);
             }
