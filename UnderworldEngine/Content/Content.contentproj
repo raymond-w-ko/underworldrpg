@@ -119,7 +119,7 @@
   <ItemGroup>
     <None Include="Maps\Chapter_01\level01.map">
       <Name>level01</Name>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <Compile Include="Scripts\defaultCamera.rs">
       <Name>defaultCamera</Name>

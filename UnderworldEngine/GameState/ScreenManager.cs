@@ -53,6 +53,13 @@ namespace UnderworldEngine.GameState
             nameToScreen.Remove(name);
         }
 
+        ~ScreenManager()
+        {
+            foreach (IScreen screen in nameToScreen.Values) {
+                screen.Unload();
+            }
+        }
+
         /// <summary>
         /// Update the IScreen that is in focus
         /// </summary>

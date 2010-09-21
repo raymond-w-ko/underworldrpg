@@ -83,7 +83,9 @@ namespace UnderworldEngine.Game
             _models = new LinkedList<GameObjectModel>();
             XmlNodeList models = _xmlDocument.GetElementsByTagName("Model");
             foreach (XmlNode model in models) {
-                _models.AddLast(GameObjectModel.Load(_xmlDocument, model));
+                GameObjectModel gom = GameObjectModel.Load(_xmlDocument, model);
+                Game1.console.Log(gom.Name +  gom.BoundingBox.ToString());
+                _models.AddLast(gom);
             }
         }
 
@@ -94,13 +96,20 @@ namespace UnderworldEngine.Game
 
         public void SaveTo(string pathName)
         {
-            _grid.Save(_xmlDocument, _rootNode);
+            XmlDocument xmlDocument = new XmlDocument();
+            XmlNode xmlDec = xmlDocument.CreateXmlDeclaration("1.0", "UTF-8", null);
+            xmlDocument.AppendChild(xmlDec);
+
+            XmlNode rootNode = xmlDocument.CreateElement(MAP_MAGIC_STRING);
+            xmlDocument.AppendChild(rootNode);
+
+            _grid.Save(xmlDocument, rootNode);
 
             foreach (GameObjectModel gom in _models) {
-                gom.Save(_xmlDocument, _rootNode);
+                gom.Save(xmlDocument, rootNode);
             }
 
-            _xmlDocument.Save(pathName);
+            xmlDocument.Save(pathName);
         }
 
         #endregion
