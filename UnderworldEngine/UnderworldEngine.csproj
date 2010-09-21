@@ -93,6 +93,7 @@
     <Compile Include="Game\Entity\EnumEntityDirection.cs" />
     <Compile Include="Game\Entity\Entity.cs" />
     <Compile Include="Game\Entity\IControllable.cs" />
+    <Compile Include="Game\Grid\BattleCursor.cs" />
     <Compile Include="Game\Primitive\GameObjectModel.cs" />
     <Compile Include="Game\Grid\GridSquare.cs" />
     <Compile Include="Game\Level\Level.cs" />

@@ -176,16 +176,7 @@ namespace UnderworldEngine
 
             // TODO: Add your drawing code here
             Game1.screenManager.Draw(gameTime);
-            
-            // Draw 2D Sprites Here
-            spriteBatch.Begin();
-
-            // Queue Sprites Here
-            fps.Draw();
-            spriteBatch.End();
-
-            // End 2D Draw
-            spriteBatch.ResetFor3d();
+            fps.Draw(gameTime);
 
             base.Draw(gameTime);
         }
