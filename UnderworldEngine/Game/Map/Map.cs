@@ -84,7 +84,7 @@ namespace UnderworldEngine.Game
             XmlNodeList models = _xmlDocument.GetElementsByTagName("Model");
             foreach (XmlNode model in models) {
                 GameObjectModel gom = GameObjectModel.Load(_xmlDocument, model);
-                Game1.console.Log(gom.Name +  gom.BoundingBox.ToString());
+                Game1.console.Log(gom.Name + ": " +  gom.BoundingBox.ToString());
                 _models.AddLast(gom);
             }
         }
