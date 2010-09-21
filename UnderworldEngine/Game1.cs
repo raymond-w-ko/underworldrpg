@@ -3,24 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
-using Microsoft.Xna.Framework.Net;
-using Microsoft.Xna.Framework.Storage;
-
-using UnderworldEngine.Graphics;
-using UnderworldEngine.Game;
-using UnderworldEngine.Audio;
+using Microsoft.Xna.Framework.Content;
 using System.IO;
+using UnderworldEngine.Graphics;
+using UnderworldEngine.Audio;
 using UnderworldEngine.Scripting;
 using UnderworldEngine.IO;
 using UnderworldEngine.GameState;
-using UnderworldEngine.Game;
-using System.Xml;
 
 namespace UnderworldEngine
 {
@@ -29,10 +19,6 @@ namespace UnderworldEngine
     /// </summary>
     public class Game1 : Microsoft.Xna.Framework.Game
     {
-        [DllImport("kernel32.dll")]
-        public static extern Boolean AllocConsole();
-        [DllImport("kernel32.dll")]
-        public static extern Boolean FreeConsole();
         public static FileStream FileStream;
         public static StreamWriter Debug;
 

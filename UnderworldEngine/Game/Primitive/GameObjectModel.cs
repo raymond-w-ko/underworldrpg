@@ -18,7 +18,14 @@ namespace UnderworldEngine.Game
 {
     public class GameObjectModel : GameObject
     {
-        private string _modelName;
+        private string _name;
+        public string Name
+        {
+            get
+            {
+                return _name;
+            }
+        }
         private Model _model;
 
         private BoundingBox _boundingBox;
@@ -33,8 +40,8 @@ namespace UnderworldEngine.Game
         public GameObjectModel(string name)
             : base()
         {
-            this._modelName = name;
-            this._model = Game1.DefaultContent.Load<Model>(_modelName);
+            this._name = name;
+            this._model = Game1.DefaultContent.Load<Model>(_name);
             CalculateBoundingBox();
         }
 
@@ -77,7 +84,9 @@ namespace UnderworldEngine.Game
             BoundingBox boundingBox = new BoundingBox();
             foreach (ModelMesh mesh in model.Meshes) {
                 VertexPositionNormalTexture[] vertices =
-                    new VertexPositionNormalTexture[mesh.VertexBuffer.SizeInBytes / VertexPositionNormalTexture.SizeInBytes];
+                    new VertexPositionNormalTexture[
+                        mesh.VertexBuffer.SizeInBytes / VertexPositionNormalTexture.SizeInBytes
+                        ];
 
                 mesh.VertexBuffer.GetData<VertexPositionNormalTexture>(vertices);
 
@@ -85,6 +94,7 @@ namespace UnderworldEngine.Game
 
                 for (int index = 0; index < vertexs.Length; index++) {
                     vertexs[index] = vertices[index].Position;
+                    Vector3.Transform(vertexs[index], _worldMatrix);
                 }
 
                 boundingBox = BoundingBox.CreateMerged(boundingBox,  BoundingBox.CreateFromPoints(vertexs));
@@ -98,7 +108,7 @@ namespace UnderworldEngine.Game
             XmlNode modelNode = xmlDocument.CreateElement("Model");
 
             XmlAttribute modelName = xmlDocument.CreateAttribute("name");
-            modelName.Value = this._modelName;
+            modelName.Value = this._name;
             modelNode.Attributes.Append(modelName);
 
             base.Save(xmlDocument, modelNode);
