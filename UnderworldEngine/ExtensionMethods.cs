@@ -60,5 +60,15 @@ namespace UnderworldEngine
 
             return 1.0f / length1;
         }
+
+        public static void ResetFor3d(this SpriteBatch spriteBatch)
+        {
+            Game1.DefaultGraphicsDevice.RenderState.DepthBufferEnable = true;
+            Game1.DefaultGraphicsDevice.RenderState.AlphaBlendEnable = false;
+            Game1.DefaultGraphicsDevice.RenderState.AlphaTestEnable = false;
+
+            Game1.DefaultGraphicsDevice.SamplerStates[0].AddressU = TextureAddressMode.Wrap;
+            Game1.DefaultGraphicsDevice.SamplerStates[0].AddressV = TextureAddressMode.Wrap;
+        }
     }
 }
