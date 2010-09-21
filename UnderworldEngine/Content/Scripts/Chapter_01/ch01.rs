@@ -1,6 +1,6 @@
 run defaultKBBind
 
-load map Chapter_01/level01.map
+load map Chapter_01/level01
 switch to level
 
 setc fplane 100

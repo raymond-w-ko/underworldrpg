@@ -34,7 +34,7 @@ namespace UnderworldEngine.GameState
             //nothing to update
         }
 
-        public void Draw()
+        public void Draw(GameTime gameTime)
         {
             Game1.DefaultGraphicsDevice.Clear(Color.Black);
         }

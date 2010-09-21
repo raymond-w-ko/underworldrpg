@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Xna.Framework;
 
 namespace UnderworldEngine.Game
 {
@@ -17,12 +18,12 @@ namespace UnderworldEngine.Game
             throw new NotImplementedException();
         }
 
-        internal void Update(Microsoft.Xna.Framework.GameTime gameTime)
+        internal void Update(GameTime gameTime)
         {
             throw new NotImplementedException();
         }
 
-        internal void Draw()
+        internal void Draw(GameTime gameTime)
         {
             throw new NotImplementedException();
         }

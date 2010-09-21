@@ -189,7 +189,7 @@ namespace UnderworldEngine
             GraphicsDevice.Clear(Color.Black);
 
             // TODO: Add your drawing code here
-            Game1.screenManager.Draw();
+            Game1.screenManager.Draw(gameTime);
             
             // Draw 2D Sprites Here
             spriteBatch.Begin();

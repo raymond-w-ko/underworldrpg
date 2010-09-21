@@ -19,6 +19,8 @@ namespace UnderworldEngine.Game
 
         private Picker _picker;
 
+        private static string MAP_MAGIC_STRING = "UWRPG";
+
         /// <summary>
         /// Load a map from the specified URL/local pathname
         /// </summary>
@@ -28,17 +30,20 @@ namespace UnderworldEngine.Game
             mapPathName = "Content/Maps/" + mapPathName;
             _pathName = mapPathName;
             Load();
+
             _picker = new Picker(_grid);
         }
 
         /// <summary>
-        /// Create an empty map
+        /// Create an empty map with the default name of "new_map"
         /// </summary>
         public Map(Grid grid, GameObjectModel groundModel)
         {
+            _pathName = "Contents/Map/new_map.map";
+
             _models = new LinkedList<GameObjectModel>();
             _grid = grid;
-            _picker = new Picker(_grid);
+            
             _models.AddLast(groundModel);
 
             _xmlDocument = new XmlDocument();
@@ -46,21 +51,32 @@ namespace UnderworldEngine.Game
             XmlNode xmlDec = _xmlDocument.CreateXmlDeclaration("1.0", "UTF-8", null);
             _xmlDocument.AppendChild(xmlDec);
 
-            _rootNode = _xmlDocument.CreateElement("UWRPG");
+            _rootNode = _xmlDocument.CreateElement(MAP_MAGIC_STRING);
             _xmlDocument.AppendChild(_rootNode);
+
+            _picker = new Picker(_grid);
         }
 
+        /// <summary>
+        /// Add a new background model to the map
+        /// </summary>
+        /// <param name="gom"></param>
         public void AddModel(GameObjectModel gom)
         {
             _models.AddLast(gom);
         }
 
+        #region XML Load & Save
         public void Load()
         {
             _xmlDocument = new XmlDocument();
-            _xmlDocument.Load(_pathName);
+            _xmlDocument.Load(_pathName + ".map");
 
             _rootNode = _xmlDocument.DocumentElement;
+
+            if (_rootNode.Name != MAP_MAGIC_STRING) {
+                throw new ApplicationException("Attempted to load an invalid map file.");
+            }
 
             _grid = Grid.Load(_xmlDocument, _rootNode["Grid"]);
 
@@ -78,36 +94,34 @@ namespace UnderworldEngine.Game
 
         public void SaveTo(string pathName)
         {
-            // Save Grid
             _grid.Save(_xmlDocument, _rootNode);
 
-            // Save Models
             foreach (GameObjectModel gom in _models) {
                 gom.Save(_xmlDocument, _rootNode);
             }
 
-            // Write out document
             _xmlDocument.Save(pathName);
         }
+
+        #endregion
 
         public void Update(GameTime gameTime)
         {
             _picker.Update(gameTime);
         }
 
-        public void Draw()
+        public void Draw(GameTime gameTime)
         {
             foreach (GameObjectModel gom in _models) {
-                gom.Draw();
+                gom.Draw(gameTime);
             }
 
-            _grid.Draw();
+            _grid.Draw(gameTime);
         }
 
-        internal void Unload()
+        public void Unload()
         {
-            //SaveTo("Content\\Maps\\level01.bin.out");
-            //throw new NotImplementedException();
+            SaveTo(_pathName + ".out");
         }
     }
 }

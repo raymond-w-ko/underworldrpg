@@ -172,7 +172,7 @@ namespace UnderworldEngine.Game
             }
         }
 
-        public void Draw()
+        public void Draw(GameTime gameTime)
         {
             _basicEffect.View = Game1.Camera.ViewMatrix;
             _basicEffect.Projection = Game1.Camera.ProjectionMatrix;

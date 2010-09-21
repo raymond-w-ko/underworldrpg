@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Xna.Framework;
 
 namespace UnderworldEngine.Game
 {
@@ -38,7 +39,7 @@ namespace UnderworldEngine.Game
             }
         }
 
-        public void Update(Microsoft.Xna.Framework.GameTime gameTime)
+        public void Update(GameTime gameTime)
         {
             _map.Update(gameTime);
 
@@ -47,12 +48,12 @@ namespace UnderworldEngine.Game
             }
         }
 
-        public void Draw()
+        public void Draw(GameTime gameTime)
         {
-            _map.Draw();
+            _map.Draw(gameTime);
 
             foreach (Entity entity in _entityList) {
-                entity.Draw();
+                entity.Draw(gameTime);
             }
         }
     }

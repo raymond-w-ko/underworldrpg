@@ -16,6 +16,6 @@ namespace UnderworldEngine.GameState
 
         void Unload();
         void Update(GameTime gameTime);
-        void Draw();
+        void Draw(GameTime gameTime);
     }
 }
