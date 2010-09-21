@@ -100,7 +100,6 @@
     <Compile Include="Game\Map\Map.cs" />
     <Compile Include="Graphics\Dialogue.cs" />
     <Compile Include="Graphics\DialogueManager.cs" />
-    <Compile Include="Graphics\Interfaces\IDraw.cs" />
     <Compile Include="Game\Grid\Grid.cs" />
     <Compile Include="Game\Primitive\Quad.cs" />
     <Compile Include="Game\Primitive\QuadTexture.cs" />

@@ -70,13 +70,13 @@ namespace UnderworldEngine.GameState
         /// <summary>
         /// Draw the IScreen that is in focus
         /// </summary>
-        public void Draw()
+        public void Draw(GameTime gameTime)
         {
             foreach (IScreen sc in nameToScreen.Values)
             {
                 if (sc.IsFocused)
                 {
-                    sc.Draw();
+                    sc.Draw(gameTime);
                 }
             }
         }

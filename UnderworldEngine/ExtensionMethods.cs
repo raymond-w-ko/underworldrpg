@@ -49,5 +49,16 @@ namespace UnderworldEngine
               angle, new Vector2(0, 0), new Vector2(length, width),
               SpriteEffects.None, 0);
         }
+
+        public static float FindScaleToUnitFactor(this BoundingBox bb)
+        {
+            float length1 = bb.Max.X - bb.Min.X;
+            float length2 = bb.Max.Z - bb.Min.Z;
+            if (length2 > length1) {
+                length1 = length2;
+            }
+
+            return 1.0f / length1;
+        }
     }
 }

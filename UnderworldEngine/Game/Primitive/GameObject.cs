@@ -3,16 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
-using Microsoft.Xna.Framework.Net;
-using Microsoft.Xna.Framework.Storage;
-
-using UnderworldEngine.Graphics.Interfaces;
 using System.Xml;
 
 namespace UnderworldEngine.Game
@@ -20,8 +11,14 @@ namespace UnderworldEngine.Game
     /// <summary>
     /// Renderable object that exists within the game world
     /// </summary>
-    public abstract class GameObject : IDraw
+    public abstract class GameObject
     {
+        #region Transformation Class
+        /// <summary>
+        /// A simple class that defines all possible transformations
+        /// that can be done to a 3D object. This is queued into a list
+        /// and then compiled into a World Matrix.
+        /// </summary>
         private class Transformation
         {
             public enum Operation
@@ -48,121 +45,147 @@ namespace UnderworldEngine.Game
                 Operations = 0;
             }
         }
+        #endregion
 
-        public Vector3 position;
-        public Vector3 Position
-        {
-            get
-            {
-                return position;
-            }
-            set
-            {
-                position = value;
-                this.needTransformationCompile = true;
-            }
-        }
-        public bool IsVisible { get; set; }
+        /// <summary>
+        /// The object's location in 3D space
+        /// </summary>
+        public Vector3 Position;
+
+        /// <summary>
+        /// Whether the object is visible / should be drawn
+        /// </summary>
+        public bool Visible;
 
         /// <summary>
         /// Matrix that is equivalent to the total sequences of transforms.
         /// </summary>
-        protected Matrix worldMatrix;
-        private List<Transformation> transformationList;
-        private bool needTransformationCompile;
+        protected Matrix _worldMatrix;
+        private LinkedList<Transformation> _transformationList;
+        private bool _needTransformationCompile;
 
         public GameObject()
         {
             this.Position = Vector3.Zero;
-            this.IsVisible = true;
+            this.Visible = true;
 
-            this.worldMatrix = Matrix.Identity;
-            this.transformationList = new List<Transformation>();
-            this.needTransformationCompile = true;
+            this._worldMatrix = Matrix.Identity;
+            this._transformationList = new LinkedList<Transformation>();
+            this._needTransformationCompile = true;
         }
 
-        public abstract void Draw();
+        public abstract void Draw(GameTime gameTime);
 
+        #region Transformation methods
+        /// <summary>
+        /// Adds a scale transformation to the transformation queue
+        /// </summary>
+        /// <param name="degrees"></param>
         public void Scale(float degrees)
         {
             Transformation trans = new Transformation();
             trans.Operations |= (int)Transformation.Operation.Scale;
             trans.Value = degrees;
-            transformationList.Add(trans);
-            this.needTransformationCompile = true;
+            _transformationList.AddLast(trans);
+            this._needTransformationCompile = true;
         }
 
+        /// <summary>
+        /// Adds a rotation along the X axis transformation to the transformation queue
+        /// </summary>
+        /// <param name="degrees"></param>
         public void ApplyRotationX(float degrees)
         {
             Transformation trans = new Transformation();
             trans.Operations |= (int)Transformation.Operation.Rotate;
             trans.Axis = Transformation.Axes.X;
             trans.Value = degrees;
-            transformationList.Add(trans);
-            this.needTransformationCompile = true;
+            _transformationList.AddLast(trans);
+            this._needTransformationCompile = true;
         }
 
+        /// <summary>
+        /// Adds a rotation along the Y axis transformation to the transformation queue
+        /// </summary>
+        /// <param name="degrees"></param>
         public void ApplyRotationY(float degrees)
         {
             Transformation trans = new Transformation();
             trans.Operations |= (int)Transformation.Operation.Rotate;
             trans.Axis = Transformation.Axes.Y;
             trans.Value = degrees;
-            transformationList.Add(trans);
-            this.needTransformationCompile = true;
+            _transformationList.AddLast(trans);
+            this._needTransformationCompile = true;
         }
 
+        /// <summary>
+        /// Adds a rotation along the Z axis transformation to the transformation queue
+        /// </summary>
+        /// <param name="degrees"></param>
         public void ApplyRotationZ(float degrees)
         {
             Transformation trans = new Transformation();
             trans.Operations |= (int)Transformation.Operation.Rotate;
             trans.Axis = Transformation.Axes.Z;
             trans.Value = degrees;
-            transformationList.Add(trans);
-            this.needTransformationCompile = true;
+            _transformationList.AddLast(trans);
+            this._needTransformationCompile = true;
         }
 
-        public void TranslateBy(float x, float y, float z)
+        /// <summary>
+        /// Adds a translation transformation to the transformation queue
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
+        public void Translate(float x, float y, float z)
         {
             Transformation trans = new Transformation();
             trans.Operations |= (int)Transformation.Operation.Translate;
             trans.Offset = new Vector3(x, y, z);
-            transformationList.Add(trans);
-            this.needTransformationCompile = true;
+            _transformationList.AddLast(trans);
+            this._needTransformationCompile = true;
         }
 
+        #endregion
+
+        /// <summary>
+        /// Converts all queued transformations into a usable World Matrix
+        /// </summary>
         public void CompileTransformations()
         {
-            if (!needTransformationCompile) {
+            if (!_needTransformationCompile) {
                 return;
             }
 
-            worldMatrix = Matrix.Identity;
+            _worldMatrix = Matrix.Identity;
 
-            foreach (Transformation trans in transformationList) {
+            foreach (Transformation trans in _transformationList) {
                 if ((trans.Operations & (int)Transformation.Operation.Scale) != 0) {
-                    worldMatrix *= Matrix.CreateScale(trans.Value);
+                    _worldMatrix *= Matrix.CreateScale(trans.Value);
                 }
 
                 if ((trans.Operations & (int)Transformation.Operation.Rotate) != 0) {
                     if (trans.Axis == Transformation.Axes.X) {
-                        worldMatrix *= Matrix.CreateRotationX(MathHelper.ToRadians(trans.Value));
+                        _worldMatrix *= Matrix.CreateRotationX(MathHelper.ToRadians(trans.Value));
                     }
                     else if (trans.Axis == Transformation.Axes.Y) {
-                        worldMatrix *= Matrix.CreateRotationY(MathHelper.ToRadians(trans.Value));
+                        _worldMatrix *= Matrix.CreateRotationY(MathHelper.ToRadians(trans.Value));
                     }
                     else if (trans.Axis == Transformation.Axes.Z) {
-                        worldMatrix *= Matrix.CreateRotationZ(MathHelper.ToRadians(trans.Value));
+                        _worldMatrix *= Matrix.CreateRotationZ(MathHelper.ToRadians(trans.Value));
                     }
                 }
 
                 if ((trans.Operations & (int)Transformation.Operation.Translate) != 0) {
-                    worldMatrix *= Matrix.CreateTranslation(trans.Offset);
+                    _worldMatrix *= Matrix.CreateTranslation(trans.Offset);
                 }
             }
 
-            this.needTransformationCompile = false;
+            this._needTransformationCompile = false;
         }
+
+        #region XML Load and Save
 
         /// <summary>
         /// Writes out stored transformations
@@ -173,7 +196,7 @@ namespace UnderworldEngine.Game
         {
             XmlNode transformationsNode = xmlDocument.CreateElement("Transformations");
 
-            foreach (Transformation trans in transformationList) {
+            foreach (Transformation trans in _transformationList) {
                 XmlNode operNode = null;
                 if ((Transformation.Operation)trans.Operations == Transformation.Operation.Scale) {
                     operNode = xmlDocument.CreateElement("Scale");
@@ -230,12 +253,12 @@ namespace UnderworldEngine.Game
                 Transformation newTrans = new Transformation();
 
                 if (trans.Name == "Scale") {
-                    float value = (float) Convert.ToDouble(trans["Value"].InnerText);
+                    float value = (float)Convert.ToDouble(trans["Value"].InnerText);
                     newTrans.Value = value;
                     newTrans.Operations = (int)Transformation.Operation.Scale;
                 }
                 else if (trans.Name == "Rotate") {
-                    float value = (float) Convert.ToDouble(trans["Value"].InnerText);
+                    float value = (float)Convert.ToDouble(trans["Value"].InnerText);
                     string axisString = trans["Axis"].InnerText;
                     newTrans.Value = value;
                     if (axisString == "X") {
@@ -256,10 +279,12 @@ namespace UnderworldEngine.Game
                     newTrans.Operations = (int)Transformation.Operation.Translate;
                 }
 
-                transformationList.Add(newTrans);
+                _transformationList.AddLast(newTrans);
             }
 
-            this.needTransformationCompile = true;
+            this._needTransformationCompile = true;
         }
+
+        #endregion
     }
 }
