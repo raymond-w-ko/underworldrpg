@@ -105,7 +105,6 @@
     <Compile Include="Graphics\Camera.cs" />
     <Compile Include="Graphics\BasicEffectManager.cs" />
     <Compile Include="Game\Primitive\GameObject.cs" />
-    <Compile Include="Graphics\ExtensionMethods.cs" />
     <Compile Include="Graphics\FpsCounter.cs" />
     <Compile Include="Graphics\Menu.cs" />
     <Compile Include="Graphics\MouseMenu.cs" />
