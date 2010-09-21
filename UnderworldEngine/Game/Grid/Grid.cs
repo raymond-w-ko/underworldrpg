@@ -26,6 +26,13 @@ namespace UnderworldEngine.Game
     {
         private int _xSize;
         private int _zSize;
+        public Vector2 Dimensions
+        {
+            get
+            {
+                return new Vector2(_xSize, _zSize);
+            }
+        }
         private string _textureName;
 
         private GridSquare[,] _grid;
@@ -229,6 +236,12 @@ namespace UnderworldEngine.Game
             Pick.LowerHandler += this.Lower;
         }
 
+        ~Grid()
+        {
+            Pick.RaiseHandler -= this.Raise;
+            Pick.LowerHandler -= this.Lower;
+        }
+
         public void Raise()
         {
             foreach (GridSquare gs in _grid) {
@@ -251,12 +264,6 @@ namespace UnderworldEngine.Game
                 gs.CompileVertices();
             }
             this.compileVertices();
-        }
-
-        ~Grid()
-        {
-            Pick.RaiseHandler -= this.Raise;
-            Pick.LowerHandler -= this.Lower;
         }
     }
 }

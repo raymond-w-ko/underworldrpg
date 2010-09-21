@@ -12,19 +12,18 @@ namespace UnderworldEngine.Graphics
         private int _numOfFrames = 0;
         private double _fps = 0;
 
+        private SpriteBatch _spriteBatch;
         private SpriteFont _spriteFont;
 
         public bool IsVisible;
 
-        public FpsCounter()
-        {
-            _spriteFont = Game1.DefaultContent.Load<SpriteFont>("Consolas");
-            IsVisible = true;
-        }
+        public FpsCounter() : this(Game1.DefaultContent.Load<SpriteFont>("Consolas")) { }
 
         public FpsCounter(SpriteFont spriteFont)
         {
             _spriteFont = spriteFont;
+            _spriteBatch = new SpriteBatch(Game1.DefaultGraphicsDevice);
+
             IsVisible = true;
         }
 
@@ -41,19 +40,22 @@ namespace UnderworldEngine.Graphics
             }
         }
 
-        public void Draw(Vector2 position, Color color)
+        public void DrawAt(Vector2 position, Color color)
         {
             if (!IsVisible) {
                 return;
             }
 
             _numOfFrames++;
-            Game1.DefaultSpriteBatch.DrawString(_spriteFont, _fps.ToString(), position, color);
+            _spriteBatch.DrawString(_spriteFont, _fps.ToString(), position, color);
         }
 
-        public void Draw()
+        public void Draw(GameTime gameTime)
         {
-            Draw(new Vector2(0, 0), Color.Yellow);
+            _spriteBatch.Begin();
+            DrawAt(new Vector2(0, 0), Color.Yellow);
+            _spriteBatch.End();
+            _spriteBatch.ResetFor3d();
         }
     }
 }
