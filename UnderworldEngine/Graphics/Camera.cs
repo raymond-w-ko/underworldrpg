@@ -1,21 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
-using Microsoft.Xna.Framework.Net;
-using Microsoft.Xna.Framework.Storage;
 
 namespace UnderworldEngine.Graphics
 {
     class Camera
     {
+        #region View and Projection Matrices Fields
         private Matrix viewMatrix;
         public Matrix ViewMatrix
         {
@@ -24,6 +16,7 @@ namespace UnderworldEngine.Graphics
                 return viewMatrix;
             }
         }
+        
 
         private Matrix projectionMatrix;
         public Matrix ProjectionMatrix
@@ -33,11 +26,13 @@ namespace UnderworldEngine.Graphics
                 return projectionMatrix;
             }
         }
+        #endregion
 
-        private Vector3 currentPosition = Vector3.Zero;
-        private Vector3 currentTarget = Vector3.Zero;
-        private Vector3 currentUpVector = Vector3.Zero;
+        private Vector3 currentPosition;
+        private Vector3 currentTarget;
+        private Vector3 currentUpVector;
 
+        #region Near & Far Plane Distance Fields
         private float nearPlaneDistance = 0.1f;
         public float NearPlaneDistance
         {
@@ -47,17 +42,29 @@ namespace UnderworldEngine.Graphics
             }
         }
         private float farPlaneDistance = 100.0f;
+        public float FarPlaneDistance
+        {
+            get
+            {
+                return farPlaneDistance;
+            }
+        }
         public class PlaneDistanceException : System.ApplicationException { };
+        #endregion
+
+        #region Camera Box Fields
 
         private const float NORMAL_CAMERA_BOX_SIZE = 12.0f;
+
         private float cameraBoxSize = NORMAL_CAMERA_BOX_SIZE;
         private float futureCameraBoxSize = NORMAL_CAMERA_BOX_SIZE;
+
         private Vector3[] allowableCameraPositions = {
             Vector3.Zero,
             Vector3.Zero,
             Vector3.Zero,
             Vector3.Zero
-                                                     };
+            };
         private enum CameraLocation
         {
             UpperLeft,
@@ -65,26 +72,80 @@ namespace UnderworldEngine.Graphics
             LowerRight,
             LowerLeft
         }
-
         private const int NUM_CAMERA_LOCATIONS = 4;
 
         private CameraLocation currentCameraLocation = CameraLocation.LowerRight;
+        private CameraLocation futureCameraLocation = CameraLocation.LowerRight;
 
         private Vector3 ringPosition;
-        float turnSpeed;
-        Matrix turnMatrix;
 
-        private CameraLocation futureCameraLocation;
+        private float turnSpeed;
+        /// <summary>
+        /// Turn Speed is in terms of degrees per second
+        /// </summary>
+        public float TurnSpeed
+        {
+            get
+            {
+                return turnSpeed;
+            }
+            set
+            {
+                float newSpeed = value / 60.0f;
+                if (newSpeed >= (360.0f / 60.0f)) {
+                    throw new ApplicationException("Camera Turn Velocity is too fast.");
+                }
+                turnSpeed = MathHelper.ToRadians(newSpeed);
+            }
+        }
+
+        private Matrix turnMatrix;
+
+        #endregion
+
         private Vector3 futurePosition;
-
-        private bool IsAcceptingCommands;
-
+        
         private Vector3 futureTarget;
         private float moveSpeed;
+        /// <summary>
+        /// MoveSpeed is defined in terms of Direct X units per second
+        /// </summary>
+        public float MoveSpeed
+        {
+            get
+            {
+                return moveSpeed * 60.0f;
+            }
+            set
+            {
+                float newSpeed = value / 60.0f;
+                if (newSpeed > (1.0f)) {
+                    throw new ApplicationException("Camera Movement Velocity is too fast.");
+                }
+                moveSpeed = newSpeed;
+            }
+        }
 
         private float zoomSpeed;
+        public float ZoomSpeed
+        {
+            get
+            {
+                return zoomSpeed;
+            }
+            set
+            {
+                float newSpeed = value / 60.0f;
+                if (newSpeed >= (1.0f)) {
+                    throw new ApplicationException("Camera Zoom Speed is too fast.");
+                }
+                zoomSpeed = newSpeed;
+            }
+        }
 
         private Vector3 direction;
+
+        private bool IsAcceptingCommands;
 
         public Camera()
         {
@@ -143,7 +204,6 @@ namespace UnderworldEngine.Graphics
             futureTarget = vector;
 
             calculateCameraBox(vector);
-
             futurePosition = allowableCameraPositions[(int)currentCameraLocation];
             
             recalculateViewMatrix();
@@ -151,6 +211,12 @@ namespace UnderworldEngine.Graphics
             direction = futureTarget - currentTarget;
             direction.Normalize();
             direction *= moveSpeed;
+        }
+
+        private void moveSmoothly()
+        {
+            currentTarget += direction;
+            currentPosition = currentTarget + ringPosition;
         }
 
         public void LookUp()
@@ -260,7 +326,8 @@ namespace UnderworldEngine.Graphics
             float viewHeight = viewWidth / Game1.DefaultGraphicsDevice.Viewport.AspectRatio;
             projectionMatrix = Matrix.CreateOrthographic(
                 viewWidth, viewHeight,
-                this.nearPlaneDistance, this.farPlaneDistance);
+                this.nearPlaneDistance, this.farPlaneDistance
+                );
         }
         #endregion
 
@@ -271,12 +338,6 @@ namespace UnderworldEngine.Graphics
                 ref turnMatrix,
                 out ringPosition
                 );
-            currentPosition = currentTarget + ringPosition;
-        }
-
-        private void moveSmoothly()
-        {
-            currentTarget += direction;
             currentPosition = currentTarget + ringPosition;
         }
 
@@ -296,7 +357,6 @@ namespace UnderworldEngine.Graphics
             futureCameraLocation = (CameraLocation)temp;
             futurePosition = allowableCameraPositions[(int)futureCameraLocation];
             turnMatrix = Matrix.CreateRotationY(-turnSpeed);
-            LookAt(currentTarget);
         }
 
         public void NextCameraView()
@@ -316,7 +376,6 @@ namespace UnderworldEngine.Graphics
             futureCameraLocation = (CameraLocation)temp;
             futurePosition = allowableCameraPositions[(int)futureCameraLocation];
             turnMatrix = Matrix.CreateRotationY(turnSpeed);
-            LookAt(currentTarget);
         }
 
         #endregion
@@ -341,6 +400,7 @@ namespace UnderworldEngine.Graphics
         public void ZoomCloser(uint dist)
         {
             // Check to make sure camera will not move too close
+            // and invert to look at floor
             if (this.cameraBoxSize - dist < 2) {
                 return;
             }
@@ -369,11 +429,11 @@ namespace UnderworldEngine.Graphics
         }
         #endregion
 
-        public void Update()
+        public void Update(GameTime gameTime)
         {
             if (currentCameraLocation != futureCameraLocation) {
                 rotateAlongRing();
-                if (currentPosition.AlmostEquals(futurePosition, this.cameraBoxSize/10000.0f)) {
+                if (currentPosition.AlmostEquals(futurePosition, turnSpeed)) {
                     currentCameraLocation = futureCameraLocation;
                     currentPosition = this.allowableCameraPositions[(int)currentCameraLocation];
                     IsAcceptingCommands = true;
