@@ -19,7 +19,7 @@ namespace UnderworldEngine
     /// </summary>
     public class Game1 : Microsoft.Xna.Framework.Game
     {
-        public static FileStream FileStream;
+        private static FileStream _fileStream;
         public static StreamWriter Debug;
 
         GraphicsDeviceManager graphics;
@@ -51,8 +51,8 @@ namespace UnderworldEngine
             Content.RootDirectory = "Content";
 
             // create a debug log text file
-            Game1.FileStream = new FileStream("log.txt", FileMode.Create);
-            Game1.Debug = new StreamWriter(Game1.FileStream);
+            Game1._fileStream = new FileStream("log.txt", FileMode.Create);
+            Game1.Debug = new StreamWriter(Game1._fileStream);
 
             Game1.audioManager = new AudioManager();
 

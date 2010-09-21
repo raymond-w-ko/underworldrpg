@@ -47,7 +47,26 @@ namespace UnderworldEngine.Game
 
         public void CalculateBoundingBox()
         {
-            _boundingBox = GetBoundingBoxFromModel(_model);
+            BoundingBox boundingBox = new BoundingBox();
+            foreach (ModelMesh mesh in _model.Meshes) {
+                VertexPositionNormalTexture[] vertices =
+                    new VertexPositionNormalTexture[
+                        mesh.VertexBuffer.SizeInBytes / VertexPositionNormalTexture.SizeInBytes
+                        ];
+
+                mesh.VertexBuffer.GetData<VertexPositionNormalTexture>(vertices);
+
+                Vector3[] vertexs = new Vector3[vertices.Length];
+
+                for (int index = 0; index < vertexs.Length; index++) {
+                    vertexs[index] = vertices[index].Position;
+                    vertexs[index] = Vector3.Transform(vertexs[index], _worldMatrix);
+                }
+
+                boundingBox = BoundingBox.CreateMerged(boundingBox, BoundingBox.CreateFromPoints(vertexs));
+            }
+
+            _boundingBox = boundingBox;
         }
         
         public override void Draw(GameTime gameTime)
@@ -79,30 +98,7 @@ namespace UnderworldEngine.Game
             }
         }
 
-        public BoundingBox GetBoundingBoxFromModel(Model model)
-        {
-            BoundingBox boundingBox = new BoundingBox();
-            foreach (ModelMesh mesh in model.Meshes) {
-                VertexPositionNormalTexture[] vertices =
-                    new VertexPositionNormalTexture[
-                        mesh.VertexBuffer.SizeInBytes / VertexPositionNormalTexture.SizeInBytes
-                        ];
-
-                mesh.VertexBuffer.GetData<VertexPositionNormalTexture>(vertices);
-
-                Vector3[] vertexs = new Vector3[vertices.Length];
-
-                for (int index = 0; index < vertexs.Length; index++) {
-                    vertexs[index] = vertices[index].Position;
-                    Vector3.Transform(vertexs[index], _worldMatrix);
-                }
-
-                boundingBox = BoundingBox.CreateMerged(boundingBox,  BoundingBox.CreateFromPoints(vertexs));
-            }
-
-            return boundingBox;
-        }
-
+        #region XML Load & Save
         public override void Save(XmlDocument xmlDocument, XmlNode rootNode)
         {
             XmlNode modelNode = xmlDocument.CreateElement("Model");
@@ -124,8 +120,10 @@ namespace UnderworldEngine.Game
 
             gom.LoadTransformations(xmlDocument, rootNode["Transformations"]);
             gom.CompileTransformations();
+            gom.CalculateBoundingBox();
 
             return gom;
         }
+        #endregion
     }
 }
