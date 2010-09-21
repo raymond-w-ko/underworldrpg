@@ -173,6 +173,9 @@ namespace UnderworldEngine
             Game1.screenManager.Update(gameTime);
 
             fps.Update(gameTime);
+
+            //update interpreter
+            Game1.interpreter.Update(gameTime);
             base.Update(gameTime);
         }
 
