@@ -29,14 +29,16 @@ namespace UnderworldEngine.Game
             }
         }
 
-        public BattleCursor(Grid grid)
+        public BattleCursor(Grid grid,
+            string cursorTextureName, string gridOverlayTextureName)
         {
             _grid = grid;
             Vector2 dimensions = _grid.Dimensions;
             _xLimit = (int)dimensions.X;
             _zLimit = (int)dimensions.Y;
 
-            MovementSpeed = 5;
+            // We want camera to lag behind a little bit, similar to Disgaea
+            MovementSpeed = Game1.Camera.MoveSpeed * 1.10f;
         }
 
         public void Update(GameTime gameTime)
