@@ -1,17 +1,10 @@
-﻿/*
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
-using Microsoft.Xna.Framework.Net;
-using Microsoft.Xna.Framework.Storage;
 
 using UnderworldEngine.Graphics;
 
@@ -19,28 +12,48 @@ namespace UnderworldEngine.Game
 {
     public class QuadTexture : Quad
     {
-        private VertexPositionNormalTexture[] vertices;
-        private int[] indexes;
+        private VertexPositionTexture[] _vertices;
+        private int[] _indices;
 
-        private Texture2D texture;
+        private Texture2D _texture;
+        private BasicEffect _basicEffect;
+        private bool _alphaBlendState;
+        private BlendFunction _blendFunction;
+        private Blend _sourceBlend;
+        private Blend _destBlend;
+        public float Alpha
+        {
+            get
+            {
+                return _basicEffect.Alpha;
+            }
+            set
+            {
+                if (value < 0.0f || value > 1.0f) {
+                    throw new ApplicationException("Invalid alpha value");
+                }
+                _basicEffect.Alpha = value;
+            }
+        }
 
-        private VertexDeclaration vertexDeclaration;
+        private VertexDeclaration _vertexDeclaration;
 
         public QuadTexture(Vector3 origin, Vector3 normal, Vector3 up, float width, float height,
             string textureName)
             : base(origin, normal, up, width, height)
         {
-            this.vertices = new VertexPositionNormalTexture[4];
-            this.indexes = new int[6];
+            this._vertices = new VertexPositionTexture[4];
+            this._indices = new int[6];
 
             FillVertices();
 
-            texture = Game1.DefaultContent.Load<Texture2D>(textureName);
-            this.effect.EnableTexture();
-            this.effect.SetTexture(texture);
+            _texture = Game1.DefaultContent.Load<Texture2D>(textureName);
+            _basicEffect = new BasicEffect(Game1.DefaultGraphicsDevice, null);
+            _basicEffect.TextureEnabled = true;
+            _basicEffect.Texture = _texture;
 
-            vertexDeclaration = new VertexDeclaration(Game1.DefaultGraphics.GraphicsDevice,
-                VertexPositionNormalTexture.VertexElements);
+            _vertexDeclaration = new VertexDeclaration(Game1.DefaultGraphics.GraphicsDevice,
+                VertexPositionTexture.VertexElements);
         }
 
         private void FillVertices()
@@ -51,70 +64,94 @@ namespace UnderworldEngine.Game
             Vector2 textureLowerLeft = new Vector2(0.0f, 1.0f);
             Vector2 textureLowerRight = new Vector2(1.0f, 1.0f);
 
-            // Provide a normal for each vertex
-            for (int i = 0; i < vertices.Length; i++) {
-                vertices[i].Normal = normal;
-            }
-
             // Set the position and texture coordinate for each vertex
-            vertices[0].Position = lowerLeft;
-            vertices[0].TextureCoordinate = textureLowerLeft;
-            vertices[1].Position = upperLeft;
-            vertices[1].TextureCoordinate = textureUpperLeft;
-            vertices[2].Position = lowerRight;
-            vertices[2].TextureCoordinate = textureLowerRight;
-            vertices[3].Position = upperRight;
-            vertices[3].TextureCoordinate = textureUpperRight;
+            _vertices[0].Position = LowerLeft;
+            _vertices[0].TextureCoordinate = textureLowerLeft;
+            _vertices[1].Position = UpperLeft;
+            _vertices[1].TextureCoordinate = textureUpperLeft;
+            _vertices[2].Position = LowerRight;
+            _vertices[2].TextureCoordinate = textureLowerRight;
+            _vertices[3].Position = UpperRight;
+            _vertices[3].TextureCoordinate = textureUpperRight;
 
             // Set the index buffer for each vertex, using
             // clockwise winding, otherwise will be culled
-            indexes[0] = 0;
-            indexes[1] = 1;
-            indexes[2] = 2;
+            _indices[0] = 0;
+            _indices[1] = 1;
+            _indices[2] = 2;
 
-            indexes[3] = 2;
-            indexes[4] = 1;
-            indexes[5] = 3;
+            _indices[3] = 2;
+            _indices[4] = 1;
+            _indices[5] = 3;
         }
 
-        public override void Draw()
+        public override void Draw(GameTime gameTime)
         {
-            if (!this.IsVisible) {
+            if (!this.Visible) {
                 return;
             }
 
-            Game1.DefaultGraphicsDevice.VertexDeclaration = vertexDeclaration;
+            Game1.DefaultGraphicsDevice.VertexDeclaration = _vertexDeclaration;
 
             CompileTransformations();
-            this.effect.UpdatePresentationMatrices(this.worldMatrix);
 
-            this.effect.BasicEffect.Begin();
+            _basicEffect.View = Game1.Camera.ViewMatrix;
+            _basicEffect.Projection = Game1.Camera.ProjectionMatrix;
+            _basicEffect.World = _worldMatrix;
 
-            foreach (EffectPass pass in this.effect.BasicEffect.CurrentTechnique.Passes) {
+            bool oldAlphaBlendingState = Game1.DefaultGraphicsDevice.RenderState.AlphaBlendEnable;
+
+            Game1.DefaultGraphicsDevice.RenderState.AlphaBlendEnable = _alphaBlendState;
+            Game1.DefaultGraphicsDevice.RenderState.BlendFunction = _blendFunction;
+            Game1.DefaultGraphicsDevice.RenderState.SourceBlend = _sourceBlend;
+            Game1.DefaultGraphicsDevice.RenderState.DestinationBlend = _destBlend;
+
+            _basicEffect.Begin();
+
+            foreach (EffectPass pass in _basicEffect.CurrentTechnique.Passes) {
                 pass.Begin();
 
-                Game1.DefaultGraphicsDevice.DrawUserIndexedPrimitives<VertexPositionNormalTexture>(
+                Game1.DefaultGraphicsDevice.DrawUserIndexedPrimitives<VertexPositionTexture>(
                     PrimitiveType.TriangleList,
-                    this.vertices, 0, 4,
-                    this.indexes, 0, 2);
+                    this._vertices, 0, 4,
+                    this._indices, 0, 2);
 
                 pass.End();
             }
 
-            this.effect.BasicEffect.End();
+            _basicEffect.End();
+
+            Game1.DefaultGraphicsDevice.RenderState.AlphaBlendEnable = oldAlphaBlendingState;
         }
 
-        public class ScaleByZeroException : ApplicationException { }
+        public void EnableAlphaBlending(
+            BlendFunction blendFunction, 
+            Blend sourceBlend, Blend destBlend
+            )
+        {
+            _alphaBlendState = true;
+
+            _basicEffect.Alpha = 1.0f;
+
+            _blendFunction = blendFunction;
+            _sourceBlend = sourceBlend;
+            _destBlend = destBlend;
+        }
+
+        public void DisableAlphaBlending()
+        {
+            _alphaBlendState = false;
+        }
+
         public void ScaleUvMap(float scale)
         {
             if (scale == 0) {
-                throw new ScaleByZeroException();
+                throw new ApplicationException("The UV map can't be scaled by a factor of 0.");
             }
 
             for (int ii = 0; ii < 4; ii++) {
-                this.vertices[ii].TextureCoordinate *= scale;
+                this._vertices[ii].TextureCoordinate *= scale;
             }
         }
     }
 }
-*/
