@@ -77,6 +77,11 @@
       <Processor>XactProcessor</Processor>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Compile Include="Textures\grid_overlay.png">
+      <Name>grid_overlay</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
     <Compile Include="Textures\dirt_01.jpg">
       <Name>dirt_01</Name>
       <Importer>TextureImporter</Importer>

@@ -3,20 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
-using Microsoft.Xna.Framework.Net;
-using Microsoft.Xna.Framework.Storage;
 
 using UnderworldEngine.Graphics;
 
 namespace UnderworldEngine.Game
 {
-    public struct Quad
+    public class Quad : GameObject
     {
         public Vector3 UpperLeft;
         public Vector3 UpperRight;
@@ -32,6 +25,11 @@ namespace UnderworldEngine.Game
             this.UpperRight = uppercenter - (left * width / 2);
             this.LowerLeft = UpperLeft - (up * height);
             this.LowerRight = UpperRight - (up * height);
+        }
+
+        public override void Draw(GameTime gameTime)
+        {
+            throw new NotImplementedException("The Quad class just supplies vertex positions and can't be drawn.");
         }
     }
 }

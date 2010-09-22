@@ -186,11 +186,11 @@ namespace UnderworldEngine.Game
             _basicEffect.World = Matrix.Identity;
 
             // enable alpha blending
-            Game1.DefaultGraphics.GraphicsDevice.RenderState.AlphaBlendEnable = true;
-            Game1.DefaultGraphics.GraphicsDevice.RenderState.AlphaBlendOperation = BlendFunction.Add;
-            Game1.DefaultGraphics.GraphicsDevice.RenderState.SourceBlend = Blend.SourceAlpha;
-            Game1.DefaultGraphics.GraphicsDevice.RenderState.DestinationBlend = Blend.InverseSourceAlpha;
-            Game1.DefaultGraphics.GraphicsDevice.RenderState.SeparateAlphaBlendEnabled = false;
+            Game1.DefaultGraphicsDevice.RenderState.AlphaBlendEnable = true;
+            Game1.DefaultGraphicsDevice.RenderState.AlphaBlendOperation = BlendFunction.Add;
+            Game1.DefaultGraphicsDevice.RenderState.SourceBlend = Blend.SourceAlpha;
+            Game1.DefaultGraphicsDevice.RenderState.DestinationBlend = Blend.InverseSourceAlpha;
+            //Game1.DefaultGraphicsDevice.RenderState.SeparateAlphaBlendEnabled = false;
 
             Game1.DefaultGraphicsDevice.VertexDeclaration = _vertexDeclaration;
 

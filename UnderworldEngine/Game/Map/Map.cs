@@ -16,6 +16,13 @@ namespace UnderworldEngine.Game
 
         private LinkedList<GameObjectModel> _models;
         private Grid _grid;
+        public Grid Grid
+        {
+            get
+            {
+                return _grid;
+            }
+        }
 
         private Picker _picker;
 
@@ -125,7 +132,7 @@ namespace UnderworldEngine.Game
                 gom.Draw(gameTime);
             }
 
-            _grid.Draw(gameTime);
+            //_grid.Draw(gameTime);
         }
 
         public void Unload()

@@ -177,6 +177,7 @@ namespace UnderworldEngine.Scripting
                     return;
 
                 Game1.console.Log(e.Message);
+                Game1.Debug.WriteLine(e.StackTrace);
             }
             #endregion
         }

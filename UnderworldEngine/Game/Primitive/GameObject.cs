@@ -50,7 +50,19 @@ namespace UnderworldEngine.Game
         /// <summary>
         /// The object's location in 3D space
         /// </summary>
-        public Vector3 Position;
+        public Vector3 _position;
+        public Vector3 Position
+        {
+            get
+            {
+                return _position;
+            }
+            set
+            {
+                _position = value;
+                _needTransformationCompile = true;
+            }
+        }
 
         /// <summary>
         /// Whether the object is visible / should be drawn
@@ -181,6 +193,8 @@ namespace UnderworldEngine.Game
                     _worldMatrix *= Matrix.CreateTranslation(trans.Offset);
                 }
             }
+
+            _worldMatrix *= Matrix.CreateTranslation(Position);
 
             this._needTransformationCompile = false;
         }

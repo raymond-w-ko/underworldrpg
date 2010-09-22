@@ -98,12 +98,12 @@
     <Compile Include="Game\Grid\GridSquare.cs" />
     <Compile Include="Game\Level\Level.cs" />
     <Compile Include="Game\Map\Map.cs" />
+    <Compile Include="Game\Primitive\QuadTexture.cs" />
     <Compile Include="Graphics\Dialogue.cs" />
     <Compile Include="Graphics\DialogueManager.cs" />
     <Compile Include="Game\Grid\Grid.cs" />
     <Compile Include="Game\Primitive\Quad.cs" />
     <Compile Include="Graphics\Camera.cs" />
-    <Compile Include="Graphics\BasicEffectManager.cs" />
     <Compile Include="Game\Primitive\GameObject.cs" />
     <Compile Include="Graphics\FpsCounter.cs" />
     <Compile Include="Graphics\Menu.cs" />
