@@ -45,7 +45,9 @@ namespace UnderworldEngine.Game
             this._vertices = new VertexPositionTexture[4];
             this._indices = new int[6];
 
+            FillTextureCoordinates();
             FillVertices();
+            FillIndices();
 
             _texture = Game1.DefaultContent.Load<Texture2D>(textureName);
             _basicEffect = new BasicEffect(Game1.DefaultGraphicsDevice, null);
@@ -56,7 +58,7 @@ namespace UnderworldEngine.Game
                 VertexPositionTexture.VertexElements);
         }
 
-        private void FillVertices()
+        private void FillTextureCoordinates()
         {
             // Fill in texture coordinates to display full texture on quad
             Vector2 textureUpperLeft = new Vector2(0.0f, 0.0f);
@@ -64,16 +66,24 @@ namespace UnderworldEngine.Game
             Vector2 textureLowerLeft = new Vector2(0.0f, 1.0f);
             Vector2 textureLowerRight = new Vector2(1.0f, 1.0f);
 
+
+            _vertices[0].TextureCoordinate = textureLowerLeft;
+            _vertices[1].TextureCoordinate = textureUpperLeft;
+            _vertices[2].TextureCoordinate = textureLowerRight;
+            _vertices[3].TextureCoordinate = textureUpperRight;
+        }
+
+        protected void FillVertices()
+        {
             // Set the position and texture coordinate for each vertex
             _vertices[0].Position = LowerLeft;
-            _vertices[0].TextureCoordinate = textureLowerLeft;
             _vertices[1].Position = UpperLeft;
-            _vertices[1].TextureCoordinate = textureUpperLeft;
             _vertices[2].Position = LowerRight;
-            _vertices[2].TextureCoordinate = textureLowerRight;
             _vertices[3].Position = UpperRight;
-            _vertices[3].TextureCoordinate = textureUpperRight;
+        }
 
+        private void FillIndices()
+        {
             // Set the index buffer for each vertex, using
             // clockwise winding, otherwise will be culled
             _indices[0] = 0;
@@ -143,6 +153,7 @@ namespace UnderworldEngine.Game
             _alphaBlendState = false;
         }
 
+        /*
         public void MakeBillboard()
         {
             Matrix viewMatrix = Game1.Camera.ViewMatrix;
@@ -155,6 +166,7 @@ namespace UnderworldEngine.Game
                 null,
                 out _worldMatrix);
         }
+        */
 
         public void ScaleUvMap(float scale)
         {

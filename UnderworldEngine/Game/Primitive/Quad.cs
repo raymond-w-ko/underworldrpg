@@ -22,7 +22,7 @@ namespace UnderworldEngine.Game
             CalculateVertices(origin, normal, up, width, height);
         }
 
-        public void CalculateVertices(Vector3 origin, Vector3 normal, Vector3 up, float width, float height)
+        public virtual void CalculateVertices(Vector3 origin, Vector3 normal, Vector3 up, float width, float height)
         {
             Vector3 left = Vector3.Cross(normal, up);
             Vector3 uppercenter = (up * height / 2) + origin;
