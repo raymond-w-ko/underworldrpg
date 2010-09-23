@@ -153,21 +153,6 @@ namespace UnderworldEngine.Game
             _alphaBlendState = false;
         }
 
-        /*
-        public void MakeBillboard()
-        {
-            Matrix viewMatrix = Game1.Camera.ViewMatrix;
-            Matrix invertedMatrix = Matrix.Invert(viewMatrix);
-            Vector3 curCameraPosition = Game1.Camera.CurrentPosition;
-            Vector3 curCameraUpVector = invertedMatrix.Up;
-            Game1.console.Log(curCameraUpVector.ToString());
-            Matrix.CreateBillboard(ref _position,
-                ref curCameraPosition, ref curCameraUpVector,
-                null,
-                out _worldMatrix);
-        }
-        */
-
         public void ScaleUvMap(float scale)
         {
             if (scale == 0) {

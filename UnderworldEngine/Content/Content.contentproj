@@ -131,6 +131,16 @@
       <Name>level01</Name>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Compile Include="Scripts\Modes\editor.rs">
+      <Name>editor</Name>
+      <Importer>RageScriptImporter</Importer>
+      <Processor>RageScriptProcessor</Processor>
+    </Compile>
+    <Compile Include="Scripts\Modes\battle.rs">
+      <Name>battle</Name>
+      <Importer>RageScriptImporter</Importer>
+      <Processor>RageScriptProcessor</Processor>
+    </Compile>
     <Compile Include="Scripts\defaultCamera.rs">
       <Name>defaultCamera</Name>
       <Importer>RageScriptImporter</Importer>

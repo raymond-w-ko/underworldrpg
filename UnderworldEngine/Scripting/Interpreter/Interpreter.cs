@@ -8,7 +8,7 @@ namespace UnderworldEngine.Scripting
 {
     class Interpreter
     {
-        Queue<string> commandQueue;
+        LinkedList<string> commandQueue;
         int commandDelay;
         StringBuilder commandBuffer;
         Dictionary<string, IInterpretable> functions;
@@ -29,7 +29,7 @@ namespace UnderworldEngine.Scripting
             functions = new Dictionary<string, IInterpretable>();
             env = new Dictionary<string,string>();
             commandBuffer = new StringBuilder();
-            commandQueue = new Queue<string>();
+            commandQueue = new LinkedList<string>();
             commandDelay = 0;
             loadFunctions();
         }
@@ -65,7 +65,8 @@ namespace UnderworldEngine.Scripting
         private void runQueue()
         {
             bool multiline = false;
-            string function = commandQueue.Dequeue();
+            string function = commandQueue.First();
+            commandQueue.RemoveFirst();
             if (function == null)
             {
                 return;
@@ -177,7 +178,7 @@ namespace UnderworldEngine.Scripting
                     return;
 
                 Game1.console.Log(e.Message);
-                Game1.Debug.WriteLine(e.StackTrace);
+                Game1.Debug.WriteLine(function + "\n" + e.Message + "\n" + e.StackTrace + "\n\n");
             }
             #endregion
         }
@@ -205,11 +206,16 @@ namespace UnderworldEngine.Scripting
          * *****************************/
         public void run(string function)
         {
-            commandQueue.Enqueue(function);
+            commandQueue.AddLast(function);
         }
 
-        public void run(Microsoft.Xna.Framework.GameTime
-            t, string function)
+        public void runFirst(string function)
+        {
+            commandQueue.AddFirst(function);
+        }
+
+        public void run(
+            Microsoft.Xna.Framework.GameTime t, string function)
         {
             run(function);
         }

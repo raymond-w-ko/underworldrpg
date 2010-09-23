@@ -132,7 +132,7 @@ namespace UnderworldEngine.Game
                 gom.Draw(gameTime);
             }
 
-            //_grid.Draw(gameTime);
+            _grid.Draw(gameTime);
         }
 
         public void Unload()
