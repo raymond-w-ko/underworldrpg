@@ -64,6 +64,20 @@ namespace UnderworldEngine.Game
             }
         }
 
+        public bool _autoPosition;
+        public bool AutoPosition
+        {
+            get
+            {
+                return _autoPosition;
+            }
+            set
+            {
+                _autoPosition = value;
+                _needTransformationCompile = true;
+            }
+        }
+
         /// <summary>
         /// Whether the object is visible / should be drawn
         /// </summary>
@@ -84,6 +98,7 @@ namespace UnderworldEngine.Game
             this._worldMatrix = Matrix.Identity;
             this._transformationList = new LinkedList<Transformation>();
             this._needTransformationCompile = true;
+            this._autoPosition = false;
         }
 
         public abstract void Draw(GameTime gameTime);
@@ -194,7 +209,9 @@ namespace UnderworldEngine.Game
                 }
             }
 
-            _worldMatrix *= Matrix.CreateTranslation(Position);
+            if (AutoPosition) {
+                _worldMatrix *= Matrix.CreateTranslation(Position);
+            }
 
             this._needTransformationCompile = false;
         }

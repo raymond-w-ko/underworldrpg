@@ -29,8 +29,22 @@ namespace UnderworldEngine.Graphics
         #endregion
 
         private Vector3 currentPosition;
+        public Vector3 CurrentPosition
+        {
+            get
+            {
+                return currentPosition;
+            }
+        }
         private Vector3 currentTarget;
         private Vector3 currentUpVector;
+        public Vector3 CurrentUpVector
+        {
+            get
+            {
+                return currentUpVector;
+            }
+        }
 
         #region Near & Far Plane Distance Fields
         private float nearPlaneDistance = 0.1f;

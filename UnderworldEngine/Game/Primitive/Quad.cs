@@ -18,13 +18,19 @@ namespace UnderworldEngine.Game
 
         public Quad(Vector3 origin, Vector3 normal, Vector3 up, float width, float height)
         {
+            Position = origin;
+            CalculateVertices(origin, normal, up, width, height);
+        }
+
+        public void CalculateVertices(Vector3 origin, Vector3 normal, Vector3 up, float width, float height)
+        {
             Vector3 left = Vector3.Cross(normal, up);
             Vector3 uppercenter = (up * height / 2) + origin;
 
             this.UpperLeft = uppercenter + (left * width / 2);
             this.UpperRight = uppercenter - (left * width / 2);
             this.LowerLeft = UpperLeft - (up * height);
-            this.LowerRight = UpperRight - (up * height);
+            this.LowerRight = UpperRight - (up * height); ;
         }
 
         public override void Draw(GameTime gameTime)

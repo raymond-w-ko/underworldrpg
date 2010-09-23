@@ -30,7 +30,25 @@ namespace UnderworldEngine.Game
             }
         }
 
-        private QuadTexture _cursor;
+        private FakeBillboardQuadTexture _cursor;
+        private int _bobFactor;
+        public int BobFactor
+        {
+            get
+            {
+                return _bobFactor;
+            }
+            set
+            {
+                if (value < Game1.DefaultGraphicsDevice.Viewport.Height / 2.0f ||
+                    value > Game1.DefaultGraphicsDevice.Viewport.Width / 2.0f
+                    ) {
+                    throw new ApplicationException("Invalid Bob Factor specified");
+                }
+                _bobFactor = value;
+            }
+        }
+
         private QuadTexture _overlay;
 
         float _timer;
@@ -49,14 +67,14 @@ namespace UnderworldEngine.Game
             // We want camera to lag behind a little bit, similar to Disgaea
             MovementSpeed = Game1.Camera.MoveSpeed * 1.10f;
 
-            _cursor = new QuadTexture(
-                new Vector3(0, 0, 0),
-                Vector3.Up,
-                Vector3.Forward,
-                1.0f,
-                1.0f,
+            // Create Cursor/Pointer/Floating Hnad
+            _cursor = new FakeBillboardQuadTexture(
+                new Vector3(6.5f, 1f, 3.5f),
+                new Vector2(1, 1),
                 cursorTextureName
                 );
+            _cursor.ResizeToGridLength(.5f);
+            _bobFactor = -50;
 
             _overlay = new QuadTexture(
                 new Vector3(6.5f, .01f, 3.5f),
@@ -81,7 +99,7 @@ namespace UnderworldEngine.Game
         private void tick()
         {
             if (_direction > 0) {
-                if (_timer > 30) {
+                if (_timer > 37.5f) {
                     _direction = -1f;
                 }
                 else {
@@ -101,12 +119,16 @@ namespace UnderworldEngine.Game
         public void Update(GameTime gameTime)
         {
             tick();
-            _overlay.Alpha = ((_maxAlpha - _minAlpha) * (float)(_timer / 30.0f)) + _minAlpha;
+            _overlay.Alpha = ((_maxAlpha - _minAlpha) * (float)(_timer / 37.5f)) + _minAlpha;
+
+            _cursor.Offset.Y = _bobFactor * (float)((60.0f - _timer) / 37.5f);
+            _cursor.Update(gameTime);
         }
 
         public void Draw(GameTime gameTime)
         {
             _overlay.Draw(gameTime);
+            _cursor.Draw(gameTime);
         }
 
         public void Unload()
