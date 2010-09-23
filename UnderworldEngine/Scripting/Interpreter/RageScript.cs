@@ -25,8 +25,6 @@ namespace UnderworldEngine.Scripting
         
         public void Unload()
         {
-            //this.source = null;
-            //this.stream = null;
             this.stream.Seek(0, SeekOrigin.Begin);
         }
     }

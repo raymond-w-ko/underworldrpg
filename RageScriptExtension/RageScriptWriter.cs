@@ -25,8 +25,7 @@ namespace RageScriptExtension
         protected override void Write(ContentWriter output, RageScript value)
         {
             // TODO: write the specified value to the output ContentWriter.
-            output.Write(value.Source.Length);
-            output.Write(value.Source);
+            output.WriteRawObject<String>(value.Source);
         }
 
         public override string GetRuntimeType(TargetPlatform targetPlatform)

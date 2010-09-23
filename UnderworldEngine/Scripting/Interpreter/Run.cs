@@ -17,9 +17,16 @@ namespace UnderworldEngine.Scripting
             RageScript rs = Game1.DefaultContent.Load<RageScript>("./Scripts/" + command[1]);
             StreamReader reader = new StreamReader(rs.stream);
 
+            LinkedList<string> file = new LinkedList<string>();
+
             while (!reader.EndOfStream)
             {
-                Game1.interpreter.run(reader.ReadLine().TrimStart().TrimEnd());
+                string line = reader.ReadLine().TrimStart().TrimEnd();
+                file.AddFirst(line);
+            }
+
+            foreach (string line in file) {
+                Game1.interpreter.runFirst(line);
             }
 
             rs.Unload();

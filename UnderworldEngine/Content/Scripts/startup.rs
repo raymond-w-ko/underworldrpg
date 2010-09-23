@@ -1,5 +1,12 @@
-# Main initializing file
+##########################
+# Main initializing file #
+##########################
+
+# Resolution Settings
 run defaultVideo
-run defaultKBBind
+
+# Camera speeds
 run defaultCamera
-bind kb Enter run Chapter_01/ch01
+
+# Keyboard bindings
+run defaultKBBind

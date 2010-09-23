@@ -24,10 +24,7 @@ namespace UnderworldEngine.Scripting
         protected override RageScript Read(ContentReader input, RageScript existingInstance)
         {
             // TODO: read a value from the input ContentReader.
-            int length = input.ReadInt32();
-            
-            input.ReadChars(1 + length/256);
-            string source = new String(input.ReadChars(length + 1));
+            string source = input.ReadRawObject<String>();
             return new RageScript(source);
         }
     }
