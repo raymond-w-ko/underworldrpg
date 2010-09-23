@@ -30,9 +30,9 @@ namespace UnderworldEngine.Game
             }
         }
 
-        private FakeBillboardQuadTexture _cursor;
-        private int _bobFactor;
-        public int BobFactor
+        private BillboardQuadTexture _cursor;
+        private float _bobFactor;
+        public float BobFactor
         {
             get
             {
@@ -40,8 +40,8 @@ namespace UnderworldEngine.Game
             }
             set
             {
-                if (value < Game1.DefaultGraphicsDevice.Viewport.Height / 2.0f ||
-                    value > Game1.DefaultGraphicsDevice.Viewport.Width / 2.0f
+                if (value < 0 || value > _xLimit / 2.0f ||
+                    value > _zLimit / 2.0f
                     ) {
                     throw new ApplicationException("Invalid Bob Factor specified");
                 }
@@ -56,6 +56,8 @@ namespace UnderworldEngine.Game
         float _maxAlpha;
         float _direction;
 
+        
+
         public BattleCursor(Grid grid,
             string cursorTextureName, string gridOverlayTextureName)
         {
@@ -67,14 +69,14 @@ namespace UnderworldEngine.Game
             // We want camera to lag behind a little bit, similar to Disgaea
             MovementSpeed = Game1.Camera.MoveSpeed * 1.10f;
 
-            // Create Cursor/Pointer/Floating Hnad
-            _cursor = new FakeBillboardQuadTexture(
-                new Vector3(6.5f, 1f, 3.5f),
-                new Vector2(1, 1),
-                cursorTextureName
-                );
-            _cursor.ResizeToGridLength(.5f);
-            _bobFactor = -50;
+            // Create Cursor/Pointer/Floating Hand
+            _cursor = new BillboardQuadTexture(
+                new Vector3(6, 1, 3),
+                1.0f,
+                "Textures/cursor");
+            _cursor.Scale = .75f ;
+            _cursor.EnableAlphaBlending(BlendFunction.Add, Blend.SourceAlpha, Blend.InverseSourceAlpha);
+            _bobFactor = .5f;
 
             _overlay = new QuadTexture(
                 new Vector3(6.5f, .01f, 3.5f),

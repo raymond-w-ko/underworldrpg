@@ -37,6 +37,13 @@ namespace UnderworldEngine.Graphics
             }
         }
         private Vector3 currentTarget;
+        public Vector3 CurrentTarget
+        {
+            get
+            {
+                return currentTarget;
+            }
+        }
         private Vector3 currentUpVector;
         public Vector3 CurrentUpVector
         {
