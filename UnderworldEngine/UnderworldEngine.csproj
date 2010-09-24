@@ -118,7 +118,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Scripting\Hooks\Bind.cs" />
-    <Compile Include="Scripting\Interpreter\BattleCursor.cs" />
+    <Compile Include="Scripting\Hooks\BattleCursor.cs" />
     <Compile Include="Scripting\Interpreter\Clear.cs" />
     <Compile Include="Scripting\Console\Console.cs" />
     <Compile Include="Scripting\Console\ConsoleKeyMap.cs" />

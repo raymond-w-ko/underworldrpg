@@ -269,8 +269,11 @@ namespace UnderworldEngine.Game
         public GridSquare GetGridSquare(uint xIndex, uint zIndex)
         {
             if (xIndex < 0 || xIndex >= _xSize ||
-                zIndex < 0 || zIndex >= _zSize) {
-                throw new ApplicationException("Invalid grid coordinate specified.");
+                zIndex < 0 || zIndex >= _zSize) 
+            {
+                //TODO fix the behavior of crashing on failure of perfect grid select
+                Game1.console.Log("(" + xIndex + ", " + zIndex + ") is not a valid coordinate on the grid");
+                throw new ApplicationException("Invalid grid coordinate specified.");    
             }
 
             return _grid[xIndex, zIndex];
