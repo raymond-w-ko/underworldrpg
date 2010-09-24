@@ -116,13 +116,13 @@ namespace UnderworldEngine.Scripting
         {
 
             string keyToBind = command[2];
-            if (keyToBind == "clear")
+            if (keyToBind == "reset")
             {
                 Game1.kb.Clear();
                 Game1.interpreter.runFirst("run defaultKBBind");
                 return;
             }
-            else if (keyToBind == "dangerousclear") {
+            else if (keyToBind == "clear") {
                 Game1.kb.Clear();
                 return;
             }

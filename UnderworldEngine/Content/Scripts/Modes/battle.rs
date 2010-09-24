@@ -1,4 +1,4 @@
-bind kb clear
+bind kb reset
 
 bind kb w setc up
 bind kb a setc left

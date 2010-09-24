@@ -1,4 +1,4 @@
-bind kb dangerousclear
+bind kb clear
 
 bind kb F1 run Modes/battle
 bind kb F4 run Modes/editor
