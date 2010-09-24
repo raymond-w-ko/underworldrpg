@@ -118,6 +118,24 @@ namespace UnderworldEngine.Game
             UnderworldEngine.Scripting.BattleCursor.RightDispatch += this.right;
         }
 
+        private bool checkBounds(Vector3 offset)
+        {
+            Vector2 potentialFutureGridPosition = _futureGridPosition;
+            potentialFutureGridPosition.X += offset.X;
+            potentialFutureGridPosition.Y += offset.Z;
+
+            if (potentialFutureGridPosition.X >= _xLimit ||
+                potentialFutureGridPosition.X < 0 ||
+                potentialFutureGridPosition.Y >= _zLimit ||
+                potentialFutureGridPosition.Y < 0) {
+                return false;
+            }
+
+            _futureGridPosition = potentialFutureGridPosition;
+
+            return true;
+        }
+
         private void up()
         {
             if (!Game1.Camera.IsAcceptingCommands) {
@@ -127,10 +145,9 @@ namespace UnderworldEngine.Game
             Vector3 offset = Game1.Camera.GetRelativeDirectionOffset(
                 UnderworldEngine.Graphics.Camera.Direction.Up
                 );
-            _futureGridPosition.X += offset.X;
-            _futureGridPosition.Y += offset.Z;
-
-            Game1.Camera.LookUp();
+            if (checkBounds(offset)) {
+                Game1.Camera.LookUp();
+            }
         }
 
         private void down()
@@ -142,10 +159,9 @@ namespace UnderworldEngine.Game
             Vector3 offset = Game1.Camera.GetRelativeDirectionOffset(
                 UnderworldEngine.Graphics.Camera.Direction.Down
                 );
-            _futureGridPosition.X += offset.X;
-            _futureGridPosition.Y += offset.Z;
-
-            Game1.Camera.LookDown();
+            if (checkBounds(offset)) {
+                Game1.Camera.LookDown();
+            }
         }
 
         private void left()
@@ -157,10 +173,9 @@ namespace UnderworldEngine.Game
             Vector3 offset = Game1.Camera.GetRelativeDirectionOffset(
                 UnderworldEngine.Graphics.Camera.Direction.Left
                 );
-            _futureGridPosition.X += offset.X;
-            _futureGridPosition.Y += offset.Z;
-
-            Game1.Camera.LookLeft();
+            if (checkBounds(offset)) {
+                Game1.Camera.LookLeft();
+            }
         }
 
         private void right()
@@ -172,10 +187,9 @@ namespace UnderworldEngine.Game
             Vector3 offset = Game1.Camera.GetRelativeDirectionOffset(
                 UnderworldEngine.Graphics.Camera.Direction.Right
                 );
-            _futureGridPosition.X += offset.X;
-            _futureGridPosition.Y += offset.Z;
-
-            Game1.Camera.LookRight();
+            if (checkBounds(offset)) {
+                Game1.Camera.LookRight();
+            }
         }
         #endregion
 

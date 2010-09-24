@@ -271,7 +271,6 @@ namespace UnderworldEngine.Game
             if (xIndex < 0 || xIndex >= _xSize ||
                 zIndex < 0 || zIndex >= _zSize) 
             {
-                //TODO fix the behavior of crashing on failure of perfect grid select
                 Game1.console.Log("(" + xIndex + ", " + zIndex + ") is not a valid coordinate on the grid");
                 throw new ApplicationException("Invalid grid coordinate specified.");    
             }
