@@ -138,6 +138,7 @@ namespace UnderworldEngine.Game
         public void Unload()
         {
             SaveTo(_pathName + ".out");
+            _grid.Unload();
         }
     }
 }

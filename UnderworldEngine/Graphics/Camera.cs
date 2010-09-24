@@ -178,7 +178,14 @@ namespace UnderworldEngine.Graphics
 
         private Vector3 _direction;
 
-        private bool IsAcceptingCommands;
+        private bool _isAcceptingCommands;
+        public bool IsAcceptingCommands
+        {
+            get
+            {
+                return _isAcceptingCommands;
+            }
+        }
 
         public Camera()
         {
@@ -202,7 +209,7 @@ namespace UnderworldEngine.Graphics
             _currentPosition = new Vector3(8, 8, 8);
             _futurePosition = new Vector3(8, 8, 8);
 
-            this.IsAcceptingCommands = true;
+            this._isAcceptingCommands = true;
 
             calculateCameraBox(_currentTarget);
             _currentPosition = _currentTarget + _ringPosition;
@@ -230,8 +237,8 @@ namespace UnderworldEngine.Graphics
         }
         public void LookAt(Vector3 vector)
         {
-            if (IsAcceptingCommands) {
-                IsAcceptingCommands = false;
+            if (_isAcceptingCommands) {
+                _isAcceptingCommands = false;
             }
             else {
                 return;
@@ -283,6 +290,12 @@ namespace UnderworldEngine.Graphics
             }
 
             _relativeDirectionOffsets = offsets;
+        }
+
+        public Vector3 GetRelativeDirectionOffset(Direction dir)
+        {
+            Vector3 offset = _relativeDirectionOffsets[(int)dir];
+            return offset;
         }
 
         public void LookUp()
@@ -417,8 +430,8 @@ namespace UnderworldEngine.Graphics
 
         public void PrevCameraView()
         {
-            if (IsAcceptingCommands) {
-                IsAcceptingCommands = false;
+            if (_isAcceptingCommands) {
+                _isAcceptingCommands = false;
             }
             else {
                 return;
@@ -435,14 +448,14 @@ namespace UnderworldEngine.Graphics
 
         public void NextCameraView()
         {
-            if (IsAcceptingCommands) {
-                IsAcceptingCommands = false;
+            if (_isAcceptingCommands) {
+                _isAcceptingCommands = false;
             }
             else {
                 return;
             }
 
-            IsAcceptingCommands = false;
+            _isAcceptingCommands = false;
             int temp = (int)_currentCameraLocation;
             temp++;
             temp += Camera.NUM_CAMERA_LOCATIONS;
@@ -479,8 +492,8 @@ namespace UnderworldEngine.Graphics
                 return;
             }
 
-            if (IsAcceptingCommands) {
-                IsAcceptingCommands = false;
+            if (_isAcceptingCommands) {
+                _isAcceptingCommands = false;
             }
             else {
                 return;
@@ -492,8 +505,8 @@ namespace UnderworldEngine.Graphics
 
         public void ZoomFarther(uint dist)
         {
-            if (IsAcceptingCommands) {
-                IsAcceptingCommands = false;
+            if (_isAcceptingCommands) {
+                _isAcceptingCommands = false;
             }
             else {
                 return;
@@ -511,7 +524,7 @@ namespace UnderworldEngine.Graphics
                     _currentCameraLocation = _futureCameraLocation;
                     _currentPosition = this.allowableCameraPositions[(int)_currentCameraLocation];
                     calculateRelativeDirectionOffset();
-                    IsAcceptingCommands = true;
+                    _isAcceptingCommands = true;
                 }
             }
             else if (_currentTarget != _futureTarget) {
@@ -519,7 +532,7 @@ namespace UnderworldEngine.Graphics
                 if (_currentTarget.AlmostEquals(_futureTarget, _moveSpeed)) {
                     _currentTarget = _futureTarget;
                     _currentPosition = this.allowableCameraPositions[(int)_currentCameraLocation];
-                    IsAcceptingCommands = true;
+                    _isAcceptingCommands = true;
                 }
             }
             else if (_cameraBoxSize != _futureCameraBoxSize) {
@@ -527,7 +540,7 @@ namespace UnderworldEngine.Graphics
                 if (_cameraBoxSize.AlmostEquals(_futureCameraBoxSize, _zoomSpeed)) {
                     _currentPosition = this.allowableCameraPositions[(int)_currentCameraLocation];
                     _cameraBoxSize = _futureCameraBoxSize;
-                    IsAcceptingCommands = true;
+                    _isAcceptingCommands = true;
                 }
             }
 

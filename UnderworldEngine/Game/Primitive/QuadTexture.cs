@@ -73,7 +73,7 @@ namespace UnderworldEngine.Game
             _vertices[3].TextureCoordinate = textureUpperRight;
         }
 
-        protected void FillVertices()
+        public void FillVertices()
         {
             // Set the position and texture coordinate for each vertex
             _vertices[0].Position = LowerLeft;

@@ -8,10 +8,8 @@ namespace UnderworldEngine.Game
 {
     class BillboardQuadTexture : QuadTexture
     {
-        private QuadTexture _quadTexture;
-
-        private Vector2 _gridPosition;
-        private float _height;
+        public Vector2 GridPosition;
+        public float Height;
         private Vector2 _dimensions;
         private float _aspectRatio;
         private float _scale;
@@ -39,8 +37,8 @@ namespace UnderworldEngine.Game
         public BillboardQuadTexture(Vector3 gridPosition, float aspectRatio, string textureName)
             : base(new Vector3(0, 0, 0), Vector3.Up, Vector3.Forward, 0, 0, textureName)
         {
-            _gridPosition = new Vector2(gridPosition.X, gridPosition.Z);
-            _height = gridPosition.Y;
+            GridPosition = new Vector2(gridPosition.X, gridPosition.Z);
+            Height = gridPosition.Y;
             _dimensions = new Vector2(1.0f, 1.0f);
             _aspectRatio = aspectRatio;
             _scale = 1.0f;
@@ -50,7 +48,7 @@ namespace UnderworldEngine.Game
 
         public void CalculateVertices()
         {
-            _origin = new Vector3(_gridPosition.X + .5f, _height + Offset.Y, _gridPosition.Y + .5f);
+            _origin = new Vector3(GridPosition.X + .5f, Height + Offset.Y, GridPosition.Y + .5f);
             _normal = (Game1.Camera.CurrentPosition - Game1.Camera.CurrentTarget);
             _normal.Normalize();
             _up = Vector3.Up;
@@ -67,7 +65,7 @@ namespace UnderworldEngine.Game
             CalculateVertices();
         }
 
-        public void Draw(GameTime gameTime)
+        public override void Draw(GameTime gameTime)
         {
             base.Draw(gameTime);
         }
