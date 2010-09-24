@@ -16,7 +16,11 @@ namespace UnderworldEngine.Game
         {
             this._map = new Map(mapName);
             _entityList = new LinkedList<Entity>();
-            _battleCursor = new BattleCursor(_map.Grid, "Textures/cursor", "Textures/grid_overlay");
+            _battleCursor = new BattleCursor(
+                _map.Grid,
+                "Textures/cursor", "Textures/grid_overlay",
+                new Vector2(6, 3)
+            );
         }
 
         public bool _isFocused;

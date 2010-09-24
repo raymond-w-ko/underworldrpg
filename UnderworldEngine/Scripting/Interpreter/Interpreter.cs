@@ -53,6 +53,7 @@ namespace UnderworldEngine.Scripting
             functions["setc"] = new SetC();
             functions["show"] = new Show();
             functions["switch"] = new Switch();
+            functions["cursor"] = new BattleCursor();
             
             #endregion
 

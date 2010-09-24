@@ -1,9 +1,9 @@
 bind kb reset
 
-bind kb w setc up
-bind kb a setc left
-bind kb s setc down
-bind kb d setc right
+bind kb w cursor up
+bind kb a cursor left
+bind kb s cursor down
+bind kb d cursor right
 
 bind kb oemtilde console
 bind kb escape exit

@@ -232,17 +232,11 @@ namespace UnderworldEngine.Game
 
         private void registerWithScripter()
         {
-            Pick.RaiseHandler += this.Raise;
-            Pick.LowerHandler += this.Lower;
+            Pick.RaiseHandler += this.raise;
+            Pick.LowerHandler += this.lower;
         }
 
-        ~Grid()
-        {
-            Pick.RaiseHandler -= this.Raise;
-            Pick.LowerHandler -= this.Lower;
-        }
-
-        public void Raise()
+        public void raise()
         {
             foreach (GridSquare gs in _grid) {
                 if (!gs.IsSelected) {
@@ -254,7 +248,7 @@ namespace UnderworldEngine.Game
             this.compileVertices();
         }
 
-        public void Lower()
+        public void lower()
         {
             foreach (GridSquare gs in _grid) {
                 if (!gs.IsSelected) {
@@ -264,6 +258,22 @@ namespace UnderworldEngine.Game
                 gs.CompileVertices();
             }
             this.compileVertices();
+        }
+
+        public void Unload()
+        {
+            Pick.RaiseHandler -= this.raise;
+            Pick.LowerHandler -= this.lower;
+        }
+
+        public GridSquare GetGridSquare(uint xIndex, uint zIndex)
+        {
+            if (xIndex < 0 || xIndex >= _xSize ||
+                zIndex < 0 || zIndex >= _zSize) {
+                throw new ApplicationException("Invalid grid coordinate specified.");
+            }
+
+            return _grid[xIndex, zIndex];
         }
     }
 }
