@@ -1,4 +1,4 @@
-bind kb clear
+bind kb reset
 
 # WASD style camera movement
 bind kb w setc up
