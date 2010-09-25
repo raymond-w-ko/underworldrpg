@@ -100,30 +100,39 @@ namespace UnderworldEngine.Game
         public void CompileVertices()
         {
             Vector3 origin = new Vector3(_xIndex + 0.5f, Height, _zIndex + 0.5f);
-            Quad Top = new Quad(origin, Vector3.Up, Vector3.Forward, 1.0f, 1.0f);
+            Quad top = new Quad(origin, Vector3.Up, Vector3.Forward, 1.0f, 1.0f);
             
             float extraHeight = (float)Math.Tan(MathHelper.ToRadians(TopAngle));
             if (TopUp == Vector3.Forward) {
-                Top.UpperLeft.Y += extraHeight;
-                Top.UpperRight.Y += extraHeight;
+                top.UpperLeft.Y += extraHeight;
+                top.UpperRight.Y += extraHeight;
             }
             else if (TopUp == Vector3.Backward) {
-                Top.LowerLeft.Y += extraHeight;
-                Top.LowerRight.Y += extraHeight;
+                top.LowerLeft.Y += extraHeight;
+                top.LowerRight.Y += extraHeight;
             }
             else if (TopUp == Vector3.Left) {
-                Top.UpperLeft.Y += extraHeight;
-                Top.LowerLeft.Y += extraHeight;
+                top.UpperLeft.Y += extraHeight;
+                top.LowerLeft.Y += extraHeight;
             }
             else if (TopUp == Vector3.Right) {
-                Top.UpperRight.Y += extraHeight;
-                Top.LowerRight.Y += extraHeight;
+                top.UpperRight.Y += extraHeight;
+                top.LowerRight.Y += extraHeight;
             }
 
             Vertices = new VertexPositionTexture[4];
             Indices = new int[6];
 
-            convertToVerticesAndIndices(Top, Vertices, 4 * 0, Indices, 6 * 0, _xIndex, _zIndex);
+            convertToVerticesAndIndices(top, Vertices, 4 * 0, Indices, 6 * 0, _xIndex, _zIndex);
+
+            // Calculate "Height" which is the height of the midpoint of the four vertices
+            Vector3 average = new Vector3();
+            foreach (VertexPositionTexture vpt in Vertices) {
+                average += vpt.Position;
+            }
+            average *= (1.0f / 4.0f);
+
+            Height = average.Y;
 
             // calculate bounding box
             Vector3[] points = new Vector3[4];
@@ -131,7 +140,6 @@ namespace UnderworldEngine.Game
                 points[ii] = Vertices[ii].Position;
             }
             _boundingBox = BoundingBox.CreateFromPoints(points);
-            //Game1.Debug.WriteLine(_boundingBox.ToString());
         }
 
         private void convertToVerticesAndIndices(Quad quad,
@@ -152,6 +160,7 @@ namespace UnderworldEngine.Game
             Indices[indexOffset + 5] = 2 + indexOffset;
         }
 
+        #region XML Save
         public void Save(XmlDocument xmlDocument, XmlNode rootNode)
         {
             XmlNode gridSquareNode = xmlDocument.CreateElement("GridSquare");
@@ -185,5 +194,6 @@ namespace UnderworldEngine.Game
 
             rootNode.AppendChild(gridSquareNode);
         }
+        #endregion
     }
 }

@@ -54,12 +54,11 @@ namespace UnderworldEngine.Game
 
         private QuadTexture _overlay;
 
+        private const float TIMER_HERTZ = 37.5f;
         float _timer;
         float _minAlpha;
         float _maxAlpha;
         float _direction;
-
-        
 
         public BattleCursor(Grid grid,
             string cursorTextureName, string gridOverlayTextureName,
@@ -97,6 +96,8 @@ namespace UnderworldEngine.Game
                 Blend.One
                 );
             _overlay.Alpha = 1.0f;
+            // Add a little height to prevent Z-fighting
+            //_overlay.Translate(0, .0001f, 0);
 
             _timer = 0;
             _minAlpha = .2f;
@@ -109,6 +110,7 @@ namespace UnderworldEngine.Game
         }
 
         #region Scripting support
+
         private void registerWithScripter()
         {
             // register binds
@@ -116,6 +118,11 @@ namespace UnderworldEngine.Game
             UnderworldEngine.Scripting.BattleCursor.DownDispatch += this.down;
             UnderworldEngine.Scripting.BattleCursor.LeftDispatch += this.left;
             UnderworldEngine.Scripting.BattleCursor.RightDispatch += this.right;
+
+            UnderworldEngine.Scripting.BattleCursor.PrimaryDispatch += this.primary;
+            UnderworldEngine.Scripting.BattleCursor.AltDispatch += this.alt;
+            UnderworldEngine.Scripting.BattleCursor.CancelDispatch += this.cancel;
+            UnderworldEngine.Scripting.BattleCursor.MenuDispatch += this.menu;
         }
 
         private bool checkBounds(Vector3 offset)
@@ -191,12 +198,33 @@ namespace UnderworldEngine.Game
                 Game1.Camera.LookRight();
             }
         }
+
+        private void primary()
+        {
+            ;
+        }
+
+        private void alt()
+        {
+            ;
+        }
+
+        private void cancel()
+        {
+            ;
+        }
+
+        private void menu()
+        {
+            ;
+        }
+
         #endregion
 
         private void tick()
         {
             if (_direction > 0) {
-                if (_timer > 37.5f) {
+                if (_timer > TIMER_HERTZ) {
                     _direction = -1f;
                 }
                 else {
@@ -215,19 +243,13 @@ namespace UnderworldEngine.Game
 
         private void updatePosition()
         {
-            GridSquare gs = _grid.GetGridSquare(
+            GridSquare gridSquare = _grid.GetGridSquare(
                 (uint)Math.Round(_gridPosition.X), (uint)Math.Round(_gridPosition.Y)
                 );
 
-            _overlay.CalculateVertices(
-                new Vector3(_gridPosition.X + .5f, gs.Height + .0001f, _gridPosition.Y + .5f),
-                Vector3.Up,
-                Vector3.Forward,
-                1.0f, 1.0f
-                );
-            _overlay.FillVertices();
-
-            _cursor.Height = gs.Height + 1.0f;
+            _overlay.ImportVertices(gridSquare);
+            
+            _cursor.Height = gridSquare.Height + 1.0f;
             _cursor.GridPosition.X = _gridPosition.X;
             _cursor.GridPosition.Y = _gridPosition.Y;
             _cursor.CalculateVertices();
@@ -242,9 +264,9 @@ namespace UnderworldEngine.Game
                 updatePosition();
             }
 
-            _overlay.Alpha = ((_maxAlpha - _minAlpha) * (float)(_timer / 37.5f)) + _minAlpha;
+            _overlay.Alpha = ((_maxAlpha - _minAlpha) * (float)(_timer / TIMER_HERTZ)) + _minAlpha;
 
-            _cursor.Offset.Y = _bobFactor * (float)((60.0f - _timer) / 37.5f);
+            _cursor.Offset.Y = _bobFactor * (float)((60.0f - _timer) / TIMER_HERTZ);
             _cursor.Update(gameTime);
         }
 
@@ -260,6 +282,11 @@ namespace UnderworldEngine.Game
             UnderworldEngine.Scripting.BattleCursor.DownDispatch -= this.down;
             UnderworldEngine.Scripting.BattleCursor.LeftDispatch -= this.left;
             UnderworldEngine.Scripting.BattleCursor.RightDispatch -= this.right;
+
+            UnderworldEngine.Scripting.BattleCursor.PrimaryDispatch -= this.primary;
+            UnderworldEngine.Scripting.BattleCursor.AltDispatch -= this.alt;
+            UnderworldEngine.Scripting.BattleCursor.CancelDispatch -= this.cancel;
+            UnderworldEngine.Scripting.BattleCursor.MenuDispatch -= this.menu;
         }
     }
 }

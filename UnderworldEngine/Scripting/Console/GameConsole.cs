@@ -695,7 +695,7 @@ namespace UnderworldEngine.Scripting
                 mCurrentText.Remove(0, mCurrentText.Length);
 
                 Game1.interpreter.run(input);
-                Game1.Debug.WriteLine(input);
+                Game1.DebugLog.WriteLine(input);
                 // call any command handlers registered to the command
                 /*if (mCommandHandlers.ContainsKey(command[0]))
                 {

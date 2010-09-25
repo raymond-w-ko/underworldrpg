@@ -163,5 +163,16 @@ namespace UnderworldEngine.Game
                 this._vertices[ii].TextureCoordinate *= scale;
             }
         }
+
+        public void ImportVertices(GridSquare gridSquare)
+        {
+            for (int ii = 0; ii < 4; ii++) {
+                this._vertices[ii] = gridSquare.Vertices[ii];
+            }
+
+            for (int ii = 0; ii < 6; ii++) {
+                this._indices[ii] = gridSquare.Indices[ii];
+            }
+        }
     }
 }
