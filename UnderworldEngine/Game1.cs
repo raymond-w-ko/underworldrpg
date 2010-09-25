@@ -20,7 +20,7 @@ namespace UnderworldEngine
     public class Game1 : Microsoft.Xna.Framework.Game
     {
         private static FileStream _fileStream;
-        public static StreamWriter Debug;
+        public static StreamWriter DebugLog;
 
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -45,6 +45,7 @@ namespace UnderworldEngine
 
         public Game1()
         {
+            // For testing and World Editor purposes
             this.IsMouseVisible = true;
 
             graphics = new GraphicsDeviceManager(this);
@@ -52,8 +53,9 @@ namespace UnderworldEngine
 
             // create a debug log text file
             Game1._fileStream = new FileStream("log.txt", FileMode.Create);
-            Game1.Debug = new StreamWriter(Game1._fileStream);
+            Game1.DebugLog = new StreamWriter(Game1._fileStream);
 
+            // Manages all sounds
             Game1.audioManager = new AudioManager();
 
             // global access to rarely changing elements
@@ -84,7 +86,7 @@ namespace UnderworldEngine
             Game1.Camera = new Camera();
 
             // console stuff
-            GameConsole.Initialize(this, "WascoSans10", Color.Black, Color.White, 0.8f, 10);
+            GameConsole.Initialize(this, "Consolas", Color.Black, Color.White, 0.8f, 10);
             Game1.console = (IGameConsole)Services.GetService(typeof(IGameConsole));
 
             // interpreter
@@ -135,7 +137,7 @@ namespace UnderworldEngine
         protected override void UnloadContent()
         {
             // TODO: Unload any non ContentManager content here
-            Game1.Debug.Close();
+            Game1.DebugLog.Close();
         }
 
         /// <summary>
